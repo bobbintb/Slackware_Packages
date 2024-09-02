@@ -1,0 +1,29 @@
+name: Build redis
+on:
+  workflow_dispatch:
+env:
+  VERSION: "2.4.4"
+  GIT_URL: "https://github.com/bobbintb/Slackware_Packages.git"
+  NAME: "redis"
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    container: ghcr.io/bobbintb/auto_slack_pack
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Update and install packages
+      run: |
+        echo "================================= Updating packages ================================="
+        CONF_FILE="/etc/slackpkg/slackpkg.conf"
+        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
+        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
+        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
+        slackpkg update <<< y
+        slackpkg install jemalloc
+    - name: Clone and make
+      run: |
+        echo "================================= Cloning ${VERSION} from git ================================="
+        pwd
+        ls -ls
