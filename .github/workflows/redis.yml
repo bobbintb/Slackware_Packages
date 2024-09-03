@@ -30,8 +30,10 @@ jobs:
         tar -xzvf ${NAME}-${VERSION}.tar.gz
         sh redis.SlackBuild
         git config --global --add safe.directory /__w/Slackware_Packages/Slackware_Packages
+        mkdir ./builds
+        cp /__w/Slackware_Packages/*.txz ./builds
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         message: 'updated redis'
-        file_pattern: '*.tar.gz'
+        file_pattern: '*.txz'
