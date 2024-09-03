@@ -8,7 +8,7 @@ jobs:
   slackware-job:
     permissions: write-all
     runs-on: ubuntu-latest
-    container: aclemons/slackrepo
+    container: ghcr.io/bobbintb/autoslackpack
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -21,4 +21,19 @@ jobs:
         sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
         slackpkg update <<< y
         slackpkg install jemalloc
-
+    - name: Clone and make
+      run: |
+        echo "================================= Cloning ${VERSION} from git ================================="
+        URL="http://download.redis.io/releases/${NAME}-${VERSION}.tar.gz"
+        cd ./$NAME
+        wget $URL
+        tar -xzvf ${NAME}-${VERSION}.tar.gz
+        sh redis.SlackBuild
+        git config --global --add safe.directory /__w/Slackware_Packages/Slackware_Packages
+        mkdir ./builds
+        cp /tmp/*.txz ./builds
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        message: 'updated redis'
+        file_pattern: '*.txz'
