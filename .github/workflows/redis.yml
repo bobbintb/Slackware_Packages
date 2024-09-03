@@ -2,9 +2,9 @@ name: Build redis
 on:
   workflow_dispatch:
 env:
-  VERSION: "2.4.4"
-  GIT_URL: "https://github.com/bobbintb/Slackware_Packages.git"
+  VERSION: "7.4.0"
   NAME: "redis"
+  URL: "http://download.redis.io/releases/${NAME}-${VERSION}.tar.gz"
 jobs:
   slackware-job:
     permissions: write-all
@@ -26,4 +26,6 @@ jobs:
       run: |
         echo "================================= Cloning ${VERSION} from git ================================="
         cd ./$NAME
+        wget $URL
+        tar -xzvf ${NAME}-${VERSION}.tar.gz
         sh redis.SlackBuild
