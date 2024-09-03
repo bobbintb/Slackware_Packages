@@ -20,18 +20,16 @@ jobs:
         sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
         sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
         slackpkg update <<< y
-        slackpkg install jemalloc
-    - name: Clone and make
+    - name: Build
       run: |
-        echo "================================= Cloning ${VERSION} from git ================================="
+        echo "================================= Downloading source code ================================="
         URL="http://download.redis.io/releases/${NAME}-${VERSION}.tar.gz"
         cd ./$NAME
         wget $URL
         tar -xzvf ${NAME}-${VERSION}.tar.gz
         sh redis.SlackBuild
         git config --global --add safe.directory /__w/Slackware_Packages/Slackware_Packages
-        mkdir ./builds
-        cp /tmp/*.txz ./builds
+        cp /tmp/*.txz ./
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
