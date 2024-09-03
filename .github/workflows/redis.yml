@@ -27,3 +27,8 @@ jobs:
         echo "================================= Cloning ${VERSION} from git ================================="
         pwd
         ls -ls
+        cd..
+        pwd
+        la -ls
+        cd /__w/Slackware_Packages/Slackware_Packages
+        ls -ls
