@@ -41,7 +41,7 @@ OUTPUT=${OUTPUT:-/tmp}
 
 info_file=$(ls *.info 2>/dev/null)
 if [ -n "$info_file" ]; then
-  source "$info_file"
+  source ./$info_file
 fi
 
 DOCFILES="00-RELEASENOTES BUGS CONTRIBUTING COPYING MANIFESTO README"
