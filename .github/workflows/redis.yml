@@ -29,6 +29,6 @@ jobs:
         ls -ls
         cd ..
         pwd
-        la -ls
+        ls -ls
         cd /__w/Slackware_Packages/Slackware_Packages
         ls -ls
