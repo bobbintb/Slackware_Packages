@@ -25,10 +25,5 @@ jobs:
     - name: Clone and make
       run: |
         echo "================================= Cloning ${VERSION} from git ================================="
-        pwd
-        ls -ls
-        cd ..
-        pwd
-        ls -ls
-        cd /__w/Slackware_Packages/Slackware_Packages
-        ls -ls
+        cd ./$NAME
+        sh redis.SlackBuild
