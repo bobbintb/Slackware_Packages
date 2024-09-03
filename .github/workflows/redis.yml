@@ -4,6 +4,7 @@ on:
 env:
   VERSION: "7.4.0"
   NAME: "redis"
+  
 jobs:
   slackware-job:
     permissions: write-all
@@ -24,11 +25,13 @@ jobs:
       run: |
         echo "================================= Downloading source code ================================="
         URL="http://download.redis.io/releases/${NAME}-${VERSION}.tar.gz"
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
         cd ./SlackBuilds/$NAME
         wget $URL
-        sh ../SlackBuilds/redis.SlackBuild
-        git config --global --add safe.directory /__w/Slackware_Packages/Slackware_Packages
-        cp /tmp/*.txz /__w/Slackware_Packages/Slackware_Packages/$NAME
+        sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
+        git config --global --add safe.directory $REPO_DIR
+        cp /tmp/*.txz ${REPO_DIR}/${NAME}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
