@@ -28,7 +28,7 @@ jobs:
         cd ./$NAME
         wget $URL
         tar -xzvf ${NAME}-${VERSION}.tar.gz
-        sh redis.SlackBuild
+        sh ../SlackBuilds/redis.SlackBuild
         git config --global --add safe.directory /__w/Slackware_Packages/Slackware_Packages
         cp /tmp/*.txz ./
     - name: Commit changes
