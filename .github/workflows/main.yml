@@ -9,7 +9,7 @@ jobs:
   slackware-job:
     permissions: write-all
     runs-on: ubuntu-latest
-    container: ghcr.io/bobbintb/auto_slack_pack
+    container: ghcr.io/bobbintb/AutoSlackPack
     steps:
     - name: Checkout
       uses: actions/checkout@v4
