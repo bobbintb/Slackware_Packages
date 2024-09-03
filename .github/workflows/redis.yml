@@ -4,7 +4,6 @@ on:
 env:
   VERSION: "7.4.0"
   NAME: "redis"
-  URL: "http://download.redis.io/releases/${NAME}-${VERSION}.tar.gz"
 jobs:
   slackware-job:
     permissions: write-all
@@ -25,6 +24,7 @@ jobs:
     - name: Clone and make
       run: |
         echo "================================= Cloning ${VERSION} from git ================================="
+        URL="http://download.redis.io/releases/${NAME}-${VERSION}.tar.gz"
         cd ./$NAME
         wget $URL
         tar -xzvf ${NAME}-${VERSION}.tar.gz
