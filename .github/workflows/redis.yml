@@ -24,13 +24,11 @@ jobs:
       run: |
         echo "================================= Downloading source code ================================="
         URL="http://download.redis.io/releases/${NAME}-${VERSION}.tar.gz"
-        mkdir ./$NAME
-        cd ./$NAME
+        cd ./SlackBuilds/$NAME
         wget $URL
-        tar -xzvf ${NAME}-${VERSION}.tar.gz
         sh ../SlackBuilds/redis.SlackBuild
         git config --global --add safe.directory /__w/Slackware_Packages/Slackware_Packages
-        cp /tmp/*.txz ./
+        cp /tmp/*.txz /__w/Slackware_Packages/Slackware_Packages/$NAME
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
