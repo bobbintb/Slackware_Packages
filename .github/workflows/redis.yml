@@ -24,6 +24,7 @@ jobs:
       run: |
         echo "================================= Downloading source code ================================="
         URL="http://download.redis.io/releases/${NAME}-${VERSION}.tar.gz"
+        mkdir ./$NAME
         cd ./$NAME
         wget $URL
         tar -xzvf ${NAME}-${VERSION}.tar.gz
