@@ -1,0 +1,32 @@
+name: Build keydb
+on:
+  workflow_dispatch:
+env:
+  VERSION: "6.3.4"
+  NAME: "keydb"
+  
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    container: aclemons/slackrepo
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Update and install packages
+      run: |
+        echo "================================= Updating packages ================================="
+        CONF_FILE="/etc/slackpkg/slackpkg.conf"
+        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
+        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
+        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
+        slackpkg update <<< y
+    - name: Build
+      run: |
+        echo "================================= Downloading source code ================================="
+        git clone --branch v${VERSION} --depth 1 https://github.com/Snapchat/KeyDB.git
+        cd KeyDB/
+        git submodule init && git submodule update
+        wget https://raw.githubusercontent.com/redis/redis/unstable/deps/lua/src/lua_bit.c
+        mv lua_bit.c deps/lua/src/lua_bit.c
+        make USE_SYSTEM_JEMALLOC=yes
