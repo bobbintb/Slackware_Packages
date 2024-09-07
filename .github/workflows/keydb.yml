@@ -30,4 +30,6 @@ jobs:
         git submodule init && git submodule update
         wget https://raw.githubusercontent.com/redis/redis/unstable/deps/lua/src/lua_bit.c
         mv lua_bit.c deps/lua/src/lua_bit.c
+        wget https://raw.githubusercontent.com/Snapchat/KeyDB/main/src/Makefile
+        mv Makefile.1 src/Makefile
         make USE_SYSTEM_JEMALLOC=yes
