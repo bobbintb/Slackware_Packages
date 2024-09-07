@@ -21,15 +21,16 @@ jobs:
         sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
         sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
         slackpkg update <<< y
-        slackpkg install jemalloc
+        wget https://slackware.uk/slackware/slackware64-15.0/slackware64/l/jemalloc-5.2.1-x86_64-3.txz
+        installpkg jemalloc-5.2.1-x86_64-3.txz
+        wget https://slackers.it/repository/slackware64-current/hiredis/hiredis-1.2.0-x86_64-1cf.txz
+        installpkg hiredis-1.2.0-x86_64-1cf.txz
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
-        git clone --branch v${VERSION} --depth 1 https://github.com/Snapchat/KeyDB.git
+        git clone --depth 1 https://github.com/Snapchat/KeyDB.git
         cd KeyDB/
         git submodule init && git submodule update
         wget https://raw.githubusercontent.com/redis/redis/unstable/deps/lua/src/lua_bit.c
         mv lua_bit.c deps/lua/src/lua_bit.c
-        wget https://raw.githubusercontent.com/Snapchat/KeyDB/main/src/Makefile
-        mv Makefile.1 src/Makefile
-        make USE_SYSTEM_JEMALLOC=yes
+        make USE_SYSTEM_JEMALLOC=yes USE_SYSTEM_HIREDIS=yes
