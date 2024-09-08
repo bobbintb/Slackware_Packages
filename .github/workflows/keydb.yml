@@ -22,8 +22,17 @@ jobs:
         sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
         slackpkg update <<< y
         wget https://slackers.it/repository/slackware64-current/hiredis/hiredis-1.2.0-x86_64-1cf.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/glibc-2.40-x86_64-5.txz
         wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-14.2.0-x86_64-2.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-g++-14.2.0-x86_64-2.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-gdc-14.2.0-x86_64-2.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-gfortran-14.2.0-x86_64-2.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-gnat-14.2.0-x86_64-2.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-go-14.2.0-x86_64-2.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-objc-14.2.0-x86_64-2.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/a/aaa_glibc-solibs-2.40-x86_64-5.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/glibc-2.40-x86_64-5.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/glibc-i18n-2.40-x86_64-5.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/glibc-profile-2.40-x86_64-5.txz
         installpkg *.txz
     - name: Build
       run: |
