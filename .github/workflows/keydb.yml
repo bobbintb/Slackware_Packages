@@ -23,7 +23,7 @@ jobs:
         slackpkg update <<< y
         wget https://slackers.it/repository/slackware64-current/hiredis/hiredis-1.2.0-x86_64-1cf.txz
         wget https://slackware.uk/slackware/slackware64-current/slackware64/l/glibc-2.40-x86_64-5.txz
-        upgradepkg glibc-2.40-x86_64-5.txz
+        installpkg glibc-2.40-x86_64-5.txz
         installpkg hiredis-1.2.0-x86_64-1cf.txz
     - name: Build
       run: |
