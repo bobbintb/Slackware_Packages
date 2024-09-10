@@ -5,21 +5,27 @@ env:
   VERSION: "2.10.7"
   NAME: "redisearch"
 jobs:
-  ubuntu-job:
+  slackware-job:
     permissions: write-all
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
+    container: aclemons/slackrepo
     steps:
     - name: Checkout
       uses: actions/checkout@v4
+    - name: Update and install packages
+      run: |
+        echo "================================= Updating packages ================================="
+        CONF_FILE="/etc/slackpkg/slackpkg.conf"
+        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
+        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
+        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
+        slackpkg update <<< y
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/boost-1.86.0-x86_64-1.txz
+        upgradepkg boost-1.86.0-x86_64-1.txz
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
         git clone --branch v2.10.7 https://github.com/RediSearch/RediSearch.git
-        #git clone --branch boost-1.86.0 https://github.com/boostorg/boost.git
         cd RediSearch/
-        bash ./.install/install_boost.sh 1.86.0
         git submodule init && git submodule update
-        sed -i 's/--disable-pip-version-check/--disable-pip-version-check --break-system-packages/g' ./deps/readies/paella/setup.py
-        make setup
-        make fetch
         make build
