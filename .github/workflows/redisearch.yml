@@ -39,7 +39,7 @@ jobs:
     - name: Build
       run: |
         pwd
-        git config --global --add safe.directory $REPO_DIR
+        # git config --global --add safe.directory $REPO_DIR
         mkdir ${REPO_DIR}/${NAME}/${VERSION}
         cp ./bin/linux-x64-release/search/redisearch.so ${REPO_DIR}/${NAME}/${VERSION}
     - name: Commit changes
