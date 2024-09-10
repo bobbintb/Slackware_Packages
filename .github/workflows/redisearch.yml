@@ -47,6 +47,7 @@ jobs:
         REPO_DIR="/__w/${REPO}/${REPO}"
         git config --global --add safe.directory $REPO_DIR
         mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
+        echo "================================= find / -name redisearch.so ================================="
         find / -name redisearch.so
         cp ./RediSearch/bin/linux-x64-release/search/redisearch.so ${REPO_DIR}/${NAME}/${VERSION}
         cd $REPO_DIR
