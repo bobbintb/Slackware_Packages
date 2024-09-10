@@ -32,6 +32,7 @@ jobs:
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
         git config --global --add safe.directory $REPO_DIR
         mkdir ${REPO_DIR}/${NAME}
+        find / -name redisearch.so
         cp /tmp/*.txz ${REPO_DIR}/${NAME}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
