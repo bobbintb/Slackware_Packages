@@ -30,6 +30,7 @@ jobs:
       run: |
         cd RediSearch/
         git submodule init && git submodule update
+        sed -i 's/RedisModuleEvent_ReplBackup/RedisModuleEvent_ReplAsyncLoad/g' src/notifications.c
         make build
         cd ..
     - name: Checkout
