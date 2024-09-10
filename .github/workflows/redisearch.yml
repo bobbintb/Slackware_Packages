@@ -1,4 +1,4 @@
-name: Build keydb
+name: Build redisearch
 on:
   workflow_dispatch:
 env:
