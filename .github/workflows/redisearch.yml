@@ -15,7 +15,9 @@ jobs:
       run: |
         echo "================================= Downloading source code ================================="
         git clone --branch v2.10.7 https://github.com/RediSearch/RediSearch.git
+        #git clone --branch boost-1.86.0 https://github.com/boostorg/boost.git
         cd RediSearch/
+        sh ./.install/install_boost.sh 1.86
         git submodule init && git submodule update
         make fetch
         make build
