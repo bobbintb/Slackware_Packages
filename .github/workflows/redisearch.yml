@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     container: aclemons/slackrepo
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
     - name: Update and install packages
       run: |
         echo "================================= Updating packages ================================="
@@ -29,6 +27,12 @@ jobs:
         cd RediSearch/
         git submodule init && git submodule update
         make build
+        pwd
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Build
+      run: |
+        pwd
         git config --global --add safe.directory $REPO_DIR
         mkdir ${REPO_DIR}/${NAME}/${VERSION}
         cp ./bin/linux-x64-release/search/redisearch.so ${REPO_DIR}/${NAME}/${VERSION}
