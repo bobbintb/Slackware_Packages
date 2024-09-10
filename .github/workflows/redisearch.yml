@@ -49,9 +49,10 @@ jobs:
         mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
         echo "================================= find / -name redisearch.so ================================="
         find / -name redisearch.so
-        cp ./RediSearch/bin/linux-x64-release/search/redisearch.so ${REPO_DIR}/${NAME}/${VERSION}
-        cd $REPO_DIR
         pwd
+        redisearch_path=$(find / -name redisearch.so)
+        cp ${redisearch_path} ${REPO_DIR}/${NAME}/${VERSION}
+        cd $REPO_DIR
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
