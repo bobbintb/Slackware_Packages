@@ -34,7 +34,6 @@ jobs:
         git submodule init && git submodule update
         sed -i 's/RedisModuleEvent_ReplBackup/RedisModuleEvent_ReplAsyncLoad/g' src/notifications.c
         make build
-        echo "================================= find / -name redisearch.so ================================="
         redisearch_path=$(find / -name redisearch.so)
         cp ${redisearch_path} /tmp
         cd ..
@@ -43,14 +42,10 @@ jobs:
     - name: Build
       run: |
         echo "================================= Moving artifact ================================="
-        ls -ls
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
         git config --global --add safe.directory $REPO_DIR
         mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
-        echo "================================= find / -name redisearch.so ================================="
-        find / -name redisearch.so
-        pwd
         redisearch_path=$(find / -name redisearch.so)
         cp ${redisearch_path} ${REPO_DIR}/${NAME}/${VERSION}
         cd $REPO_DIR
