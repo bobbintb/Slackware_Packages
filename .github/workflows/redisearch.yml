@@ -19,5 +19,7 @@ jobs:
         cd RediSearch/
         bash ./.install/install_boost.sh 1.86.0
         git submodule init && git submodule update
+        sed -i 's/--disable-pip-version-check/--disable-pip-version-check --break-system-packages/g' ./deps/readies/paella/setup.py
+        make setup
         make fetch
         make build
