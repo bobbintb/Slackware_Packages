@@ -4,42 +4,23 @@ on:
 env:
   VERSION: "6.3.4"
   NAME: "keydb"
-  
 jobs:
   slackware-job:
     permissions: write-all
     runs-on: ubuntu-latest
-    container: aclemons/slackrepo
     steps:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Update and install packages
       run: |
         echo "================================= Updating packages ================================="
-        CONF_FILE="/etc/slackpkg/slackpkg.conf"
-        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
-        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
-        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
-        slackpkg update <<< y
-        wget https://slackers.it/repository/slackware64-current/hiredis/hiredis-1.2.0-x86_64-1cf.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-14.2.0-x86_64-2.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-g++-14.2.0-x86_64-2.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-gdc-14.2.0-x86_64-2.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-gfortran-14.2.0-x86_64-2.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-gnat-14.2.0-x86_64-2.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-go-14.2.0-x86_64-2.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/gcc-objc-14.2.0-x86_64-2.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/a/aaa_glibc-solibs-2.40-x86_64-5.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/glibc-2.40-x86_64-5.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/glibc-i18n-2.40-x86_64-5.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/glibc-profile-2.40-x86_64-5.txz
-        installpkg *.txz
+        apt install -y debhelper libsystemd-dev pkg-config pbuilder build-essential nasm autotools-dev autoconf libjemalloc-dev tcl tcl-dev uuid-dev libcurl4-openssl-dev libbz2-dev libzstd-dev liblz4-dev libsnappy-dev libssl-dev
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
-        git clone --depth 1 https://github.com/Snapchat/KeyDB.git
+        git clone --depth 1 --branch v6.3.4 https://github.com/Snapchat/KeyDB.git
         cd KeyDB/
         git submodule init && git submodule update
         wget https://raw.githubusercontent.com/redis/redis/unstable/deps/lua/src/lua_bit.c
         mv lua_bit.c deps/lua/src/lua_bit.c
-        make USE_SYSTEM_JEMALLOC=yes USE_SYSTEM_HIREDIS=yes
+        make
