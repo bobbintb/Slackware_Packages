@@ -20,16 +20,22 @@ jobs:
         slackpkg update <<< y
         wget https://slackware.uk/slackware/slackware64-current/slackware64/l/boost-1.86.0-x86_64-1.txz
         upgradepkg boost-1.86.0-x86_64-1.txz
+    - name: Checkout tools repo
+      uses: actions/checkout@v4
+      with:
+        repository: RediSearch/RediSearch
+        ref: 'v2.10.7'
+        path: RediSearch
     - name: Build
       run: |
-        echo "================================= Downloading source code ================================="
-        git clone --branch v2.10.7 https://github.com/RediSearch/RediSearch.git
         cd RediSearch/
         git submodule init && git submodule update
         make build
-        pwd
+        cd ..
     - name: Checkout
       uses: actions/checkout@v4
+      with:
+        path: main
     - name: Build
       run: |
         pwd
