@@ -35,7 +35,8 @@ jobs:
         sed -i 's/RedisModuleEvent_ReplBackup/RedisModuleEvent_ReplAsyncLoad/g' src/notifications.c
         make build
         echo "================================= find / -name redisearch.so ================================="
-        find / -name redisearch.so
+        redisearch_path=$(find / -name redisearch.so)
+        cp ${redisearch_path} /tmp
         cd ..
     - name: Checkout
       uses: actions/checkout@v4
