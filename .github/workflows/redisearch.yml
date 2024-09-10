@@ -2,31 +2,21 @@ name: Build redisearch
 on:
   workflow_dispatch:
 env:
-  VERSION: "6.3.4"
-  NAME: "keydb"
+  VERSION: "2.10.7"
+  NAME: "redisearch"
   
 jobs:
-  slackware-job:
+  ubuntu-job:
     permissions: write-all
     runs-on: ubuntu-latest
-    container: aclemons/slackrepo
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Update and install packages
-      run: |
-        echo "================================= Updating packages ================================="
-        CONF_FILE="/etc/slackpkg/slackpkg.conf"
-        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
-        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
-        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
-        slackpkg update <<< y
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/boost-1.86.0-x86_64-1.txz
-        installpkg *.txz
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
         git clone --branch v2.10.7 https://github.com/RediSearch/RediSearch.git
         cd RediSearch/
-        git submodule init && git submodule update
+        make setup
+        make fetch
         make build
