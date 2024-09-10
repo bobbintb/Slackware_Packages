@@ -20,7 +20,8 @@ jobs:
         slackpkg update <<< y
         wget https://slackware.uk/slackware/slackware64-current/slackware64/l/boost-1.86.0-x86_64-1.txz
         upgradepkg boost-1.86.0-x86_64-1.txz
-    - name: Checkout tools repo
+        echo "================================= Checkout RediSearch repo ================================="
+    - name: Checkout RediSearch repo
       uses: actions/checkout@v4
       with:
         repository: RediSearch/RediSearch
@@ -28,6 +29,7 @@ jobs:
         path: RediSearch
     - name: Build
       run: |
+        echo "================================= Building RediSearch ================================="
         cd RediSearch/
         git submodule init && git submodule update
         sed -i 's/RedisModuleEvent_ReplBackup/RedisModuleEvent_ReplAsyncLoad/g' src/notifications.c
@@ -35,16 +37,17 @@ jobs:
         cd ..
     - name: Checkout
       uses: actions/checkout@v4
-      with:
-        path: main
     - name: Build
       run: |
+        echo "================================= Moving artifact ================================="
+        ls -ls
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
         git config --global --add safe.directory $REPO_DIR
         mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
         cp ./RediSearch/bin/linux-x64-release/search/redisearch.so ${REPO_DIR}/${NAME}/${VERSION}
         cd $REPO_DIR
+        pwd
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
