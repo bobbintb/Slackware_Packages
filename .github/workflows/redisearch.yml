@@ -30,6 +30,7 @@ jobs:
         git submodule init && git submodule update
         make build
         cp ./bin/linux-x64-release/search/redisearch.so ${REPO_DIR}/${NAME}
+        git config --global --add safe.directory $REPO_DIR
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
