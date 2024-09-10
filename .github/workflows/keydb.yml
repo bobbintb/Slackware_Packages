@@ -23,4 +23,5 @@ jobs:
         git submodule init && git submodule update
         wget https://raw.githubusercontent.com/redis/redis/unstable/deps/lua/src/lua_bit.c
         mv lua_bit.c deps/lua/src/lua_bit.c
-        make
+        cd pkg/deb/
+        ./deb-buildsource.sh
