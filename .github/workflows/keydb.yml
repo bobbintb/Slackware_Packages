@@ -5,7 +5,7 @@ env:
   VERSION: "6.3.4"
   NAME: "keydb"
 jobs:
-  slackware-job:
+  ubuntu-job:
     permissions: write-all
     runs-on: ubuntu-latest
     steps:
@@ -14,7 +14,7 @@ jobs:
     - name: Update and install packages
       run: |
         echo "================================= Updating packages ================================="
-        apt install -y debhelper libsystemd-dev pkg-config pbuilder build-essential nasm autotools-dev autoconf libjemalloc-dev tcl tcl-dev uuid-dev libcurl4-openssl-dev libbz2-dev libzstd-dev liblz4-dev libsnappy-dev libssl-dev
+        sudo apt install -y debhelper libsystemd-dev pkg-config pbuilder build-essential nasm autotools-dev autoconf libjemalloc-dev tcl tcl-dev uuid-dev libcurl4-openssl-dev libbz2-dev libzstd-dev liblz4-dev libsnappy-dev libssl-dev
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
