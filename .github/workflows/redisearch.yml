@@ -42,7 +42,7 @@ jobs:
         REPO_DIR="/__w/${REPO}/${REPO}"
         pwd
         git config --global --add safe.directory $REPO_DIR
-        mkdir ${REPO_DIR}/${NAME}/${VERSION}
+        mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
         cp ./bin/linux-x64-release/search/redisearch.so ${REPO_DIR}/${NAME}/${VERSION}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
