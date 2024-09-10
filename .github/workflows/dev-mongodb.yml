@@ -1,4 +1,4 @@
-name: Build mongodb
+name: DEV Build mongodb
 on:
   workflow_dispatch:
 env:
