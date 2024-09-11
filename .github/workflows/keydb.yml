@@ -69,7 +69,7 @@ jobs:
         echo "================================= Creating init.d script ================================="
         mkdir -p /tmp/${NAME}/install
         mkdir -p /tmp/${NAME}/etc/rc.d
-        cat << EOF > /tmp/${NAME}/etc/rc.d/rc.${NAME}.new
+        cat << 'EOF' > /tmp/${NAME}/etc/rc.d/rc.${NAME}.new
         #!/bin/bash
         #
         # KeyDB startup script for Slackware Linux
@@ -133,7 +133,7 @@ jobs:
         esac
         EOF
         echo "================================= Creating slack-desc ================================="
-        cat << EOF > /tmp/${NAME}/install/slack-desc
+        cat << 'EOF' > /tmp/${NAME}/install/slack-desc
         # HOW TO EDIT THIS FILE:
         # The "handy ruler" below makes it easier to edit a package description. Line
         # up the first '|' above the ':' following the base package name, and the '|' on
@@ -155,7 +155,7 @@ jobs:
         keydb:
         EOF
         echo "================================= Creating doinst.sh script ================================="
-        cat << EOF > /tmp/${NAME}/install/doinst.sh
+        cat << 'EOF' > /tmp/${NAME}/install/doinst.sh
         config() {
           NEW="$1"
           OLD="$(dirname $NEW)/$(basename $NEW .new)"
