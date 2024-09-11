@@ -49,10 +49,10 @@ jobs:
         mv keydb-check-aof $bindir
         mv keydb-check-rdb $bindir
         mkdir -p /usr/share/licenses
-        mv COPYING /usr/share/licenses/
+        mv ../COPYING /usr/share/licenses/
         mkdir -p /etc/keydb
-        mv keydb.conf /etc/keydb
-        mv sentinel.conf /etc/keydb
+        mv ../keydb.conf /etc/keydb
+        mv ../sentinel.conf /etc/keydb
     - name: Move
       run: |
         echo "================================= Moving artifact ================================="
