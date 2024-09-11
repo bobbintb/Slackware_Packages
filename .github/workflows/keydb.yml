@@ -62,6 +62,69 @@ jobs:
         mkdir -p /tmp/${NAME}/usr/man/man5/
         mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man5/* /tmp/${NAME}/usr/man/man5/
         mkdir -p /tmp/${NAME}/install
+        cat << EOF > /tmp/${NAME}/rc.d/rc.${NAME}
+        #!/bin/bash
+        #
+        # KeyDB startup script for Slackware Linux
+        
+        PORT=6379
+        SERV=/usr/bin/keydb-server
+        CLI=/usr/bin/keydb-cli
+        CONF=/etc/keydb/keydb.conf
+        PIDFILE=$(grep pidfile $CONF | cut -d" " -f2)
+        
+        keydb_start() {
+          if [ ! -r $CONF ]; then
+            echo "$CONF does not appear to exist.  Abort."
+            exit 1
+          fi
+        
+          if [ -s $PIDFILE ]; then
+            echo "KeyDB appears to be already running?"
+            exit 1
+          fi
+        
+          echo "Starting KeyDB server..."
+          $SERV $CONF
+        }
+        
+        keydb_stop() {
+          if [ ! -s $PIDFILE ]; then
+            echo "$PIDFILE does not exist or is empty."
+            exit 1
+          fi
+        
+          PID=$(cat $PIDFILE)
+          echo -n "Stopping KeyDB server..."
+          $CLI -p $PORT shutdown
+          while [ -d /proc/$PID ]; do
+            sleep 1
+            echo -n "."
+          done
+          echo " done"
+        }
+        
+        keydb_restart() {
+          keydb_stop
+          sleep 3
+          keydb_start
+        }
+        
+        case "$1" in
+          start)
+            keydb_start
+            ;;
+          stop)
+            keydb_stop
+            ;;
+          restart)
+            keydb_restart
+            ;;
+          *)
+            echo "Usage: $0 {start|stop|restart}"
+            exit 1
+        esac
+        EOF
         cat << EOF > /tmp/${NAME}/install/slack-desc
         # HOW TO EDIT THIS FILE:
         # The "handy ruler" below makes it easier to edit a package description. Line
