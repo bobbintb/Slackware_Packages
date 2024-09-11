@@ -92,7 +92,7 @@ jobs:
         mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
         cd /tmp
         tar -cvJf ${NAME}-${VERSION}-x86_64-1loom.txz -C ${NAME}/ .
-        cp *.tgz ${REPO_DIR}/${NAME}/${VERSION}
+        cp *.txz ${REPO_DIR}/${NAME}/${VERSION}
         cd $REPO_DIR
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
