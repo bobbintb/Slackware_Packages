@@ -172,21 +172,27 @@ jobs:
           # Otherwise, we leave the .new copy for the admin to consider...
         }
         
-        perms() {
+        preserve_perms() {
           NEW="$1"
-          OLD="$(dirname $NEW)/$(basename $NEW .new)"
-          if [ -e $OLD ]; then
-            cp -a $OLD ${NEW}.incoming
-            cat $NEW > ${NEW}.incoming
-            mv ${NEW}.incoming $NEW
+          OLD="$(dirname ${NEW})/$(basename ${NEW} .new)"
+          if [ -e ${OLD} ]; then
+            cp -a ${OLD} ${NEW}.incoming
+            cat ${NEW} > ${NEW}.incoming
+            mv ${NEW}.incoming ${NEW}
           fi
-          config $NEW
+          config ${NEW}
         }
         
         config etc/keydb/keydb.conf.new
         config etc/keydb/sentinel.conf.new
         config etc/logrotate.d/keydb.new
-        perms etc/rc.d/rc.keydb.new
+        preserve_perms etc/rc.d/rc.keydb.new
+        ( cd usr/bin ; rm -rf keydb-check-aof )
+        ( cd usr/bin ; ln -sf keydb-server keydb-check-aof )
+        ( cd usr/bin ; rm -rf keydb-check-rdb )
+        ( cd usr/bin ; ln -sf keydb-server keydb-check-rdb )
+        ( cd usr/bin ; rm -rf keydb-sentinel )
+        ( cd usr/bin ; ln -sf keydb-server keydb-sentinel )
         EOF
     - name: Move
       run: |
