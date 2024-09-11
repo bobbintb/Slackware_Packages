@@ -99,7 +99,7 @@ jobs:
         sudo rm pkgtools-15.0-noarch-42.txz
         cd ./${NAME}
         sudo ../makepkg ../${NAME}-${VERSION}-x86_64-1loom.txz
-        #tar -cvJf ${NAME}-${VERSION}-x86_64-1loom.txz -C ${NAME}/ .
+        cd ..
         cp *.txz ${REPO_DIR}/${NAME}/
         cd $REPO_DIR
     - name: Commit changes
