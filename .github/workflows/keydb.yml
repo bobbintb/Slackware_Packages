@@ -37,7 +37,7 @@ jobs:
       run: |
         echo "================================= pwd ================================="
         pwd
-        bindir=/tmp/usr/bin/
+        bindir=/tmp/${NAME}/usr/bin/
         mkdir -p $bindir
         cd KeyDB/src/
         ls -ls
@@ -49,20 +49,53 @@ jobs:
         mv keydb-check-aof $bindir
         mv keydb-check-rdb $bindir
         mkdir -p /usr/share/licenses
-        mv ../COPYING /usr/share/licenses/
-        mkdir -p /tmp/etc/keydb
-        mv ../keydb.conf /tmp/etc/keydb
-        mv ../sentinel.conf /tmp/etc/keydb
+        docdir=/tmp/${NAME}/usr/doc/${NAME}-${VERSION}/
+        mv ../00-RELEASENOTES $docdir
+        mv ../BUGS $docdir
+        mv ../CONDUCT $docdir
+        mv ../COPYING $docdir
+        mv ../INSTALL $docdir
+        mv ../README.md $docdir
+        mv ../TLS.md $docdir
+        mkdir -p /tmp/${NAME}/etc/keydb
+        mv ../keydb.conf /tmp/${NAME}/etc/keydb
+        mv ../sentinel.conf /tmp/${NAME}/etc/keydb
+        mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man1/* /tmp/${NAME}/usr/man/man1/
+        mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man5/* /tmp/${NAME}/usr/man/man5/
+        mkdir -p /tmp/${NAME}/install
+        cat << EOF > /tmp/${NAME}/install/slack-desc
+        # HOW TO EDIT THIS FILE:
+        # The "handy ruler" below makes it easier to edit a package description. Line
+        # up the first '|' above the ':' following the base package name, and the '|' on
+        # the right side marks the last column you can put a character in. You must make
+        # exactly 11 lines for the formatting to be correct. It's also customary to
+        # leave one space after the ':'.
+        
+             |-----handy-ruler------------------------------------------------------|
+        keydb: keydb (A Multithreaded Fork of Redis)
+        keydb:
+        keydb: KeyDB is a high performance fork of Redis with a focus on
+        keydb: multithreading, memory efficiency, and high throughput. In addition
+        keydb: to performance improvements, KeyDB offers features such as Active
+        keydb: Replication, FLASH Storage and Subkey Expires. KeyDB has a MVCC
+        keydb: architecture that allows you to execute queries such as KEYS and
+        keydb: SCAN without blocking the database and degrading performance.
+        keydb:
+        keydb:
+        keydb:
+        EOF
     - name: Move
       run: |
         echo "================================= Moving artifact ================================="
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/home/runner/work/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
+        cd /tmp
+        tar -cvJf ${NAME}-${VERSION}-x86_64-1loom.txz -C ${NAME}/ .
         cp *.tgz ${REPO_DIR}/${NAME}/${VERSION}
         cd $REPO_DIR
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         message: 'updated keydb'
-        file_pattern: '*.tgz'
+        file_pattern: '*.txz'
