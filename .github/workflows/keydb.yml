@@ -47,7 +47,7 @@ jobs:
         mv keydb-diagnostic-tool $bindir
         mv keydb-sentinel $bindir
         mv keydb-check-aof $bindir
-        mv keydb-diagnostic-tool $bindir
+        mv keydb-check-rdb $bindir
         mkdir -p /usr/share/licenses
         mv COPYING /usr/share/licenses/
         mkdir -p /etc/keydb
