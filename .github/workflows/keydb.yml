@@ -24,12 +24,13 @@ jobs:
         wget https://raw.githubusercontent.com/redis/redis/unstable/deps/lua/src/lua_bit.c
         mv lua_bit.c deps/lua/src/lua_bit.c
         cd pkg/deb/
-        ./deb-buildsource.sh
-        cd deb_files_generated/
-        alien -t --scripts *.deb
+        #./deb-buildsource.sh
+        #cd deb_files_generated/
+        #alien -t --scripts *.deb
     - name: Move
       run: |
         echo "================================= Moving artifact ================================="
+        pwd
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
