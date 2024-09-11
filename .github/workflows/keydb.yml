@@ -35,6 +35,8 @@ jobs:
         make
     - name: Prepare package
       run: |
+        echo "================================= pwd ================================="
+        pwd
         bindir=/tmp/usr/bin/
         mkdir -p $bindir
         cd src/
