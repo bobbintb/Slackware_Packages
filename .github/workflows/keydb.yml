@@ -40,6 +40,7 @@ jobs:
         bindir=/tmp/usr/bin/
         mkdir -p $bindir
         cd KeyDB/src/
+        ls -ls
         mv keydb-server $bindir
         mv keydb-cli $bindir
         mv keydb-benchmark $bindir
