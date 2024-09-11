@@ -96,6 +96,8 @@ jobs:
         REPO_DIR="/home/runner/work/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/${NAME}/
         cd /tmp
+        wget https://slackware.uk/slackware/slackware64-15.0/slackware64/a/pkgtools-15.0-noarch-42.txz
+        tar xvzf pkgtools-15.0-noarch-42.txz
         tar -cvJf ${NAME}-${VERSION}-x86_64-1loom.txz -C ${NAME}/ .
         cp *.txz ${REPO_DIR}/${NAME}/
         cd $REPO_DIR
