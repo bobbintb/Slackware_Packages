@@ -94,12 +94,13 @@ jobs:
     - name: Move
       run: |
         echo "================================= Moving artifact ================================="
+        sudo su
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/home/runner/work/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/${NAME}/
         cd /tmp
         wget https://slackware.uk/slackware/slackware64-15.0/slackware64/a/pkgtools-15.0-noarch-42.txz
-        sudo tar xvf pkgtools-15.0-noarch-42.txz
+        tar xvf pkgtools-15.0-noarch-42.txz
         mv ./sbin/makepkg ./
         rm install
         rm pkgtools-15.0-noarch-42.txz
