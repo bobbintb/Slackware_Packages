@@ -93,10 +93,10 @@ jobs:
         wget https://slackware.uk/slackware/slackware64-15.0/slackware64/a/pkgtools-15.0-noarch-42.txz
         sudo tar xvf pkgtools-15.0-noarch-42.txz
         sudo mv ./sbin/makepkg ./
-        rm -dr sbin
-        rm -dr usr
-        rm -dr var
-        rm pkgtools-15.0-noarch-42.txz
+        sudo rm -dr sbin
+        sudo rm -dr usr
+        sudo rm -dr var
+        sudo rm pkgtools-15.0-noarch-42.txz
         cd ./${NAME}
         ../makepkg ../${NAME}-${VERSION}-x86_64-1loom.txz
         #tar -cvJf ${NAME}-${VERSION}-x86_64-1loom.txz -C ${NAME}/ .
