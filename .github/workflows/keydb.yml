@@ -60,7 +60,9 @@ jobs:
         mkdir -p /tmp/${NAME}/etc/keydb
         mv ../keydb.conf /tmp/${NAME}/etc/keydb
         mv ../sentinel.conf /tmp/${NAME}/etc/keydb
+        mkdir -p /tmp/${NAME}/usr/man/man1/
         mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man1/* /tmp/${NAME}/usr/man/man1/
+        mkdir -p /tmp/${NAME}/usr/man/man5/
         mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man5/* /tmp/${NAME}/usr/man/man5/
         mkdir -p /tmp/${NAME}/install
         cat << EOF > /tmp/${NAME}/install/slack-desc
