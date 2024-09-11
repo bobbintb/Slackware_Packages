@@ -48,8 +48,8 @@ jobs:
         mv keydb-sentinel $bindir
         mv keydb-check-aof $bindir
         mv keydb-check-rdb $bindir
-        mkdir -p /usr/share/licenses
         docdir=/tmp/${NAME}/usr/doc/${NAME}-${VERSION}/
+        mkdir -p $docdir
         mv ../00-RELEASENOTES $docdir
         mv ../BUGS $docdir
         mv ../CONDUCT $docdir
