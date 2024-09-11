@@ -134,7 +134,7 @@ jobs:
         # exactly 11 lines for the formatting to be correct. It's also customary to
         # leave one space after the ':'.
         
-             |-----handy-ruler------------------------------------------------------|
+             |-----handy-ruler--------------------------------------------------------|
         keydb: keydb (A Multithreaded Fork of Redis)
         keydb:
         keydb: KeyDB is a high performance fork of Redis with a focus on
