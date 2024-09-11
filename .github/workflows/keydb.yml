@@ -50,9 +50,9 @@ jobs:
         mv keydb-check-rdb $bindir
         mkdir -p /usr/share/licenses
         mv ../COPYING /usr/share/licenses/
-        mkdir -p /etc/keydb
-        mv ../keydb.conf /etc/keydb
-        mv ../sentinel.conf /etc/keydb
+        mkdir -p /tmp/etc/keydb
+        mv ../keydb.conf /tmp/etc/keydb
+        mv ../sentinel.conf /tmp/etc/keydb
     - name: Move
       run: |
         echo "================================= Moving artifact ================================="
