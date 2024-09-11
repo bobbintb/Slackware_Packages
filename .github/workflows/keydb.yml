@@ -38,11 +38,13 @@ jobs:
         bindir=/tmp/${NAME}/usr/bin/
         mkdir -p $bindir
         cd KeyDB/src/
-        ls -ls
         mv keydb-server $bindir
         mv keydb-cli $bindir
         mv keydb-benchmark $bindir
         mv keydb-diagnostic-tool $bindir
+        ln -sf $bindir/keydb-server $bindir/keydb-sentinel
+        ln -sf $bindir/keydb-server $bindir/keydb-check-aof
+        ln -sf $bindir/keydb-server $bindir/keydb-check-rdb
         docdir=/tmp/${NAME}/usr/doc/${NAME}-${VERSION}/
         mkdir -p $docdir
         mv ../00-RELEASENOTES $docdir
@@ -97,7 +99,7 @@ jobs:
         mkdir -p ${REPO_DIR}/${NAME}/
         cd /tmp
         wget https://slackware.uk/slackware/slackware64-15.0/slackware64/a/pkgtools-15.0-noarch-42.txz
-        tar xvf pkgtools-15.0-noarch-42.txz
+        sudo tar xvf pkgtools-15.0-noarch-42.txz
         mv ./sbin/makepkg ./
         rm install
         rm pkgtools-15.0-noarch-42.txz
