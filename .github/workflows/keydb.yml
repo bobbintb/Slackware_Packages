@@ -64,7 +64,7 @@ jobs:
         mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man5/* /tmp/${NAME}/usr/man/man5/
         echo "================================= Moving config files ================================="
         mkdir -p /tmp/${NAME}/etc/${NAME}
-        mkdir -p /tmp/${NAME}/etc/logrotate.d/${NAME}
+        mkdir -p /tmp/${NAME}/etc/logrotate.d
         mv ../${NAME}.conf /tmp/${NAME}/etc/${NAME}/${NAME}.conf.new
         mv ../sentinel.conf /tmp/${NAME}/etc/${NAME}/sentinel.conf.new
         mv ../pkg/rpm/keydb_build/keydb_rpm/etc/logrotate.d/keydb /tmp/${NAME}/etc/logrotate.d
