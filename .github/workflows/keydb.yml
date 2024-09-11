@@ -14,7 +14,8 @@ jobs:
     - name: Update and install packages
       run: |
         echo "================================= Updating packages ================================="
-        sudo apt install -y alien debhelper libsystemd-dev pkg-config pbuilder build-essential nasm autotools-dev autoconf libjemalloc-dev tcl tcl-dev uuid-dev libcurl4-openssl-dev libbz2-dev libzstd-dev liblz4-dev libsnappy-dev libssl-dev
+        sudo apt upgrade -y
+        sudo apt install -y debhelper libsystemd-dev pkg-config pbuilder build-essential nasm autotools-dev autoconf libjemalloc-dev tcl tcl-dev uuid-dev libcurl4-openssl-dev libbz2-dev libzstd-dev liblz4-dev libsnappy-dev libssl-dev
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
@@ -23,10 +24,32 @@ jobs:
         git submodule init && git submodule update
         wget https://raw.githubusercontent.com/redis/redis/unstable/deps/lua/src/lua_bit.c
         mv lua_bit.c deps/lua/src/lua_bit.c
-        cd pkg/deb/
-        ./deb-buildsource.sh
-        cd deb_files_generated/
-        alien -t --scripts *.deb
+        #cd pkg/deb/
+        #./deb-buildsource.sh
+        #cd deb_files_generated/
+        #alien -t --scripts *.deb
+        cd src/
+        rm Makefile
+        wget https://raw.githubusercontent.com/Snapchat/KeyDB/main/src/Makefile
+        cd ..
+        make
+    - name: Prepare package
+      run: |
+        bindir=/tmp/usr/bin/
+        mkdir -p $bindir
+        cd src/
+        mv keydb-server $bindir
+        mv keydb-cli $bindir
+        mv keydb-benchmark $bindir
+        mv keydb-diagnostic-tool $bindir
+        mv keydb-sentinel $bindir
+        mv keydb-check-aof $bindir
+        mv keydb-diagnostic-tool $bindir
+        mkdir -p /usr/share/licenses
+        mv COPYING /usr/share/licenses/
+        mkdir -p /etc/keydb
+        mv keydb.conf /etc/keydb
+        mv sentinel.conf /etc/keydb
     - name: Move
       run: |
         echo "================================= Moving artifact ================================="
