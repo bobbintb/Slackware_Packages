@@ -62,8 +62,8 @@ jobs:
         mkdir -p /tmp/${NAME}/usr/man/man5/
         mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man5/* /tmp/${NAME}/usr/man/man5/
         mkdir -p /tmp/${NAME}/install
-        mkdir -p /tmp/${NAME}/rc.d
-        cat << EOF > /tmp/${NAME}/rc.d/rc.${NAME}
+        mkdir -p /tmp/${NAME}/etc/rc.d
+        cat << EOF > /tmp/${NAME}/etc/rc.d/rc.${NAME}
         #!/bin/bash
         #
         # KeyDB startup script for Slackware Linux
