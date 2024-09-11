@@ -32,11 +32,9 @@ jobs:
         rm Makefile
         wget https://raw.githubusercontent.com/Snapchat/KeyDB/main/src/Makefile
         cd ..
-        make CFLAGS="-DUSE_PROCESSOR_CLOCK" DEBUG= OPTIMIZATION=-O3\ -flto
+        make CFLAGS="-DUSE_PROCESSOR_CLOCK" DEBUG=
     - name: Prepare package
       run: |
-        echo "================================= pwd ================================="
-        pwd
         bindir=/tmp/${NAME}/usr/bin/
         mkdir -p $bindir
         cd KeyDB/src/
