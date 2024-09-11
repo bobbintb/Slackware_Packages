@@ -134,7 +134,7 @@ jobs:
             exit 1
         esac
         EOF
-        chmod 755 /tmp/${NAME}/etc/rc.d/rc.${NAME}.new
+        sudo chmod 755 /tmp/${NAME}/etc/rc.d/rc.${NAME}.new
         echo "================================= Creating slack-desc ================================="
         cat << 'EOF' > /tmp/${NAME}/install/slack-desc
         # HOW TO EDIT THIS FILE:
@@ -172,21 +172,22 @@ jobs:
           # Otherwise, we leave the .new copy for the admin to consider...
         }
         
-        preserve_perms() {
+        perms() {
+          # Keep same perms on file
           NEW="$1"
-          OLD="$(dirname ${NEW})/$(basename ${NEW} .new)"
-          if [ -e ${OLD} ]; then
-            cp -a ${OLD} ${NEW}.incoming
-            cat ${NEW} > ${NEW}.incoming
-            mv ${NEW}.incoming ${NEW}
+          OLD="$(dirname $NEW)/$(basename $NEW .new)"
+          if [ -e $OLD ]; then
+            cp -a $OLD $NEW.incoming
+            cat $NEW > $NEW.incoming
+            mv $NEW.incoming $NEW
           fi
-          config ${NEW}
+          config $NEW
         }
         
         config etc/keydb/keydb.conf.new
         config etc/keydb/sentinel.conf.new
         config etc/logrotate.d/keydb.new
-        preserve_perms etc/rc.d/rc.keydb.new
+        perms etc/rc.d/rc.keydb.new
         ( cd usr/bin ; rm -rf keydb-check-aof )
         ( cd usr/bin ; ln -sf keydb-server keydb-check-aof )
         ( cd usr/bin ; rm -rf keydb-check-rdb )
@@ -194,6 +195,7 @@ jobs:
         ( cd usr/bin ; rm -rf keydb-sentinel )
         ( cd usr/bin ; ln -sf keydb-server keydb-sentinel )
         EOF
+        sudo chmod 755 /tmp/${NAME}/install/doinst.sh
     - name: Move
       run: |
         echo "================================= Moving artifact ================================="
