@@ -45,9 +45,6 @@ jobs:
         mv keydb-cli $bindir
         mv keydb-benchmark $bindir
         mv keydb-diagnostic-tool $bindir
-        mv keydb-sentinel $bindir
-        mv keydb-check-aof $bindir
-        mv keydb-check-rdb $bindir
         docdir=/tmp/${NAME}/usr/doc/${NAME}-${VERSION}/
         mkdir -p $docdir
         mv ../00-RELEASENOTES $docdir
