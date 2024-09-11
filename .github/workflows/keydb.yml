@@ -32,12 +32,15 @@ jobs:
         rm Makefile
         wget https://raw.githubusercontent.com/Snapchat/KeyDB/main/src/Makefile
         cd ..
+        echo "================================= Building ================================="
         make CFLAGS="-DUSE_PROCESSOR_CLOCK" DEBUG=
     - name: Prepare package
       run: |
+        echo "================================= Creating directories and moving files ================================="
         bindir=/tmp/${NAME}/usr/bin/
         mkdir -p $bindir
         cd KeyDB/src/
+        echo "================================= Moving binaries ================================="
         mv keydb-server $bindir
         mv keydb-cli $bindir
         mv keydb-benchmark $bindir
@@ -45,6 +48,7 @@ jobs:
         ln -sf $bindir/keydb-server $bindir/keydb-sentinel
         ln -sf $bindir/keydb-server $bindir/keydb-check-aof
         ln -sf $bindir/keydb-server $bindir/keydb-check-rdb
+        echo "================================= Moving documents ================================="
         docdir=/tmp/${NAME}/usr/doc/${NAME}-${VERSION}/
         mkdir -p $docdir
         mv ../00-RELEASENOTES $docdir
@@ -54,16 +58,18 @@ jobs:
         mv ../INSTALL $docdir
         mv ../README.md $docdir
         mv ../TLS.md $docdir
-        mkdir -p /tmp/${NAME}/etc/keydb
-        mv ../keydb.conf /tmp/${NAME}/etc/keydb
-        mv ../sentinel.conf /tmp/${NAME}/etc/keydb
         mkdir -p /tmp/${NAME}/usr/man/man1/
         mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man1/* /tmp/${NAME}/usr/man/man1/
         mkdir -p /tmp/${NAME}/usr/man/man5/
         mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man5/* /tmp/${NAME}/usr/man/man5/
+        echo "================================= Moving config files ================================="
+        mkdir -p /tmp/${NAME}/etc/keydb
+        mv ../keydb.conf /tmp/${NAME}/etc/keydb/keydb.conf.new
+        mv ../sentinel.conf /tmp/${NAME}/etc/keydb/sentinel.conf.new
+        echo "================================= Creating init.d script ================================="
         mkdir -p /tmp/${NAME}/install
         mkdir -p /tmp/${NAME}/etc/rc.d
-        cat << EOF > /tmp/${NAME}/etc/rc.d/rc.${NAME}
+        cat << EOF > /tmp/${NAME}/etc/rc.d/rc.${NAME}.new
         #!/bin/bash
         #
         # KeyDB startup script for Slackware Linux
@@ -126,6 +132,7 @@ jobs:
             exit 1
         esac
         EOF
+        echo "================================= Creating slack-desc ================================="
         cat << EOF > /tmp/${NAME}/install/slack-desc
         # HOW TO EDIT THIS FILE:
         # The "handy ruler" below makes it easier to edit a package description. Line
@@ -146,6 +153,37 @@ jobs:
         keydb:
         keydb:
         keydb:
+        EOF
+        echo "================================= Creating doinst.sh script ================================="
+        cat << EOF > /tmp/${NAME}/install/doinst.sh
+        config() {
+          NEW="$1"
+          OLD="$(dirname $NEW)/$(basename $NEW .new)"
+          # If there's no config file by that name, mv it over:
+          if [ ! -r $OLD ]; then
+            mv $NEW $OLD
+          elif [ "$(cat $OLD | md5sum)" = "$(cat $NEW | md5sum)" ]; then
+            # toss the redundant copy
+            rm $NEW
+          fi
+          # Otherwise, we leave the .new copy for the admin to consider...
+        }
+        
+        perms() {
+          NEW="$1"
+          OLD="$(dirname $NEW)/$(basename $NEW .new)"
+          if [ -e $OLD ]; then
+            cp -a $OLD ${NEW}.incoming
+            cat $NEW > ${NEW}.incoming
+            mv ${NEW}.incoming $NEW
+          fi
+          config $NEW
+        }
+        
+        config etc/keydb/keydb.conf.new
+        config etc/keydb/sentinel.conf.new
+        config etc/logrotate.d/keydb.new
+        perms etc/rc.d/rc.keydb.new
         EOF
     - name: Move
       run: |
