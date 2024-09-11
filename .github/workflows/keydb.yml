@@ -67,7 +67,7 @@ jobs:
         mkdir -p /tmp/${NAME}/etc/logrotate.d/${NAME}
         mv ../${NAME}.conf /tmp/${NAME}/etc/${NAME}/${NAME}.conf.new
         mv ../sentinel.conf /tmp/${NAME}/etc/${NAME}/sentinel.conf.new
-        mv ..pkg/rpm/keydb_build/keydb_rpm/etc/logrotate.d/keydb /tmp/${NAME}/etc/logrotate.d
+        mv ../pkg/rpm/keydb_build/keydb_rpm/etc/logrotate.d/keydb /tmp/${NAME}/etc/logrotate.d
         echo "================================= Creating init.d script ================================="
         mkdir -p /tmp/${NAME}/install
         mkdir -p /tmp/${NAME}/etc/rc.d
