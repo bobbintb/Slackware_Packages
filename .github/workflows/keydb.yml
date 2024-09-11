@@ -62,14 +62,6 @@ jobs:
         mkdir -p /tmp/${NAME}/usr/man/man5/
         mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man5/* /tmp/${NAME}/usr/man/man5/
         mkdir -p /tmp/${NAME}/install
-        cat << EOF > /tmp/${NAME}/install/doinst.sh
-        ( cd usr/bin ; rm -rf keydb-sentinel )
-        ( cd usr/bin ; ln -sf keydb-server keydb-sentinel )
-        ( cd usr/bin ; rm -rf keydb-check-aof )
-        ( cd usr/bin ; ln -sf keydb-server keydb-check-aof )
-        ( cd usr/bin ; rm -rf keydb-check-rdb )
-        ( cd usr/bin ; ln -sf keydb-server keydb-check-rdb )
-        EOF
         cat << EOF > /tmp/${NAME}/install/slack-desc
         # HOW TO EDIT THIS FILE:
         # The "handy ruler" below makes it easier to edit a package description. Line
