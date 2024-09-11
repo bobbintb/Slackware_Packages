@@ -15,7 +15,7 @@ jobs:
       run: |
         echo "================================= Updating packages ================================="
         sudo apt upgrade -y
-        sudo apt install -y debhelper libsystemd-dev pkg-config pbuilder build-essential nasm autotools-dev autoconf libjemalloc-dev tcl tcl-dev uuid-dev libcurl4-openssl-dev libbz2-dev libzstd-dev liblz4-dev libsnappy-dev libssl-dev
+        sudo apt install -y tree debhelper libsystemd-dev pkg-config pbuilder build-essential nasm autotools-dev autoconf libjemalloc-dev tcl tcl-dev uuid-dev libcurl4-openssl-dev libbz2-dev libzstd-dev liblz4-dev libsnappy-dev libssl-dev
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
@@ -161,6 +161,7 @@ jobs:
         sudo rm -dr usr
         sudo rm -dr var
         sudo rm pkgtools-15.0-noarch-42.txz
+        tree
         cd ./${NAME}
         sudo ../makepkg ../${NAME}-${VERSION}-x86_64-1loom.txz
         cd ..
