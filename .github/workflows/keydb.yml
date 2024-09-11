@@ -14,6 +14,7 @@ jobs:
     - name: Update and install packages
       run: |
         echo "================================= Updating packages ================================="
+        sudo apt upgrade -y
         sudo apt install -y debhelper libsystemd-dev pkg-config pbuilder build-essential nasm autotools-dev autoconf libjemalloc-dev tcl tcl-dev uuid-dev libcurl4-openssl-dev libbz2-dev libzstd-dev liblz4-dev libsnappy-dev libssl-dev
     - name: Build
       run: |
@@ -23,20 +24,149 @@ jobs:
         git submodule init && git submodule update
         wget https://raw.githubusercontent.com/redis/redis/unstable/deps/lua/src/lua_bit.c
         mv lua_bit.c deps/lua/src/lua_bit.c
-        cd pkg/deb/
-        ./deb-buildsource.sh
-        cd deb_files_generated/
-        alien -t --scripts *.deb
+        #cd pkg/deb/
+        #./deb-buildsource.sh
+        #cd deb_files_generated/
+        #alien -t --scripts *.deb
+        cd src/
+        rm Makefile
+        wget https://raw.githubusercontent.com/Snapchat/KeyDB/main/src/Makefile
+        cd ..
+        make CFLAGS="-DUSE_PROCESSOR_CLOCK" DEBUG=
+    - name: Prepare package
+      run: |
+        bindir=/tmp/${NAME}/usr/bin/
+        mkdir -p $bindir
+        cd KeyDB/src/
+        mv keydb-server $bindir
+        mv keydb-cli $bindir
+        mv keydb-benchmark $bindir
+        mv keydb-diagnostic-tool $bindir
+        ln -sf $bindir/keydb-server $bindir/keydb-sentinel
+        ln -sf $bindir/keydb-server $bindir/keydb-check-aof
+        ln -sf $bindir/keydb-server $bindir/keydb-check-rdb
+        docdir=/tmp/${NAME}/usr/doc/${NAME}-${VERSION}/
+        mkdir -p $docdir
+        mv ../00-RELEASENOTES $docdir
+        mv ../BUGS $docdir
+        mv ../CONDUCT $docdir
+        mv ../COPYING $docdir
+        mv ../INSTALL $docdir
+        mv ../README.md $docdir
+        mv ../TLS.md $docdir
+        mkdir -p /tmp/${NAME}/etc/keydb
+        mv ../keydb.conf /tmp/${NAME}/etc/keydb
+        mv ../sentinel.conf /tmp/${NAME}/etc/keydb
+        mkdir -p /tmp/${NAME}/usr/man/man1/
+        mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man1/* /tmp/${NAME}/usr/man/man1/
+        mkdir -p /tmp/${NAME}/usr/man/man5/
+        mv ../pkg/rpm/keydb_build/keydb_rpm/usr/share/man/man5/* /tmp/${NAME}/usr/man/man5/
+        mkdir -p /tmp/${NAME}/install
+        cat << EOF > /tmp/${NAME}/rc.d/rc.${NAME}
+        #!/bin/bash
+        #
+        # KeyDB startup script for Slackware Linux
+        
+        PORT=6379
+        SERV=/usr/bin/keydb-server
+        CLI=/usr/bin/keydb-cli
+        CONF=/etc/keydb/keydb.conf
+        PIDFILE=$(grep pidfile $CONF | cut -d" " -f2)
+        
+        keydb_start() {
+          if [ ! -r $CONF ]; then
+            echo "$CONF does not appear to exist.  Abort."
+            exit 1
+          fi
+        
+          if [ -s $PIDFILE ]; then
+            echo "KeyDB appears to be already running?"
+            exit 1
+          fi
+        
+          echo "Starting KeyDB server..."
+          $SERV $CONF
+        }
+        
+        keydb_stop() {
+          if [ ! -s $PIDFILE ]; then
+            echo "$PIDFILE does not exist or is empty."
+            exit 1
+          fi
+        
+          PID=$(cat $PIDFILE)
+          echo -n "Stopping KeyDB server..."
+          $CLI -p $PORT shutdown
+          while [ -d /proc/$PID ]; do
+            sleep 1
+            echo -n "."
+          done
+          echo " done"
+        }
+        
+        keydb_restart() {
+          keydb_stop
+          sleep 3
+          keydb_start
+        }
+        
+        case "$1" in
+          start)
+            keydb_start
+            ;;
+          stop)
+            keydb_stop
+            ;;
+          restart)
+            keydb_restart
+            ;;
+          *)
+            echo "Usage: $0 {start|stop|restart}"
+            exit 1
+        esac
+        EOF
+        cat << EOF > /tmp/${NAME}/install/slack-desc
+        # HOW TO EDIT THIS FILE:
+        # The "handy ruler" below makes it easier to edit a package description. Line
+        # up the first '|' above the ':' following the base package name, and the '|' on
+        # the right side marks the last column you can put a character in. You must make
+        # exactly 11 lines for the formatting to be correct. It's also customary to
+        # leave one space after the ':'.
+        
+             |-----handy-ruler------------------------------------------------------|
+        keydb: keydb (A Multithreaded Fork of Redis)
+        keydb:
+        keydb: KeyDB is a high performance fork of Redis with a focus on
+        keydb: multithreading, memory efficiency, and high throughput. In addition
+        keydb: to performance improvements, KeyDB offers features such as Active
+        keydb: Replication, FLASH Storage and Subkey Expires. KeyDB has a MVCC
+        keydb: architecture that allows you to execute queries such as KEYS and
+        keydb: SCAN without blocking the database and degrading performance.
+        keydb:
+        keydb:
+        keydb:
+        EOF
     - name: Move
       run: |
         echo "================================= Moving artifact ================================="
         REPO=${GITHUB_REPOSITORY##*/}
-        REPO_DIR="/__w/${REPO}/${REPO}"
-        mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
-        cp *.tgz ${REPO_DIR}/${NAME}/${VERSION}
+        REPO_DIR="/home/runner/work/${REPO}/${REPO}"
+        mkdir -p ${REPO_DIR}/${NAME}/
+        cd /tmp
+        wget https://slackware.uk/slackware/slackware64-15.0/slackware64/a/pkgtools-15.0-noarch-42.txz
+        sudo tar xvf pkgtools-15.0-noarch-42.txz
+        sudo mv ./sbin/makepkg ./
+        sudo rm -dr sbin
+        sudo rm -dr usr
+        sudo rm -dr var
+        sudo rm pkgtools-15.0-noarch-42.txz
+        cd ./${NAME}
+        sudo ../makepkg ../${NAME}-${VERSION}-x86_64-1loom.txz
+        cd ..
+        cp *.txz ${REPO_DIR}/${NAME}/
         cd $REPO_DIR
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         message: 'updated keydb'
-        file_pattern: '*.tgz'
+        file_pattern: '*.txz'
