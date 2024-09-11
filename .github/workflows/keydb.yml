@@ -134,6 +134,7 @@ jobs:
             exit 1
         esac
         EOF
+        chmod 755 /tmp/${NAME}/etc/rc.d/rc.${NAME}.new
         echo "================================= Creating slack-desc ================================="
         cat << 'EOF' > /tmp/${NAME}/install/slack-desc
         # HOW TO EDIT THIS FILE:
