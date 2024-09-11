@@ -32,7 +32,7 @@ jobs:
         rm Makefile
         wget https://raw.githubusercontent.com/Snapchat/KeyDB/main/src/Makefile
         cd ..
-        make
+        make CFLAGS="-DUSE_PROCESSOR_CLOCK" DEBUG= OPTIMIZATION=-O3\ -flto
     - name: Prepare package
       run: |
         echo "================================= pwd ================================="
