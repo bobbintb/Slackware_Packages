@@ -184,9 +184,9 @@ jobs:
           config $NEW
         }
         
-        config etc/keydb/keydb.conf.new
-        config etc/keydb/sentinel.conf.new
-        config etc/logrotate.d/keydb.new
+        perms etc/keydb/keydb.conf.new
+        perms etc/keydb/sentinel.conf.new
+        perms etc/logrotate.d/keydb.new
         perms etc/rc.d/rc.keydb.new
         EOF
         sudo chmod 755 /tmp/${NAME}/install/doinst.sh
