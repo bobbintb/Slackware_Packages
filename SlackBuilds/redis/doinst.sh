@@ -22,7 +22,7 @@ perms() {
   config $NEW
 }
 
-perms etc/redis/redis.conf.new
-perms etc/redis/sentinel.conf.new
-perms etc/logrotate.d/redis.new
+config etc/redis/redis.conf.new
+config etc/redis/sentinel.conf.new
+config etc/logrotate.d/redis.new
 perms etc/rc.d/rc.redis.new
