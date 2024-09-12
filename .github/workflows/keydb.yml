@@ -206,7 +206,7 @@ jobs:
         sudo rm pkgtools-15.0-noarch-42.txz
         sudo tree ./
         cd ./${NAME}
-        sudo ../makepkg -l y -c n ../${NAME}-${VERSION}-x86_64-1loom.txz
+        sudo ../makepkg -l y -c y ../${NAME}-${VERSION}-x86_64-1loom.txz
         cd ..
         cp *.txz ${REPO_DIR}/${NAME}/
         cd $REPO_DIR
