@@ -188,12 +188,6 @@ jobs:
         config etc/keydb/sentinel.conf.new
         config etc/logrotate.d/keydb.new
         perms etc/rc.d/rc.keydb.new
-        ( cd usr/bin ; rm -rf keydb-check-aof )
-        ( cd usr/bin ; ln -sf keydb-server keydb-check-aof )
-        ( cd usr/bin ; rm -rf keydb-check-rdb )
-        ( cd usr/bin ; ln -sf keydb-server keydb-check-rdb )
-        ( cd usr/bin ; rm -rf keydb-sentinel )
-        ( cd usr/bin ; ln -sf keydb-server keydb-sentinel )
         EOF
         sudo chmod 755 /tmp/${NAME}/install/doinst.sh
     - name: Move
@@ -212,7 +206,7 @@ jobs:
         sudo rm pkgtools-15.0-noarch-42.txz
         sudo tree ./
         cd ./${NAME}
-        sudo ../makepkg ../${NAME}-${VERSION}-x86_64-1loom.txz
+        sudo ../makepkg -l y -c n ../${NAME}-${VERSION}-x86_64-1loom.txz
         cd ..
         cp *.txz ${REPO_DIR}/${NAME}/
         cd $REPO_DIR
