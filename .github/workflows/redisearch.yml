@@ -35,18 +35,20 @@ jobs:
         # sed -i 's/RedisModuleEvent_ReplBackup/RedisModuleEvent_ReplAsyncLoad/g' src/notifications.c
         make build
         redisearch_path=$(find / -name redisearch.so)
+        echo "==============1================"
         find / -name redisearch.so
         cp ${redisearch_path} /tmp
         cd ..
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Build
+    - name: Move
       run: |
         echo "================================= Moving artifact ================================="
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
         git config --global --add safe.directory $REPO_DIR
         mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
+        echo "=============2================="
         redisearch_path=$(find / -name redisearch.so)
         find / -name redisearch.so
         mv ${redisearch_path} ${REPO_DIR}/${NAME}/${VERSION}
