@@ -33,7 +33,7 @@ jobs:
         wget https://raw.githubusercontent.com/Snapchat/KeyDB/main/src/Makefile
         cd ..
         echo "================================= Building ================================="
-        make CFLAGS="-DUSE_PROCESSOR_CLOCK" DEBUG=
+        make CFLAGS="-DUSE_PROCESSOR_CLOCK" BUILD_WITH_SYSTEMD=no USE_SYSTEMD=no DEBUG=
     - name: Prepare package
       run: |
         echo "================================= Creating directories and moving files ================================="
