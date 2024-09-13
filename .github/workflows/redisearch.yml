@@ -2,7 +2,7 @@ name: Build redisearch
 on:
   workflow_dispatch:
 env:
-  VERSION: "2.6.22"
+  VERSION: "2.6.22-1"
   NAME: "redisearch"
 jobs:
   slackware-job:
@@ -17,8 +17,8 @@ jobs:
     - name: Checkout RediSearch repo
       uses: actions/checkout@v4
       with:
-        repository: RediSearch/RediSearch
-        ref: 'v2.6.22'
+        repository: bobbintb/RediSearch
+        ref: 'v2.6.22-1'
         path: RediSearch
     - name: Build
       run: |
