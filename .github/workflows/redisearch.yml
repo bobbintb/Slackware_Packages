@@ -28,7 +28,7 @@ jobs:
         # sed -i 's/RedisModuleEvent_ReplBackup/RedisModuleEvent_ReplAsyncLoad/g' src/notifications.c
         make build
         redisearch_path=$(find / -name redisearch.so)
-        find / -name redisearch.so
+        sudo find / -name redisearch.so
         cp ${redisearch_path} /tmp
         cd ..
     - name: Checkout
