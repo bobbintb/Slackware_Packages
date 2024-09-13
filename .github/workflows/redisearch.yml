@@ -12,13 +12,7 @@ jobs:
     - name: Update and install packages
       run: |
         echo "================================= Updating packages ================================="
-        CONF_FILE="/etc/slackpkg/slackpkg.conf"
-        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
-        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
-        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
-        slackpkg update <<< y
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/l/boost-1.86.0-x86_64-1.txz
-        upgradepkg boost-1.86.0-x86_64-1.txz
+        sudo apt upgrade -y
         echo "================================= Checkout RediSearch repo ================================="
     - name: Checkout RediSearch repo
       uses: actions/checkout@v4
