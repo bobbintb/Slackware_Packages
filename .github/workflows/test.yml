@@ -1,4 +1,4 @@
-name: Build keydb
+name: test
 on:
   workflow_dispatch:
 env:
@@ -17,3 +17,5 @@ jobs:
         sudo apt update -y
         sudo apt upgrade -y
         curl --version
+        wget https://answers.launchpad.net/ubuntu/+source/curl/8.8.0-1ubuntu1/+build/28489471/+files/curl_8.8.0-1ubuntu1_amd64.deb
+        apt install ./curl_8.8.0-1ubuntu1_amd64.deb
