@@ -19,3 +19,5 @@ jobs:
         curl --version
         wget https://answers.launchpad.net/ubuntu/+source/curl/8.8.0-1ubuntu1/+build/28489471/+files/curl_8.8.0-1ubuntu1_amd64.deb
         sudo apt install ./curl_8.8.0-1ubuntu1_amd64.deb
+        wget http://launchpadlibrarian.net/731670510/libcurl4t64_8.8.0-1ubuntu1_amd64.deb
+        sudo apt install ./libcurl4t64_8.8.0-1ubuntu1_amd64.deb
