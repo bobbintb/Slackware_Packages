@@ -1,0 +1,19 @@
+name: Build keydb
+on:
+  workflow_dispatch:
+env:
+  VERSION: "6.3.4"
+  NAME: "keydb"
+jobs:
+  ubuntu-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Update and install packages
+      run: |
+        echo "================================= Updating packages ================================="
+        sudo apt update -y
+        sudo apt upgrade -y
+        curl --version
