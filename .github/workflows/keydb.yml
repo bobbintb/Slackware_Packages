@@ -85,12 +85,12 @@ jobs:
         
         keydb_start() {
           if [ ! -r $CONF ]; then
-            echo "$CONF does not appear to exist.  Abort."
+            echo "$CONF does not appear to exist. Abort."
             exit 1
           fi
         
           if [ -s $PIDFILE ]; then
-            echo "KeyDB appears to be already running?"
+            echo "KeyDB appears to be already running on PID ${PIDFILE}."
             exit 1
           fi
         
