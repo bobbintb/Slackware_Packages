@@ -16,7 +16,7 @@ jobs:
       run: |
         echo "================================= Updating packages ================================="
         yum update
-        yum install git wget openssl-devel g++ libuuid-devel curl-devel libatomic zlib-devel sudo xz tree
+        yum install git wget openssl-devel g++ libuuid-devel curl-devel libatomic zlib-devel sudo xz xz-libs xz-devel tree
         wget https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/j/jemalloc-5.2.1-2.el9.x86_64.rpm
         wget https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/j/jemalloc-devel-5.2.1-2.el9.x86_64.rpm
         wget https://rpmfind.net/linux/openmandriva/5.0/repository/x86_64/unsupported/release/lua5.1-5.1.5-10-omv4002.x86_64.rpm
