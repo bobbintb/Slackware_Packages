@@ -228,6 +228,9 @@ jobs:
         cp *.txz ${REPO_DIR}/${NAME}/
         cd $REPO_DIR
         git config --global --add safe.directory '*'
+        echo "================================= test ================================="
+        pwd
+        find / -name *.txz
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
