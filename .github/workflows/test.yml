@@ -227,7 +227,7 @@ jobs:
         cd ..
         cp *.txz ${REPO_DIR}/${NAME}/
         cd $REPO_DIR
-        #git config --global --add safe.directory '*'
+        git config --global --add safe.directory '*'
         echo "================================= test ================================="
         pwd
         find / -name *.txz
