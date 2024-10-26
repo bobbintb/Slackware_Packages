@@ -4,7 +4,6 @@ on:
 env:
   VERSION: "6.3.4"
   NAME: "keydb"
-  
 jobs:
   slackware-job:
     permissions: write-all
@@ -227,6 +226,7 @@ jobs:
         cd ..
         cp *.txz ${REPO_DIR}/${NAME}/
         cd $REPO_DIR
+        git config --global --add safe.directory '*'
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
