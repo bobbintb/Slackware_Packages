@@ -22,7 +22,7 @@ jobs:
         sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
         slackpkg update <<< y
         slackpkg upgrade-all
-        slackpkg install jemalloc infozip libssh2
+        slackpkg install jemalloc infozip libssh2 sudo
         wget https://slackers.it/repository/slackware64-current/luarocks/luarocks-3.11.1-x86_64-1cf.txz
         wget https://slackware.uk/people/alien/sbrepos/15.0/x86_64/lua/lua-5.1.5-x86_64-3alien.tgz
         installpkg *.tgz
