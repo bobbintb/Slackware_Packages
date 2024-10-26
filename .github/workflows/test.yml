@@ -1,51 +1,56 @@
-name: Build keydb
+name: Build KeyDB autoslackpack
 on:
   workflow_dispatch:
 env:
   VERSION: "6.3.4"
   NAME: "keydb"
+  
 jobs:
-  ubuntu-job:
+  slackware-job:
     permissions: write-all
     runs-on: ubuntu-latest
-    container: oraclelinux:9
+    container: spaceinvaderone/auto_slack_pack
     steps:
     - name: Checkout
       uses: actions/checkout@v4
     - name: Update and install packages
       run: |
         echo "================================= Updating packages ================================="
-        yum update
-        yum install git wget openssl-devel g++ libuuid-devel curl-devel libatomic zlib-devel sudo xz tree which
-        wget https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/j/jemalloc-5.2.1-2.el9.x86_64.rpm
-        wget https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/j/jemalloc-devel-5.2.1-2.el9.x86_64.rpm
-        wget https://rpmfind.net/linux/openmandriva/5.0/repository/x86_64/unsupported/release/lua5.1-5.1.5-10-omv4002.x86_64.rpm
-        wget https://rpmfind.net/linux/openmandriva/5.0/repository/x86_64/unsupported/release/lib64lua5.1-5.1.5-10-omv4002.x86_64.rpm
-        wget https://rpmfind.net/linux/openmandriva/5.0/repository/x86_64/unsupported/release/lib64lua5.1-devel-5.1.5-10-omv4002.x86_64.rpm
-        wget https://dl.fedoraproject.org/pub/epel/9/Everything/x86_64/Packages/l/luarocks-3.9.2-5.el9.noarch.rpm
-        yum install jemalloc-5.2.1-2.el9.x86_64.rpm
-        yum install jemalloc-devel-5.2.1-2.el9.x86_64.rpm
-        yum install lua5.1-5.1.5-10-omv4002.x86_64.rpm
-        yum install lib64lua5.1-5.1.5-10-omv4002.x86_64.rpm
-        yum install lib64lua5.1-devel-5.1.5-10-omv4002.x86_64.rpm
-        yum install luarocks-3.9.2-5.el9.noarch.rpm
-        ln -s /usr/bin/lua5.1 /usr/bin/lua-5.1
-        wget https://sourceforge.net/projects/luabinaries/files/5.1.5/Linux%20Libraries/lua-5.1.5_Linux515_64_lib.tar.gz
-        tar -xzvf lua-5.1.5_Linux515_64_lib.tar.gz
-        cp liblua5.1.a /usr/lib64/liblua.a
-        luarocks --lua-version 5.1 install lua-cmsgpack
-        luarocks --lua-version 5.1 install lua-cjson
-        luarocks --lua-version 5.1 install struct
-        luarocks --lua-version 5.1 install luabitop
-        luarocks --lua-version 5.1 install luastatic
+        CONF_FILE="/etc/slackpkg/slackpkg.conf"
+        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
+        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
+        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
+        slackpkg update <<< y
+        slackpkg upgrade-all
+        slackpkg install jemalloc infozip libssh2
+        wget https://slackers.it/repository/slackware64-current/luarocks/luarocks-3.11.1-x86_64-1cf.txz
+        wget https://slackware.uk/people/alien/sbrepos/15.0/x86_64/lua/lua-5.1.5-x86_64-3alien.tgz
+        installpkg *.tgz
+        installpkg *.txz
+        mkdir /usr/include/lua5.1
+        ln /usr/include/lua.h /usr/include/lua5.1/lua.h
+        ln /usr/include/lua.hpp /usr/include/lua5.1/lua.hpp
+        ln /usr/include/luaconf.h /usr/include/lua5.1/luaconf.h
+        ln /usr/include/lualib.h /usr/include/lua5.1/lualib.h
+        luarocks install lua-cjson
+        luarocks install struct
+        luarocks install lua-cmsgpack
+        luarocks install luabitop
+        luarocks install luastatic
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
         git clone --depth 1 --branch v6.3.4 https://github.com/bobbintb/KeyDB.git
-        cd KeyDB
+        cd KeyDB/
         git submodule init && git submodule update
+        echo "================================= Fixing compiler warnings ================================="
+        sed -i -e "s/\*((char\*)-1) = 'x';/\*(volatile char\*)-1 = 'x';/g" src/debug.cpp
+        sed -i -e "s/\*((char\*)-1) = 'x';/\*(volatile char\*)-1 = 'x';/g" src/redis-cli.c
+        sed -i -e "s/\*((char\*)-1) = 'x';/\*(volatile char\*)-1 = 'x';/g" src/redis-benchmark.cpp
+        sed -i -e "s/\*((char\*)-1) = 'x';/\*(volatile char\*)-1 = 'x';/g" src/keydb-diagnostic-tool.cpp
+        sed -i -e "s/\*((char\*)-1) = 'x';/\*(volatile char\*)-1 = 'x';/g" src/fastlock.cpp
         echo "================================= Building ================================="
-        make USE_SYSTEMD=no USE_SYSTEM_JEMALLOC=yes USE_SYSTEM_LUA=yes LDFLAGS+="/usr/lib64/lua/5.1/bit.so" LDFLAGS+="/usr/lib64/lua/5.1/cjson.so" LDFLAGS+="/usr/lib64/lua/5.1/cmsgpack.so" LDFLAGS+="/usr/lib64/lua/5.1/struct.so" LDFLAGS+="/usr/lib64/liblua.a" DEBUG=
+        make USE_SYSTEMD=no USE_SYSTEM_JEMALLOC=yes USE_SYSTEM_LUA=yes LDFLAGS+="/usr/lib/lua/5.1/bit.so" LDFLAGS+="/usr/lib/lua/5.1/cjson.so" LDFLAGS+="/usr/lib/lua/5.1/cmsgpack.so" LDFLAGS+="/usr/lib/lua/5.1/struct.so" LDFLAGS+="/usr/lib64/liblua.a" DEBUG=
     - name: Prepare package
       run: |
         echo "================================= Creating directories and moving files ================================="
@@ -217,15 +222,10 @@ jobs:
         sudo rm -dr var
         sudo rm pkgtools-15.0-noarch-42.txz
         sudo tree ./
-        echo "================================= test 1 ================================="
         cd ./${NAME}
-        echo "================================= test 2 ================================="
         sudo ../makepkg -l y -c n ../${NAME}-${VERSION}-x86_64-1loom.txz
-        echo "================================= test 3 ================================="
         cd ..
-        echo "================================= test 4 ================================="
         cp *.txz ${REPO_DIR}/${NAME}/
-        echo "================================= test 5 ================================="
         cd $REPO_DIR
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
