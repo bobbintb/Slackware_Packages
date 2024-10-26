@@ -26,6 +26,7 @@ jobs:
         wget https://slackware.uk/people/alien/sbrepos/15.0/x86_64/lua/lua-5.1.5-x86_64-3alien.tgz
         installpkg *.tgz
         installpkg *.txz
+        rm *.txz
         mkdir /usr/include/lua5.1
         ln /usr/include/lua.h /usr/include/lua5.1/lua.h
         ln /usr/include/lua.hpp /usr/include/lua5.1/lua.hpp
@@ -219,7 +220,7 @@ jobs:
         sudo rm -dr sbin
         sudo rm -dr usr
         sudo rm -dr var
-        sudo rm *.txz
+        sudo rm pkgtools-15.0-noarch-42.txz
         sudo tree ./
         cd ./${NAME}
         sudo ../makepkg -l y -c n ../${NAME}-${VERSION}-x86_64-1loom.txz
