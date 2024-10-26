@@ -204,8 +204,6 @@ jobs:
         sudo chmod 755 /tmp/${NAME}/install/doinst.sh
     - name: Move
       run: |
-        echo $PATH
-        export PATH=$PATH:/usr/bin/xz
         echo "================================= Moving artifact ================================="
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/home/runner/work/${REPO}/${REPO}"
@@ -219,10 +217,15 @@ jobs:
         sudo rm -dr var
         sudo rm pkgtools-15.0-noarch-42.txz
         sudo tree ./
+        echo "================================= test 1 ================================="
         cd ./${NAME}
+        echo "================================= test 2 ================================="
         sudo ../makepkg -l y -c n ../${NAME}-${VERSION}-x86_64-1loom.txz
+        echo "================================= test 3 ================================="
         cd ..
+        echo "================================= test 4 ================================="
         cp *.txz ${REPO_DIR}/${NAME}/
+        echo "================================= test 5 ================================="
         cd $REPO_DIR
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
