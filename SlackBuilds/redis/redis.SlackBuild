@@ -124,7 +124,7 @@ install -Dm0644 sentinel.conf $PKG/etc/redis/sentinel.conf.new
 install -dm0700 $PKG/var/lib/redis
 
 # Install init script.
-install -Dm644 $CWD/files/rc.redis /etc/rc.d/rc.redis.new
+install -Dm644 $CWD/files/rc.redis $PKG/etc/rc.d/rc.redis.new
 
 # Install logrotate script.
 install -Dm644 $CWD/files/redis.logrotate $PKG/etc/logrotate.d/redis.new
