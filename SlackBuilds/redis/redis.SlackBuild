@@ -98,8 +98,7 @@ if [ -e $CWD/patches/ ]; then
 fi
 
 make CFLAGS="$SLKCFLAGS"
-# make PREFIX=$PKG/usr install
-make PREFIX=$PKG install
+make PREFIX=$PKG/usr install
 
 # Don't ship .la files:
 rm -f $PKG/{,usr/}lib${LIBDIRSUFFIX}/*.la
