@@ -22,7 +22,7 @@ jobs:
         sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-current\//' /etc/slackpkg/mirrors
         slackpkg update <<< y
         slackpkg upgrade-all
-        slackpkg install sqlite libedit
+        slackpkg install libedit sqlite
         wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/slackrepo/slackrepo-20240823-noarch-1_SBo.txz
         installpkg *.txz
         rm *.txz
