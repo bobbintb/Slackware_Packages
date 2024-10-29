@@ -8,7 +8,9 @@ jobs:
   slackware-job:
     permissions: write-all
     runs-on: ubuntu-latest
-    container: spaceinvaderone/auto_slack_pack
+    container:
+      image: spaceinvaderone/auto_slack_pack
+      options: --privileged
     steps:
     - name: Checkout
       uses: actions/checkout@v4
