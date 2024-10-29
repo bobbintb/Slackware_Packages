@@ -1,0 +1,27 @@
+name: Build ValKey
+on:
+  workflow_dispatch:
+env:
+  VERSION: "8.0.1"
+  NAME: "valkey"
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    container: spaceinvaderone/auto_slack_pack
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Update and install packages
+      run: |
+        echo "================================= Updating packages ================================="
+        CONF_FILE="/etc/slackpkg/slackpkg.conf"
+        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
+        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
+        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
+        sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-current\//' /etc/slackpkg/mirrors
+        slackpkg update <<< y
+        slackpkg upgrade-all
+        slackpkg install sqlite libedit
+        echo "OPT_CHROOT='n'" >> /root/.slackreporc
+        slackrepo update
