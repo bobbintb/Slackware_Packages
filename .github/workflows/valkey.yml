@@ -23,5 +23,14 @@ jobs:
         slackpkg update <<< y
         slackpkg upgrade-all
         slackpkg install sqlite libedit
+        wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/slackrepo/slackrepo-20240823-noarch-1_SBo.txz
+        installpkg *.txz
+        rm *.txz
         echo "OPT_CHROOT='n'" >> /root/.slackreporc
         slackrepo update
+        slackrepo build ${NAME}
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated valkey'
+        file_pattern: '*.txz'
