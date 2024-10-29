@@ -7,7 +7,7 @@ env:
 jobs:
   slackware-job:
     permissions: write-all
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - name: Update and install packages
       run: |
