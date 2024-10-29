@@ -13,6 +13,7 @@ jobs:
       run: |
         echo "================================= Updating packages ================================="
         sudo apt upgrade -y
+        sudo apt install libboost-all-dev -y
         echo "================================= Checkout RediSearch repo ================================="
     - name: Checkout RediSearch repo
       uses: actions/checkout@v4
