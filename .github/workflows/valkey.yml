@@ -31,6 +31,7 @@ jobs:
         touch /root/.slackreporc
         echo "OPT_CHROOT='n'" >> /root/.slackreporc
         slackrepo update
+        pwd
         slackrepo build ${NAME}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
