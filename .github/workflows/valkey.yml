@@ -28,6 +28,7 @@ jobs:
         wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/slackrepo/slackrepo-20240823-noarch-1_SBo.txz
         installpkg *.txz
         rm *.txz
+        touch /root/.slackreporc
         echo "OPT_CHROOT='n'" >> /root/.slackreporc
         slackrepo update
         slackrepo build ${NAME}
