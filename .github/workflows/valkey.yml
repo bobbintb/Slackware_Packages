@@ -33,6 +33,7 @@ jobs:
         echo 'TMP="/__w/Slackware_Packages/Slackware_Packages/tmp/%REPO%"' >> /root/.slackreporc
         slackrepo update
         echo "================================= ls ================================="
+        cat /root/.slackreporc
         ls -ls /tmp
         pwd
         slackrepo build ${NAME}
