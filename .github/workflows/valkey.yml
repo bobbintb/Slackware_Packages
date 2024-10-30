@@ -31,7 +31,7 @@ jobs:
         touch /root/.slackreporc
         echo "OPT_CHROOT='n'" >> /root/.slackreporc
         slackrepo update
-        mkdir /tmp
+        ls -ls /tmp
         pwd
         slackrepo build ${NAME}
     - name: Commit changes
