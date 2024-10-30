@@ -24,7 +24,7 @@ jobs:
     - name: Build
       run: |
         echo "================================= Building RediSearch ================================="
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh <<< p
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
         . "$HOME/.cargo/env"
         cargo build --release
         cd RedisJSON/
