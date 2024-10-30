@@ -24,19 +24,11 @@ jobs:
         sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-15.0\//' /etc/slackpkg/mirrors
         slackpkg update <<< y
         slackpkg upgrade-all
-        slackpkg install libedit sqlite
-        wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/slackrepo/slackrepo-20240823-noarch-1_SBo.txz
-        installpkg *.txz
-        rm *.txz
-        touch /root/.slackreporc
-        echo "OPT_CHROOT='n'" >> /root/.slackreporc
-        echo 'TMP="/__w/Slackware_Packages/Slackware_Packages/tmp/%REPO%"' >> /root/.slackreporc
-        slackrepo update
-        echo "================================= ls ================================="
-        cat /root/.slackreporc
-        ls -ls /tmp
-        pwd
-        slackrepo build ${NAME}
+        wget https://github.com/sbopkg/sbopkg/releases/download/0.38.2/sbopkg-0.38.2-noarch-1_wsr.tgz
+        installpkg *.tgz
+        rm *.tgz
+        sbopkg -r
+        sbopkg -b ${NAME}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
