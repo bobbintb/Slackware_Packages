@@ -13,7 +13,7 @@ jobs:
       run: |
         echo "================================= Updating packages ================================="
         sudo apt upgrade -y
-        sudo apt install libboost-all-dev -y
+        sudo apt install libclang-dev -y
         echo "================================= Checkout RediSearch repo ================================="
     - name: Checkout RedisJSON repo
       uses: actions/checkout@v4
@@ -24,9 +24,8 @@ jobs:
     - name: Build
       run: |
         echo "================================= Building RediSearch ================================="
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh <<< p
         . "$HOME/.cargo/env"
-        slackpkg install llvm
         cargo build --release
         cd RedisJSON/
         cp /home/runner/work/Slackware_Packages/Slackware_Packages/RedisJSON/target/release/build/librejson.so /tmp
