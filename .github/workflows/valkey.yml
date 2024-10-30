@@ -27,8 +27,9 @@ jobs:
         wget https://github.com/sbopkg/sbopkg/releases/download/0.38.2/sbopkg-0.38.2-noarch-1_wsr.tgz
         installpkg *.tgz
         rm *.tgz
-        sbopkg -r
+        sbopkg -r -q
         sbopkg -b ${NAME} <<< p
+        find / -name *.tgz
         git config --global --add safe.directory '*'
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
