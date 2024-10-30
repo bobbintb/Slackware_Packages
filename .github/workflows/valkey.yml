@@ -28,7 +28,7 @@ jobs:
         installpkg *.tgz
         rm *.tgz
         sbopkg -r
-        sbopkg -b ${NAME}
+        sbopkg -b ${NAME} <<< p
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
