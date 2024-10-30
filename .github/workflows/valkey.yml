@@ -31,6 +31,7 @@ jobs:
         touch /root/.slackreporc
         echo "OPT_CHROOT='n'" >> /root/.slackreporc
         slackrepo update
+        echo "================================= ls ================================="
         ls -ls /tmp
         pwd
         slackrepo build ${NAME}
