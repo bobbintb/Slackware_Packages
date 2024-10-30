@@ -30,6 +30,7 @@ jobs:
         rm *.txz
         touch /root/.slackreporc
         echo "OPT_CHROOT='n'" >> /root/.slackreporc
+        echo 'TMP="/__w/Slackware_Packages/Slackware_Packages/tmp/%REPO%"' >> /root/.slackreporc
         slackrepo update
         echo "================================= ls ================================="
         ls -ls /tmp
