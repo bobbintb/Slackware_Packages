@@ -26,8 +26,8 @@ jobs:
         echo "================================= Building RediSearch ================================="
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
         . "$HOME/.cargo/env"
-        cargo build --release
         cd RedisJSON/
+        cargo build --release
         cp /home/runner/work/Slackware_Packages/Slackware_Packages/RedisJSON/target/release/build/librejson.so /tmp
         cd ..
     - name: Checkout
