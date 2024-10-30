@@ -29,6 +29,7 @@ jobs:
         echo "================================= Downloading source code ================================="
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
+        mkdir -p ${REPO_DIR}/${NAME}
         cd ./SlackBuilds/$NAME
         wget https://github.com/sbopkg/sbopkg/releases/download/0.38.2/sbopkg-0.38.2-noarch-1_wsr.tgz
         installpkg *.tgz
