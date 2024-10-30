@@ -29,7 +29,7 @@ jobs:
         cd RedisJSON/
         cargo build --release
         find / -name librejson.so
-        cp /home/runner/work/Slackware_Packages/Slackware_Packages/RedisJSON/target/release/build/librejson.so /tmp
+        cp /home/runner/work/Slackware_Packages/Slackware_Packages/RedisJSON/target/release/librejson.so /tmp
         cd ..
     - name: Checkout
       uses: actions/checkout@v4
