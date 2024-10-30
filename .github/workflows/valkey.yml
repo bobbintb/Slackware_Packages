@@ -39,7 +39,6 @@ jobs:
         sbopkg -b ${NAME} <<< p
         find / -name *.tgz
         git config --global --add safe.directory $REPO_DIR
-        sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
         mkdir ${REPO_DIR}/${NAME}
         cp /tmp/*.tgz ${REPO_DIR}/${NAME}
     - name: Commit changes
