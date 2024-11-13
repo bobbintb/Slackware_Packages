@@ -55,7 +55,8 @@ jobs:
         
         find / -name *.txz
         git config --global --add safe.directory $REPO_DIR
-        cp /tmp/*.txz ${REPO_DIR}/${NAME}
+        
+        mv *.txz ${REPO_DIR}/${NAME}
         rm -dr ../tmp
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
