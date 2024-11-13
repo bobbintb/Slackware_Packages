@@ -49,14 +49,15 @@ jobs:
         makepkg ../${repo}/"${NAME}-v${VERSION}".txz <<< y
         popd
         
-        find / -name $FILE
         git config --global --add safe.directory $REPO_DIR
+
+        echo "find txz"
+        find / -name $FILE
+        echo "current dir
         pwd
         mv ${NAME}-v${VERSION}.txz ${ARCHIVE_DIR}
-        find / -name *.txz
-        pwd
-        echo "testtesttest"
-        ls -ls ${REPO_DIR}/${NAME}
+        echo "ARCHIVE_DIR"
+        ls -ls ${ARCHIVE_DIR}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
