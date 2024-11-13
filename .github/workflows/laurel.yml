@@ -1,0 +1,69 @@
+name: Build laurel
+on:
+  workflow_dispatch:
+env:
+  VERSION: "0.6.3"
+  NAME: "laurel"
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    container:
+      image: spaceinvaderone/auto_slack_pack
+      options: --privileged
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Update and install packages
+      run: |
+        echo "================================= Updating packages ================================="
+        CONF_FILE="/etc/slackpkg/slackpkg.conf"
+        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
+        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
+        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
+        sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-15.0\//' /etc/slackpkg/mirrors
+        slackpkg update <<< y
+        slackpkg upgrade-all
+    - name: Build
+      run: |
+        echo "================================= Downloading source code ================================="
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        mkdir -p ${REPO_DIR}/${NAME}
+        wget https://github.com/threathunters-io/laurel/releases/download/v0.6.3/laurel-v0.6.3-x86_64-glibc.tar.gz
+        tar -xf laurel-v0.6.3-x86_64-glibc.tar.gz
+                
+        echo "Copying files to temporary folder to archive..."
+
+        dest="../tmp/usr/local/sbin/${name}"
+        mkdir -p "$dest"
+        mv ./${name} "$dest"
+        
+        dest="../tmp/etc/audit/plugins.d/"
+        mkdir -p "$dest"
+        wget https://raw.githubusercontent.com/threathunters-io/laurel/refs/heads/master/etc/audit/plugins.d/laurel.conf
+        mv ./laurel.conf "$dest"
+        
+        dest="../tmp/etc/laurel"
+        mkdir -p "$dest"
+        wget https://raw.githubusercontent.com/threathunters-io/laurel/refs/heads/master/etc/laurel/config.toml
+        mv ./config.toml "$dest"
+        
+        pushd ../tmp
+        makepkg ../${repo}/"${name}".txz <<< n
+        popd
+        rm -dr ../tmp
+        }
+        
+        installpkg *.tgz
+        rm *.tgz
+        sbopkg -r -q
+        sbopkg -b ${NAME} <<< p
+        find / -name *.tgz
+        git config --global --add safe.directory $REPO_DIR
+        cp /tmp/*.tgz ${REPO_DIR}/${NAME}
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated valkey'
+        file_pattern: '*.tgz'
