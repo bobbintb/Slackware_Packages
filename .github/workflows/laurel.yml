@@ -51,7 +51,7 @@ jobs:
         
         git config --global --add safe.directory $REPO_DIR
 
-        echo "find txz"
+        echo "find ${FILE}"
         find / -name $FILE
         echo "current dir
         pwd
