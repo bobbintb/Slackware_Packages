@@ -53,17 +53,12 @@ jobs:
         makepkg ../${repo}/"${NAME}".txz <<< n
         popd
         rm -dr ../tmp
-        }
         
-        installpkg *.tgz
-        rm *.tgz
-        sbopkg -r -q
-        sbopkg -b ${NAME} <<< p
-        find / -name *.tgz
+        find / -name *.txz
         git config --global --add safe.directory $REPO_DIR
-        cp /tmp/*.tgz ${REPO_DIR}/${NAME}
+        cp /tmp/*.txz ${REPO_DIR}/${NAME}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        commit_message: 'updated valkey'
-        file_pattern: '*.tgz'
+        commit_message: 'updated laurel'
+        file_pattern: '*.txz'
