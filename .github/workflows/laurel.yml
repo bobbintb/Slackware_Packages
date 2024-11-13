@@ -23,6 +23,7 @@ jobs:
         mkdir -p ${ARCHIVE_DIR}
         echo "Archive dir"
         echo ${ARCHIVE_DIR}
+        cd ${ARCHIVE_DIR}
         echo "Current dir"
         pwd
         wget https://github.com/threathunters-io/laurel/releases/download/v${VERSION}/${NAME}-v${VERSION}-x86_64-glibc.tar.gz
