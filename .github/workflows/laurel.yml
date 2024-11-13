@@ -35,9 +35,9 @@ jobs:
                 
         echo "Copying files to temporary folder to archive..."
 
-        dest="../tmp/usr/local/sbin/${name}"
+        dest="../tmp/usr/local/sbin/${NAME}"
         mkdir -p "$dest"
-        mv ./${name} "$dest"
+        mv ./${NAME} "$dest"
         
         dest="../tmp/etc/audit/plugins.d/"
         mkdir -p "$dest"
@@ -50,7 +50,7 @@ jobs:
         mv ./config.toml "$dest"
         
         pushd ../tmp
-        makepkg ../${repo}/"${name}".txz <<< n
+        makepkg ../${repo}/"${NAME}".txz <<< n
         popd
         rm -dr ../tmp
         }
