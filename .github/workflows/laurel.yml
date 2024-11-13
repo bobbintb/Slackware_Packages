@@ -19,7 +19,12 @@ jobs:
         echo "================================= Downloading source code ================================="
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
-        mkdir -p ${REPO_DIR}/${NAME}
+        ARCHIVE_DIR=${REPO_DIR}/${NAME}
+        mkdir -p ${ARCHIVE_DIR}
+        echo "Archive dir"
+        echo ${ARCHIVE_DIR}
+        echo "Current dir"
+        pwd
         wget https://github.com/threathunters-io/laurel/releases/download/v0.6.3/laurel-v0.6.3-x86_64-glibc.tar.gz
         tar -xf laurel-v0.6.3-x86_64-glibc.tar.gz
                 
