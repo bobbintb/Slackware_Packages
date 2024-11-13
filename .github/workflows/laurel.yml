@@ -50,12 +50,13 @@ jobs:
         mv ./config.toml "$dest"
         
         pushd ../tmp
+        FILE="${NAME}-v${VERSION}".txz
         makepkg ../${repo}/"${NAME}-v${VERSION}".txz <<< n
         popd
         
-        find / -name *.txz
+        find / -name $FILE
         git config --global --add safe.directory $REPO_DIR
-        mv ../*.txz ${REPO_DIR}/${NAME}
+        mv ../$FILE ${REPO_DIR}/${NAME}
         find / -name *.txz
         pwd
     - name: Commit changes
