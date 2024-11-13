@@ -50,7 +50,7 @@ jobs:
         find / -name *.txz
         pwd
         echo "testtesttest"
-        echo ls -ls ${REPO_DIR}/${NAME}
+        ls -ls ${REPO_DIR}/${NAME}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
