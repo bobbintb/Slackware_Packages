@@ -56,7 +56,7 @@ jobs:
         pwd
         echo "find file"
         find / -name *.txz
-        mv ${NAME}-v${VERSION}.txz ${ARCHIVE_DIR}
+        # mv ${NAME}-v${VERSION}.txz ${ARCHIVE_DIR}
         echo "ARCHIVE_DIR"
         ls -ls ${ARCHIVE_DIR}
     - name: Commit changes
