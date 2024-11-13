@@ -51,8 +51,6 @@ jobs:
         
         git config --global --add safe.directory $REPO_DIR
 
-        echo "find ${FILE}"
-        find / -name $FILE
         echo "current dir
         pwd
         mv ${NAME}-v${VERSION}.txz ${ARCHIVE_DIR}
