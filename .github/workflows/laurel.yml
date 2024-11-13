@@ -55,7 +55,7 @@ jobs:
         
         find / -name *.txz
         git config --global --add safe.directory $REPO_DIR
-        
+        pwd
         mv *.txz ${REPO_DIR}/${NAME}
         rm -dr ../tmp
     - name: Commit changes
