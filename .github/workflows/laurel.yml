@@ -46,7 +46,7 @@ jobs:
         
         find / -name $FILE
         git config --global --add safe.directory $REPO_DIR
-        mv ../$FILE ${REPO_DIR}/${NAME}
+        mv /__w/Slackware_Packages/laurel-v0.6.3.txz ${REPO_DIR}/${NAME}
         find / -name *.txz
         pwd
     - name: Commit changes
