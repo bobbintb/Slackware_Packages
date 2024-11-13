@@ -25,33 +25,33 @@ jobs:
         echo ${ARCHIVE_DIR}
         echo "Current dir"
         pwd
-        wget https://github.com/threathunters-io/laurel/releases/download/v0.6.3/laurel-v0.6.3-x86_64-glibc.tar.gz
-        tar -xf laurel-v0.6.3-x86_64-glibc.tar.gz
+        wget https://github.com/threathunters-io/laurel/releases/download/v${VERSION}/${NAME}-v${VERSION}-x86_64-glibc.tar.gz
+        tar -xf ${NAME}-v${VERSION}-x86_64-glibc.tar.gz ${NAME}
                 
         echo "Copying files to temporary folder to archive..."
 
-        dest="../tmp/usr/local/sbin/${NAME}"
+        dest="./tmp/usr/local/sbin/${NAME}"
         mkdir -p "$dest"
         mv ./${NAME} "$dest"
         
-        dest="../tmp/etc/audit/plugins.d/"
+        dest="./tmp/etc/audit/plugins.d/"
         mkdir -p "$dest"
         wget https://raw.githubusercontent.com/threathunters-io/laurel/refs/heads/master/etc/audit/plugins.d/laurel.conf
         mv ./laurel.conf "$dest"
         
-        dest="../tmp/etc/laurel"
+        dest="./tmp/etc/laurel"
         mkdir -p "$dest"
         wget https://raw.githubusercontent.com/threathunters-io/laurel/refs/heads/master/etc/laurel/config.toml
         mv ./config.toml "$dest"
         
-        pushd ../tmp
+        pushd ./tmp
         FILE="${NAME}-v${VERSION}".txz
         makepkg ../${repo}/"${NAME}-v${VERSION}".txz <<< y
         popd
         
         find / -name $FILE
         git config --global --add safe.directory $REPO_DIR
-        mv /__w/Slackware_Packages/laurel-v0.6.3.txz ${REPO_DIR}/${NAME}
+        # mv /__w/Slackware_Packages/${NAME}-v${VERSION}.txz ${REPO_DIR}/${NAME}
         find / -name *.txz
         pwd
         echo "testtesttest"
