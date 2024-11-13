@@ -51,7 +51,8 @@ jobs:
         
         find / -name $FILE
         git config --global --add safe.directory $REPO_DIR
-        # mv /__w/Slackware_Packages/${NAME}-v${VERSION}.txz ${REPO_DIR}/${NAME}
+        pwd
+        mv ${NAME}-v${VERSION}.txz ${ARCHIVE_DIR}
         find / -name *.txz
         pwd
         echo "testtesttest"
