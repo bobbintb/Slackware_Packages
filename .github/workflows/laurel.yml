@@ -31,7 +31,7 @@ jobs:
                 
         echo "Copying files to temporary folder to archive..."
 
-        dest="./tmp/usr/local/sbin/${NAME}/"
+        dest="./tmp/usr/local/sbin/"
         mkdir -p "$dest"
         mv ./${NAME} "$dest"
         
