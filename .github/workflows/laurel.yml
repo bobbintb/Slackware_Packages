@@ -50,7 +50,7 @@ jobs:
         mv ./config.toml "$dest"
         
         pushd ../tmp
-        makepkg ../${repo}/"${NAME}".txz <<< n
+        makepkg ../${repo}/"${NAME}-v${VERSION}".txz <<< n
         popd
         
         find / -name *.txz
