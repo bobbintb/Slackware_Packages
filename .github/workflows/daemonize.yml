@@ -30,6 +30,7 @@ jobs:
         mkdir -p ${REPO_DIR}/${NAME}
         cd ./SlackBuilds/$NAME
         wget $URL
+        mv release-${VERSION}.tar.gz ${NAME}-${VERSION}.tar.gz
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
         git config --global --add safe.directory $REPO_DIR
         cp /tmp/*.txz ${REPO_DIR}/${NAME}
