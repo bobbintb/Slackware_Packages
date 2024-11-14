@@ -1,16 +1,15 @@
 #!/bin/bash
 #
-# Redis startup script for Slackware Linux
+# LAUREL startup script for Slackware Linux
 
-PORT=6379
-SERV=/usr/bin/redis-server
-CLI=/usr/bin/redis-cli
-CONF=/etc/redis/redis.conf
-PIDFILE=$(grep pidfile $CONF | cut -d" " -f2)
+prog="LAUREL"
+SERV=/usr/local/sbin/laurel
+CONF=/etc/laurel/config.toml
+PIDFILE="/var/run/laurel.pid"
 
-redis_start() {
+start() {
   if [ ! -r $CONF ]; then
-    echo "$CONF does not appear to exist.  Abort."
+    echo "$CONF does not appear to exist. Abort."
     exit 1
   fi
 
@@ -20,10 +19,10 @@ redis_start() {
   fi
 
   echo "Starting LAUREL..."
-  $SERV $CONF
+  $SERV
 }
 
-redis_stop() {
+stop() {
   if [ ! -s $PIDFILE ]; then
     echo "$PIDFILE does not exist or is empty."
     exit 1
@@ -39,23 +38,34 @@ redis_stop() {
   echo " done"
 }
 
-redis_restart() {
-  redis_stop
-  sleep 3
-  redis_start
+restart() {
+  stop
+  start
+}
+
+status() {
+  PIDFILE=$(pidof $prog)
+  if [ "$PIDFILE" == "" ]; then
+    echo "$prog is not running!"
+  else
+    echo "$prog is running at pid(s) ${PIDFILE}."
+  fi
+  return $?
 }
 
 case "$1" in
   start)
-    redis_start
+    start
     ;;
   stop)
-    redis_stop
+    stop
     ;;
   restart)
-    redis_restart
+    restart
+    ;;
+  status)
+    status
     ;;
   *)
-    echo "Usage: $0 {start|stop|restart}"
-    exit 1
+    echo "Usage: $0 {start|stop|restart|status}"
 esac
