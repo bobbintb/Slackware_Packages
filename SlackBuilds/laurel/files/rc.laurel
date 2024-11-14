@@ -15,11 +15,11 @@ redis_start() {
   fi
 
   if [ -s $PIDFILE ]; then
-    echo "Redis appears to be already running?"
+    echo "LAUREL appears to be already running?"
     exit 1
   fi
 
-  echo "Starting Redis server..."
+  echo "Starting LAUREL..."
   $SERV $CONF
 }
 
@@ -30,7 +30,7 @@ redis_stop() {
   fi
 
   PID=$(cat $PIDFILE)
-  echo -n "Stopping Redis server..."
+  echo -n "Stopping LAUREL..."
   $CLI -p $PORT shutdown
   while [ -d /proc/$PID ]; do
     sleep 1
