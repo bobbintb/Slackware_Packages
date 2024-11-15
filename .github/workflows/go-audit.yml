@@ -25,7 +25,7 @@ jobs:
         echo ${ARCHIVE_DIR}
         cd ${ARCHIVE_DIR}
         wget https://github.com/slackhq/go-audit/releases/download/v${VERSION}/${NAME}-linux-amd64.tar.gz
-        tar -xf ${NAME}-v${VERSION}-x86_64-glibc.tar.gz ${NAME}
+        tar -xf ${NAME}-linux-amd64.tar.gz ${NAME}
                 
         echo "Copying files to temporary folder to archive..."
 
