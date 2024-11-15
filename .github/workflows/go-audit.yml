@@ -29,9 +29,19 @@ jobs:
                 
         echo "Copying files to temporary folder to archive..."
 
-        dest="./tmp/usr/local/sbin/"
+        dest="./tmp/usr/local/bin/"
         mkdir -p "$dest"
         mv ./${NAME} "$dest"
+
+        dest="./tmp/etc/"
+        mkdir -p "$dest"
+        wget https://raw.githubusercontent.com/slackhq/go-audit/refs/heads/master/go-audit.yaml.example
+        mv ./go-audit.yaml.example "$dest"go-audit.yaml
+
+        dest="./tmp/etc/rc.d/"
+        mkdir -p "$dest"
+        wget https://raw.githubusercontent.com/slackhq/go-audit/refs/heads/master/contrib/rh-sysv.go-audit.init
+        mv ./rh-sysv.go-audit.init "$dest"rc.${NAME}
         
         pushd ./tmp
         FILE="${NAME}-v${VERSION}".txz
