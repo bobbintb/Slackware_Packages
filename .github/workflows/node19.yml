@@ -1,9 +1,9 @@
-name: Build node19
+name: Build nodejs19
 on:
   workflow_dispatch:
 env:
   VERSION: "19.8.1"
-  NAME: "node"
+  NAME: "nodejs"
 jobs:
   slackware-job:
     permissions: write-all
