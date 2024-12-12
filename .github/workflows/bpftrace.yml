@@ -24,12 +24,17 @@ jobs:
         sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-15.0\//' /etc/slackpkg/mirrors
         slackpkg update <<< y
         # slackpkg upgrade-all
-        # slackpkg install llvm ccache
+        slackpkg install llvm ccache vim asciidoctor
         # wget https://slackware.uk/slackware/slackware64-current/slackware64/d/luajit-2.1.1732813678-x86_64-1.txz
         wget https://slackers.it/repository/slackware64-current/libbpf/libbpf-1.4.6-x86_64-1cf.txz
         wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/bcc/bcc-0.32.0-x86_64-1_SBo.tgz
+        wget https://slackware.uk/people/alien/sbrepos/current/x86_64/cereal/cereal-1.3.0-x86_64-1alien.txz
+        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/pahole-1.28-x86_64-1.txz
+        wget https://ftp.sotirov-bg.net/pub/contrib/slackware/packages/slackware64-15.0/gtest-1.11.0-x86_64-2gds.txz
         installpkg *.txz
         rm *.txz
+        installpkg *.tgz
+        rm *.tgz
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
