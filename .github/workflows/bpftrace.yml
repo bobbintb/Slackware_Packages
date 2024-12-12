@@ -39,7 +39,6 @@ jobs:
         upgradepkg *.txz
         rm *.txz
         wget https://slackware.uk/slackware/slackware64-current/slackware64/d/binutils-2.43.1-x86_64-1.txz
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/cmake-3.31.2-x86_64-1.txz
         upgradepkg *.txz
         rm *.txz
         ls /var/log/packages/
