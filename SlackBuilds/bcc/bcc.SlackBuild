@@ -96,6 +96,7 @@ cmake \
     -DLIB_SUFFIX=${LIBDIRSUFFIX} \
     -DMAN_INSTALL_DIR=/usr/man \
     -DENABLE_TESTS=OFF \
+    -DENABLE_LLVM_SHARED=1 \
     -DCMAKE_BUILD_TYPE=Release ..
   make
   make install/strip DESTDIR=$PKG
