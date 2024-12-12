@@ -2,7 +2,7 @@ name: Build llvm (dynamic linking)
 on:
   workflow_dispatch:
 env:
-  VERSION: "0.21.213.0.0"
+  VERSION: "13.0.0"
   NAME: "llvm"
 jobs:
   slackware-job:
