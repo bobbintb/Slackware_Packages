@@ -78,8 +78,7 @@ find -L . \
   -o -perm 511 \) -exec chmod 755 {} \; -o \
  \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
-
-sed -i '/CMAKE_CXX_EXTENSIONS/alink_libraries(z LLVMMC LLVMSupport LLVMMC LLVMCore LLVMipo LLVMObject LLVMBPFInfo LLVMBPFDesc LLVMExecutionEngine LLVMTarget LLVMDemangle)' CMakeLists.txt
+sed -i '/CMAKE_CXX_EXTENSIONS/alink_libraries(z LLVMPasses LLVMCodeGen LLVMX86Info LLVMX86Desc LLVMX86CodeGen LLVMAMDGPUInfo LLVMAMDGPUDesc LLVMMC LLVMSupport LLVMMC LLVMCore LLVMipo LLVMObject LLVMBPFInfo LLVMBPFDesc LLVMExecutionEngine LLVMTarget LLVMDemangle LLVMAMDGPUCodeGen)' CMakeLists.txt
 
 mkdir -p build
 cd build
