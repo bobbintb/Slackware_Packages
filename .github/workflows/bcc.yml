@@ -2,7 +2,7 @@ name: Build bcc
 on:
   workflow_dispatch:
 env:
-  VERSION: "0.28.0"
+  VERSION: "0.32.0"
   NAME: "bcc"
 jobs:
   slackware-job:
@@ -25,7 +25,7 @@ jobs:
         slackpkg update <<< y
         # slackpkg upgrade-all
         slackpkg install llvm ccache
-        wget https://slackware.uk/slackware/slackware64-current/slackware64/d/luajit-2.1.1732813678-x86_64-1.txz
+        wget https://ponce.cc/slackware/slackware64-15.0/packages/luajit-2.0.5-x86_64-2ponce.txz
         wget https://slackers.it/repository/slackware64-current/libbpf/libbpf-1.4.6-x86_64-1cf.txz
         installpkg *.txz
         rm *.txz
