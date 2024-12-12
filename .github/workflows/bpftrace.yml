@@ -47,7 +47,7 @@ jobs:
         REPO_DIR="/__w/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/${NAME}
         cd ./SlackBuilds/$NAME
-        wget https://github.com/iovisor/bpftrace/archive/refs/tags/v0.21.2/bpftrace-0.21.2.tar.gz
+        wget https://github.com/iovisor/${NAME}/archive/refs/tags/v${VERSION}/${NAME}-${VERSION}.tar.gz
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
         # installpkg *.tgz
         # rm *.tgz
