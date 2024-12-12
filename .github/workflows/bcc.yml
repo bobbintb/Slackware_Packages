@@ -38,7 +38,7 @@ jobs:
         mkdir -p ${REPO_DIR}/${NAME}
         cd ./SlackBuilds/$NAME
         # . ./${NAME}.info
-        wget $DOWNLOAD
+        wget https://github.com/iovisor/bcc/releases/download/v0.32.0/bcc-src-with-submodule.tar.gz
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
         #wget https://github.com/sbopkg/sbopkg/releases/download/0.38.2/sbopkg-0.38.2-noarch-1_wsr.tgz
         #installpkg *.tgz
