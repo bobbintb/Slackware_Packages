@@ -26,10 +26,10 @@ jobs:
         # slackpkg upgrade-all
         # slackpkg install llvm ccache
         # wget https://slackware.uk/slackware/slackware64-current/slackware64/d/luajit-2.1.1732813678-x86_64-1.txz
-        # wget https://slackers.it/repository/slackware64-current/libbpf/libbpf-1.4.6-x86_64-1cf.txz
-        # installpkg *.txz
-        # rm *.txz
-        # pip install setuptools
+        wget https://slackers.it/repository/slackware64-current/libbpf/libbpf-1.4.6-x86_64-1cf.txz
+        wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/bcc/bcc-0.32.0-x86_64-1_SBo.tgz
+        installpkg *.txz
+        rm *.txz
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
