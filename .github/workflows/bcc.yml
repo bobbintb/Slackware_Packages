@@ -45,9 +45,9 @@ jobs:
         #rm *.tgz
         #sbopkg -r -q
         #sbopkg -b ${NAME} <<< p
-        #find / -name *.tgz
-        #git config --global --add safe.directory $REPO_DIR
-        #cp /tmp/*.tgz ${REPO_DIR}/${NAME}
+        find / -name *.tgz
+        git config --global --add safe.directory $REPO_DIR
+        cp /tmp/*.tgz ${REPO_DIR}/${NAME}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
