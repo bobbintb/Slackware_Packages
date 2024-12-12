@@ -73,6 +73,7 @@ cd $TMP
 rm -rf $PRGNAM
 tar xvf $CWD/$TARNAM.tar.gz
 cd $PRGNAM
+git init
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
