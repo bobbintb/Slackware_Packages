@@ -114,6 +114,8 @@ cd build
     -DCMAKE_CXX_COMPILER="clang++" \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_C_FLAGS="-I/usr/include -I/usr/include/linux -I/usr/lib64/clang/13.0.0/include" \
+    -DCMAKE_CXX_FLAGS="-I/usr/include -I/usr/include/linux -I/usr/lib64/clang/13.0.0/include" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLLVM_LIBDIR_SUFFIX=${LIBDIRSUFFIX} \
     -DCMAKE_BUILD_TYPE=Release \
