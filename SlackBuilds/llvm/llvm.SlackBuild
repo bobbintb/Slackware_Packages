@@ -114,9 +114,6 @@ cd build
     -DCMAKE_CXX_COMPILER="clang++" \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
-
-    -DCMAKE_C_FLAGS="-I/usr/include -I/usr/include/linux -I/usr/lib64/clang/13.0.0/include" \
-    -DCMAKE_CXX_FLAGS="-I/usr/include -I/usr/include/c++/v1 -I/usr/lib64/gcc/x86_64-slackware-linux/11.2.0/include/c++/v1" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLLVM_LIBDIR_SUFFIX=${LIBDIRSUFFIX} \
     -DCMAKE_BUILD_TYPE=Release \
@@ -133,7 +130,7 @@ cd build
     -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=NO \
     -DLLVM_INSTALL_UTILS=ON \
     -DLLVM_BINUTILS_INCDIR=/usr/include \
-    -DCLANG_RESOURCE_DIR="../lib${LIBDIRSUFFIX}/clang/$(echo $VERSION | cut -f 1 -d .)" \
+    -DCLANG_RESOURCE_DIR="../lib${LIBDIRSUFFIX}/clang/${$VERSION}" \
     -DLLVM_TARGETS_TO_BUILD="host;AMDGPU;BPF;WebAssembly" \
     -DLLVM_INCLUDE_BENCHMARKS=OFF \
     -DCOMPILER_RT_BUILD_LIBFUZZER=OFF \
