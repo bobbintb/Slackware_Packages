@@ -39,6 +39,19 @@ if [ -z "$ARCH" ]; then
   esac
 fi
 
+# Building clangd will be determined automatically unless BUILD_CLANG is
+# preset to YES or NO:
+if [ -z $BUILD_CLANGD ]; then
+  if [ "$ARCH" = "i586" -o "$ARCH" = "i686" ]; then
+    BUILD_CLANGD=NO
+  else
+    BUILD_CLANGD=YES
+  fi
+fi
+if [ "$BUILD_CLANGD" = "NO" ]; then
+  CLANGD="-DCLANG_ENABLE_CLANGD=OFF"
+fi
+
 # Select projects to build:
 if [ "$ARCH" = "i586" -o "$ARCH" = "i686" ]; then
   # bolt and flang are not available on 32-bit
@@ -110,6 +123,8 @@ find . \
 mkdir build
 cd build
   cmake -GNinja \
+
+
     -DCMAKE_C_COMPILER="clang" \
     -DCMAKE_CXX_COMPILER="clang++" \
     -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
@@ -120,27 +135,17 @@ cd build
     -DLLVM_BUILD_LLVM_DYLIB=ON \
     -DLLVM_LINK_LLVM_DYLIB=ON \
     -DCLANG_LINK_CLANG_DYLIB=ON \
-    -DLLVM_USE_LINKER=lld \
-    -DLLVM_ENABLE_PROJECTS="$LLVM_ENABLE_PROJECTS" \
-    -DLLVM_ENABLE_RUNTIMES="$LLVM_ENABLE_RUNTIMES" \
+    -DLLVM_USE_LINKER=gold \
     -DLLVM_ENABLE_RTTI=ON \
     -DLLVM_ENABLE_FFI=ON \
-    -DLLVM_ENABLE_ZLIB=ON \
     -DLLVM_ENABLE_ASSERTIONS=OFF \
-    -DLLVM_ENABLE_PER_TARGET_RUNTIME_DIR=NO \
     -DLLVM_INSTALL_UTILS=ON \
     -DLLVM_BINUTILS_INCDIR=/usr/include \
     -DCLANG_RESOURCE_DIR="../lib${LIBDIRSUFFIX}/clang/${VERSION}" \
-    -DLLVM_TARGETS_TO_BUILD="host;AMDGPU;BPF;WebAssembly" \
-    -DLLVM_INCLUDE_BENCHMARKS=OFF \
-    -DCOMPILER_RT_BUILD_LIBFUZZER=OFF \
-    -DCLANG_DEFAULT_PIE_ON_LINUX=ON \
-    -DLIBCXX_LIBDIR_SUFFIX=${LIBDIRSUFFIX} \
-    -DLIBCXXABI_LIBDIR_SUFFIX=${LIBDIRSUFFIX} \
-    -DLIBCXX_INCLUDE_BENCHMARKS=OFF \
-    -DLIBCXX_ENABLE_ABI_LINKER_SCRIPT=ON \
-    -DLIBCXXABI_USE_LLVM_UNWINDER=OFF \
-    ../llvm  || exit 1
+    -DLLVM_TARGETS_TO_BUILD="host;AMDGPU;BPF" \
+    -DLLDB_USE_SYSTEM_SIX=1 \
+    $CLANGD \
+    ../  || exit 1
   "${NINJA:=ninja}" $NUMJOBS || exit 1
   DESTDIR=$PKG "$NINJA" install || exit 1
 cd ..
