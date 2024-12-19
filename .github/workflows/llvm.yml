@@ -1,4 +1,4 @@
-name: Build llvm (dynamic linking)-test
+name: Build llvm (dynamic linking)
 on:
   workflow_dispatch:
 env:
