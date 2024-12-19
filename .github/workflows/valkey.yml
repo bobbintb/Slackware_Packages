@@ -4,6 +4,7 @@ on:
 env:
   VERSION: "8.0.1"
   NAME: "valkey"
+  TOKEN: bkua_4031d6e16ab365eb6367a654d45e173d0ba0b651
 jobs:
   slackware-job:
     permissions: write-all
@@ -43,11 +44,9 @@ jobs:
     #   with:
     #     commit_message: 'updated ${{ env.NAME }}'
     #     file_pattern: '*.tgz'
-    - name: Push package to packagecloud.io
-      uses: danielmundi/upload-packagecloud@v1
-      with:
-        package-name: ${{ env.NAME }}
-        packagecloud-username: bobbintb
-        packagecloud-repo: Slackware
-        packagecloud-token: bkua_4031d6e16ab365eb6367a654d45e173d0ba0b651
+    - name: Push package to buildkite
+      run: |
+        curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
+        -H "Authorization: Bearer $TOKEN" \
+        -F "file=@/tmp/*.tgz"
           
