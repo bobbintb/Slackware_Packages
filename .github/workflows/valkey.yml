@@ -46,7 +46,7 @@ jobs:
     #     file_pattern: '*.tgz'
     - name: Push package to buildkite
       run: |
-        FILE=$(echo *.tgz)
+        FILE=$(echo /tmp/*.tgz)
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
         -H "Authorization: Bearer $TOKEN" \
         -F "file=@/tmp/${FILE}"
