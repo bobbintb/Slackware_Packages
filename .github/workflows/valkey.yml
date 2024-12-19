@@ -38,8 +38,17 @@ jobs:
         find / -name *.tgz
         git config --global --add safe.directory $REPO_DIR
         cp /tmp/*.tgz ${REPO_DIR}/${NAME}
-    - name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
+    # - name: Commit changes
+    #   uses: stefanzweifel/git-auto-commit-action@v5
+    #   with:
+    #     commit_message: 'updated ${{ env.NAME }}'
+    #     file_pattern: '*.tgz'
+    - name: Push package to packagecloud.io
+      uses: computology/packagecloud-github-action@v0.8
       with:
-        commit_message: 'updated ${{ env.NAME }}'
-        file_pattern: '*.tgz'
+        package-name: ${{ env.NAME }}
+        packagecloud-username: bobbintb
+        packagecloud-reponame: Slackware
+        packagecloud-distro: ${{ env.VERSION }}
+        packagecloud-token: bkua_4031d6e16ab365eb6367a654d45e173d0ba0b651
+          
