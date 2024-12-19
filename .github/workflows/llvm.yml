@@ -34,15 +34,13 @@ jobs:
         cd ./SlackBuilds/$NAME
         wget https://github.com/llvm/${NAME}-project/archive/refs/tags/${NAME}org-${VERSION}.tar.gz
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
-        # installpkg *.tgz
-        # rm *.tgz
-        # sbopkg -r -q
-        # sbopkg -b ${NAME} <<< p
-        # find / -name *.txz
         git config --global --add safe.directory $REPO_DIR
         cp /tmp/*.txz ${REPO_DIR}/${NAME}
-    - name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
+    - name: Release
+      uses: softprops/action-gh-release@v2
       with:
-        commit_message: 'updated ${{ env.NAME }}'
-        file_pattern: '*.txz'
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: v${{ env.VERSION }}
+        make_latest: true
+        files: |
+          *.txz
