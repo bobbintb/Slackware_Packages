@@ -24,7 +24,7 @@ jobs:
       run: |
         echo "================================= Installing dependencies ================================="
         slackpkg remove gcc-go
-        wget https://slackers.it/repository/slackware64-current/go/go-1.23.1-x86_64-1cf.txz
+        wget https://slackers.it/repository/slackware64-current/go/go-1.23.4-x86_64-1cf.txz
         installpkg go-1.23.1-x86_64-1cf.txz
     - name: Build
       run: |
