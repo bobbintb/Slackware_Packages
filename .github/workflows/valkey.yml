@@ -49,5 +49,6 @@ jobs:
         package-name: ${{ env.NAME }}
         packagecloud-username: bobbintb
         packagecloud-reponame: Slackware
+        packagecloud-distro: npm
         packagecloud-token: bkua_4031d6e16ab365eb6367a654d45e173d0ba0b651
           
