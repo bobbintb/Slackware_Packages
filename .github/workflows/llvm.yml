@@ -36,11 +36,8 @@ jobs:
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
         git config --global --add safe.directory $REPO_DIR
         cp /tmp/*.txz ${REPO_DIR}/${NAME}
-    - name: Release
-      uses: softprops/action-gh-release@v2
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag_name: v${{ env.VERSION }}
-        make_latest: true
-        files: |
-          *.txz
+        commit_message: 'updated ${{ env.NAME }}'
+        file_pattern: '*.txz'
