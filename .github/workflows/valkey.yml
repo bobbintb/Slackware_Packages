@@ -44,11 +44,11 @@ jobs:
     #     commit_message: 'updated ${{ env.NAME }}'
     #     file_pattern: '*.tgz'
     - name: Push package to packagecloud.io
-      uses: computology/packagecloud-github-action@v0.8
+      uses: danielmundi/upload-packagecloud@v1
       with:
         package-name: ${{ env.NAME }}
         packagecloud-username: bobbintb
-        packagecloud-reponame: Slackware
+        packagecloud-repo: Slackware
         packagecloud-distro: node.js
         packagecloud-token: bkua_4031d6e16ab365eb6367a654d45e173d0ba0b651
           
