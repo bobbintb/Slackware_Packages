@@ -21,16 +21,11 @@ jobs:
         sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
         sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
         sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
-        sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-15.0\//' /etc/slackpkg/mirrors
+        # sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-15.0\//' /etc/slackpkg/mirrors
         slackpkg update <<< y
         # slackpkg upgrade-all
-        #################################
-        wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/retry/retry-1.0.4.tgz
-        installpkg retry-1.0.4.tgz
-        rm retry-1.0.4.tgz
-        #################################
-        retry --times=5 slackpkg install ccache libssh2
-        wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/llvm/llvm-13.0.0-x86_64-2.txz
+        slackpkg install ccache libssh2 llvm
+        # wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/llvm/llvm-13.0.0-x86_64-2.txz
         wget https://ponce.cc/slackware/slackware64-15.0/packages/luajit-2.0.5-x86_64-2ponce.txz
         wget https://slackers.it/repository/slackware64-current/libbpf/libbpf-1.4.7-x86_64-1cf.txz
         installpkg *.txz
