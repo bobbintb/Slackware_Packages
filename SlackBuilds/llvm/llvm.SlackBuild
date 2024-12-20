@@ -88,7 +88,7 @@ else
 fi
 
 # Python2 short version:
-# PY2=$(python -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())' | cut -f 2 -d n | cut -f 1 -d /)
+PY2=$(python -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())' | cut -f 2 -d n | cut -f 1 -d /)
 # Python3 short version:
 PY3=$(python3 -c 'from distutils.sysconfig import get_python_lib; print(get_python_lib())' | cut -f 2 -d n | cut -f 1 -d /)
 
@@ -171,16 +171,15 @@ cd build
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLLVM_LIBDIR_SUFFIX=${LIBDIRSUFFIX} \
     -DCMAKE_BUILD_TYPE=Release \
+    -DLLVM_BUILD_LLVM_DYLIB=ON \
+    -DLLVM_LINK_LLVM_DYLIB=ON \
+    -DLLVM_USE_LINKER=gold \
     -DLLVM_ENABLE_RTTI=ON \
     -DLLVM_ENABLE_FFI=ON \
-	-DLLVM_ENABLE_ASSERTIONS=OFF \
+    -DLLVM_ENABLE_ASSERTIONS=OFF \
     -DLLVM_INSTALL_UTILS=ON \
     -DLLVM_BINUTILS_INCDIR=/usr/include \
     -DCLANG_RESOURCE_DIR="../lib${LIBDIRSUFFIX}/clang/${VERSION}" \
-	-DLLVM_USE_LINKER=gold \
-    -DLLVM_BUILD_LLVM_DYLIB=ON \
-    -DLLVM_LINK_LLVM_DYLIB=ON \
-    -DCLANG_LINK_CLANG_DYLIB=ON \
     -DLLVM_TARGETS_TO_BUILD="host;AMDGPU;BPF" \
     -DLLDB_USE_SYSTEM_SIX=1 \
     $CLANGD \
@@ -221,18 +220,18 @@ done
 rm -f "$PKG/usr/lib$LIBDIRSUFFIX/python${PY2}/site-packages/six.py"
 
 # Compile Python scripts:
-# python -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY2}/site-packages/clang"
-# python -O -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY2}/site-packages/clang"
+python -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY2}/site-packages/clang"
+python -O -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY2}/site-packages/clang"
 python3 -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY3}/site-packages/clang"
 python3 -O -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY3}/site-packages/clang"
-# python -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY2}/site-packages/lldb"
-# python -O -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY2}/site-packages/lldb"
-python3 -m compileall "$PKG/usr/share/scan-view"
-python3 -O -m compileall "$PKG/usr/share/scan-view"
-python3 -m compileall "$PKG/usr/share/clang"
-python3 -O -m compileall "$PKG/usr/share/clang"
-python3 -m compileall "$PKG/usr/share/opt-viewer"
-python3 -O -m compileall "$PKG/usr/share/opt-viewer"
+python -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY2}/site-packages/lldb"
+python -O -m compileall "$PKG/usr/lib$LIBDIRSUFFIX/python${PY2}/site-packages/lldb"
+python -m compileall "$PKG/usr/share/scan-view"
+python -O -m compileall "$PKG/usr/share/scan-view"
+python -m compileall "$PKG/usr/share/clang"
+python -O -m compileall "$PKG/usr/share/clang"
+python -m compileall "$PKG/usr/share/opt-viewer"
+python -O -m compileall "$PKG/usr/share/opt-viewer"
 
 # Move man page directory:
 mv $PKG/usr/share/man $PKG/usr/
