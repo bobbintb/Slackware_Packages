@@ -26,7 +26,7 @@ jobs:
         # slackpkg upgrade-all
         slackpkg install llvm ccache libssh2
         wget https://ponce.cc/slackware/slackware64-15.0/packages/luajit-2.0.5-x86_64-2ponce.txz
-        wget https://slackers.it/repository/slackware64-current/libbpf/libbpf-1.4.7-x86_64-1cf.txz
+        wget https://github.com/bobbintb/Slackware_Packages/raw/refs/heads/main/libbpf/libbpf-1.5.0-x86_64-1cf.txz
         installpkg *.txz
         rm *.txz
         pip install setuptools
