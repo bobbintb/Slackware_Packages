@@ -23,13 +23,8 @@ jobs:
         sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
         sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-15.0\//' /etc/slackpkg/mirrors
         slackpkg update <<< y
-        # slackpkg upgrade-all
-        slackpkg install llvm ccache libssh2
-        wget https://ponce.cc/slackware/slackware64-15.0/packages/luajit-2.0.5-x86_64-2ponce.txz
-        wget https://slackers.it/repository/slackware64-current/libbpf/libbpf-1.4.7-x86_64-1cf.txz
-        installpkg *.txz
-        rm *.txz
-        pip install setuptools
+        # installpkg *.txz
+        # rm *.txz
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
@@ -37,14 +32,7 @@ jobs:
         REPO_DIR="/__w/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/${NAME}
         cd ./SlackBuilds/$NAME
-        # . ./${NAME}.info
-        wget https://github.com/iovisor/bcc/releases/download/v0.32.0/bcc-src-with-submodule.tar.gz
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
-        #wget https://github.com/sbopkg/sbopkg/releases/download/0.38.2/sbopkg-0.38.2-noarch-1_wsr.tgz
-        #installpkg *.tgz
-        #rm *.tgz
-        #sbopkg -r -q
-        #sbopkg -b ${NAME} <<< p
         find / -name *.tgz
         git config --global --add safe.directory $REPO_DIR
         cp /tmp/*.tgz ${REPO_DIR}/${NAME}
