@@ -34,11 +34,10 @@ jobs:
         cd ./SlackBuilds/$NAME
         wget https://github.com/libbpf/${NAME}/archive/refs/tags/v${VERSION}.tar.gz
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
-        find / -name *.tgz
         git config --global --add safe.directory $REPO_DIR
-        cp /tmp/*.tgz ${REPO_DIR}/${NAME}
+        cp /tmp/*.txz ${REPO_DIR}/${NAME}
     - name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: 'updated ${{ env.NAME }}'
-        file_pattern: '*.tgz'
+        file_pattern: '*.txz'
