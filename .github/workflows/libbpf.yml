@@ -32,6 +32,7 @@ jobs:
         REPO_DIR="/__w/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/${NAME}
         cd ./SlackBuilds/$NAME
+        wget https://github.com/libbpf/${NAME}/archive/refs/tags/v${VERSION}.tar.gz
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
         find / -name *.tgz
         git config --global --add safe.directory $REPO_DIR
