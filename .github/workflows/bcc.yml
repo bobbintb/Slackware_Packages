@@ -32,6 +32,7 @@ jobs:
         ##############################################
         installpkg *.txz
         rm *.txz
+        pip install setuptools
     - name: Build
       run: |
         echo "================================= Downloading source code ================================="
