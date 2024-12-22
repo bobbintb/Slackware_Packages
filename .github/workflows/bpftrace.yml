@@ -48,6 +48,7 @@ jobs:
         cd ./SlackBuilds/$NAME
         ##############################################
         wget https://github.com/iovisor/${NAME}/archive/refs/tags/v${VERSION}/${NAME}-${VERSION}.tar.gz
+        find / -name "LLVMConfig.cmake" 2>/dev/null
         export LLVM_DIR=/tmp/llvm-13.0.0.src/build/lib64/cmake/llvm/
         ##############################################
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
