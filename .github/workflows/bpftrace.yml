@@ -23,9 +23,11 @@ jobs:
         sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
         sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-current\//' /etc/slackpkg/mirrors
         slackpkg update <<< y
-        slackpkg upgrade-all
+        #slackpkg upgrade-all
         ##############################################
-        slackpkg install ccache vim asciidoctor libedit libssh2 ruby llvm
+        slackpkg install ccache vim asciidoctor libedit libssh2 ruby llvm openssl11
+        slackpkg upgrade-all
+        slackpkg upgrade-all
         slackpkg upgrade-all
         slackpkg upgrade-all
         ##############################################
