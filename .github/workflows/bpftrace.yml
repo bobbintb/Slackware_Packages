@@ -27,7 +27,7 @@ jobs:
         slackpkg update <<< y
         #slackpkg upgrade-all
         ##############################################
-        slackpkg install ccache vim asciidoctor libedit libssh2 ruby llvm openssl11
+        slackpkg install ccache vim asciidoctor libedit libssh2 ruby llvm
         slackpkg upgrade-all
         slackpkg upgrade-all
         slackpkg upgrade-all
