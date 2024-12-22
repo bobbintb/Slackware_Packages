@@ -27,7 +27,7 @@ jobs:
         slackpkg update <<< y
         #slackpkg upgrade-all
         ##############################################
-        slackpkg install ccache vim asciidoctor libedit libssh2 ruby nghttp3 llvmfmt 
+        slackpkg install ccache vim asciidoctor libedit libssh2 ruby nghttp3 llvm fmt 
         slackpkg upgrade-all || true
         slackpkg upgrade-all || true
         slackpkg upgrade-all || true
