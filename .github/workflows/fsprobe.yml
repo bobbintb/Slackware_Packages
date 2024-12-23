@@ -4,6 +4,7 @@ on:
 env:
   VERSION: "2024.12.22"
   NAME: "fsprobe"
+  PACKAGES: "ccache vim asciidoctor libedit libssh2 ruby nghttp3 llvm fmt"
 jobs:
   slackware-job:
     permissions: write-all
@@ -31,7 +32,7 @@ jobs:
         slackpkg update gpg <<< y
         slackpkg update <<< y
         ##############################################
-        slackpkg install ccache vim asciidoctor libedit libssh2 ruby nghttp3 llvm fmt 
+        slackpkg install ${PACKAGES}
         slackpkg upgrade-all || true
         slackpkg upgrade-all || true
         slackpkg upgrade-all || true
@@ -47,7 +48,7 @@ jobs:
         echo "================================= Downloading source code ================================="
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
-        rm ${REPO_DIR}/${NAME}
+        rm -d ${REPO_DIR}/${NAME}
         mkdir -p ${REPO_DIR}/${NAME}
         ##############################################
         git clone https://github.com/Gui774ume/fsprobe.git
