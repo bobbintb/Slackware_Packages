@@ -134,8 +134,8 @@ done
 
 # Compress info pages and remove the package's dir file
 # If no info pages are installed by the software, don't leave this in the script
-rm -f $PKG/usr/info/dir
-gzip -9 $PKG/usr/info/*.info*
+# rm -f $PKG/usr/info/dir
+# gzip -9 $PKG/usr/info/*.info*
 
 # Remove perllocal.pod and other special files that don't need to be installed,
 # as they will overwrite what's already on the system.  If this is not needed,
