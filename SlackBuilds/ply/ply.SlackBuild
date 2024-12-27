@@ -70,7 +70,7 @@ fi
 
 CWD=$(pwd)
 TMP=${TMP:-/tmp/SBo}	# For consistency's sake, use this
-PKG=$TMP/package-$PRGNAM
+PKG=$TMP/$PRGNAM
 OUTPUT=${OUTPUT:-/tmp}	# Drop the package in /tmp
 
 if [ "$ARCH" = "i586" ]; then
@@ -127,8 +127,8 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
 # If man pages are installed to /usr/share/man instead, you'll need to either
 # add the --mandir=/usr/man flag to configure or move them manually after the
 # make install process is run.
-find $PKG/usr/man -type f -exec gzip -9 {} \;
-for i in $( find $PKG/usr/man -type l ) ; do
+find $PKG/man -type f -exec gzip -9 {} \;
+for i in $( find $PKG/man -type l ) ; do
   ln -s $( readlink $i ).gz $i.gz ; rm $i
 done
 
