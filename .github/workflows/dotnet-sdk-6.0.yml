@@ -41,8 +41,8 @@ jobs:
         ##############################################
         wget https://slackers.it/repository/slackware64-current/gtest/gtest-1.15.2-x86_64-1cf.txz
         ##############################################
-        #installpkg *.txz
-        #rm *.txz
+        installpkg *.txz
+        rm *.txz
         #installpkg *.tgz
         #rm *.tgz
     - name: Build
