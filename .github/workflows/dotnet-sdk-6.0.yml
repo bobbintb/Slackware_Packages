@@ -5,6 +5,7 @@ env:
   VERSION: "6.0"
   NAME: "dotnet-sdk-6.0"
   PACKAGES: ""
+  SOURCE: https://download.visualstudio.microsoft.com/download/pr/35b1b4d1-b8f4-4b5c-9ddf-e64a846ee50b/93cc198f1c48fe5c4853bd937226f570/dotnet-sdk-6.0.428-linux-x64.tar.gz
 jobs:
   slackware-job:
     permissions: write-all
