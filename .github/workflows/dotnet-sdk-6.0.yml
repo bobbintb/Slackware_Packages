@@ -32,7 +32,7 @@ jobs:
         slackpkg update gpg <<< y
         slackpkg update <<< y
         ##############################################
-        slackpkg install ${PACKAGES}
+        # slackpkg install ${PACKAGES}
         # slackpkg upgrade-all || true
         # slackpkg upgrade-all || true
         # slackpkg upgrade-all || true
