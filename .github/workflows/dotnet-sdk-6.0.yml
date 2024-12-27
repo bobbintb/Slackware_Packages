@@ -33,10 +33,10 @@ jobs:
         slackpkg update <<< y
         ##############################################
         slackpkg install ${PACKAGES}
-        slackpkg upgrade-all || true
-        slackpkg upgrade-all || true
-        slackpkg upgrade-all || true
-        slackpkg upgrade-all || true
+        # slackpkg upgrade-all || true
+        # slackpkg upgrade-all || true
+        # slackpkg upgrade-all || true
+        # slackpkg upgrade-all || true
         ##############################################
         wget https://slackers.it/repository/slackware64-current/gtest/gtest-1.15.2-x86_64-1cf.txz
         ##############################################
