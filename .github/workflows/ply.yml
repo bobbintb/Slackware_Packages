@@ -55,8 +55,13 @@ jobs:
         sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
         git config --global --add safe.directory $REPO_DIR
         cp /tmp/*.tgz ${REPO_DIR}/${NAME}
-    - name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: 'updated ${{ env.NAME }}'
-        file_pattern: '*.tgz'
+    # - name: Commit changes
+    #   uses: stefanzweifel/git-auto-commit-action@v5
+    #   with:
+    #     commit_message: 'updated ${{ env.NAME }}'
+    #     file_pattern: '*.tgz'
+    - name: Upload
+      run: |
+        curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
+        -H "Authorization: Bearer ${{ secrets.packagecloud_token }}" \
+        -F "file=@${REPO_DIR}/${NAME}/*.tgz"
