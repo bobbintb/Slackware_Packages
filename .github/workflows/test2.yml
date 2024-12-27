@@ -1,0 +1,28 @@
+name: test
+on:
+  workflow_dispatch:
+env:
+  VERSION: "2.3.0"
+  NAME: "ply"
+  PACKAGES: ""
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/slackpkg/
+        key: slackpkg
+    - name: Push package to packagecloud.io
+      uses: computology/packagecloud-github-action@v0.8
+      with:
+        package-name: /__w/${GITHUB_REPOSITORY##*/}/${GITHUB_REPOSITORY##*/}/${NAME}/*.tgz
+        packagecloud-username: bobbintb
+        packagecloud-reponame: Slackware
+        packagecloud-distro: slackware
+        packagecloud-token: ${{ secrets.packagecloud_token }}          
