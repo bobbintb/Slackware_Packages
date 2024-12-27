@@ -12,12 +12,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Cache packages
-      id: cache-packages
-      uses: actions/cache@v4
-      with:
-        path: /var/cache/slackpkg/
-        key: slackpkg
     - name: Push package to packagecloud.io
       uses: computology/packagecloud-github-action@v0.8
       with:
