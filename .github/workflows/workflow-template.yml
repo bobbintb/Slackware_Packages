@@ -20,7 +20,17 @@ on:
         type: string
 jobs:
   build-environment:
-    permissions: write-all
+    permissions:
+      attestations: write
+      checks: write
+      deployments: write
+      discussions: write
+      packages: write
+      pages: write
+      repository-projects: write
+      statuses: write
+      security-events: write
+      id-token: write
     runs-on: ubuntu-latest
     container:
       image: spaceinvaderone/auto_slack_pack
