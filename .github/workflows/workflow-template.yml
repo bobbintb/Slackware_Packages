@@ -53,7 +53,7 @@ jobs:
         REPO_DIR="/__w/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/${{ inputs.NAME }}
         cd ./SlackBuilds/${{ inputs.NAME }}
-        wget ${SOURCE}
+        wget ${{ inputs.SOURCE }}
         sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild
     - name: Upload
       run: |
