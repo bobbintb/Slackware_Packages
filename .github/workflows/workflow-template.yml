@@ -59,6 +59,9 @@ jobs:
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo "Package created at: $package_path"
         find / -name *.tgz
+    - name: Check secret value (for debugging)
+      run: |
+        echo "Secret: ${{ secrets.PACKAGECLOUD_TOKEN }}"
     - name: Upload
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
