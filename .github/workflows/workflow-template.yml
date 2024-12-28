@@ -34,6 +34,7 @@ jobs:
         path: /var/cache/slackpkg/
         key: slackpkg
     - name: Update slackpkg
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
         CONF_FILE="/etc/slackpkg/slackpkg.conf"
         sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
