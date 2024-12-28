@@ -7,4 +7,5 @@ jobs:
     with:
       VERSION: "0.11.10"
       NAME: "slapt-get"
+      PACKAGES: libidn2 libssh2
       SOURCE: "https://github.com/jaos/slapt-get/archive/0.11.10/slapt-get-0.11.10.tar.gz"
