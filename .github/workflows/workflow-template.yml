@@ -62,4 +62,4 @@ jobs:
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
         -H "Authorization: Bearer ${{ secrets.packagecloud_token }}" \
-        -F "file=@/tmp/*.txz"
+        -F "file=@$package_path"
