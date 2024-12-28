@@ -19,7 +19,7 @@ on:
         required: true
         type: string
 jobs:
-  build-environment:
+  slackbuild_and_upload:
     runs-on: ubuntu-latest
     container:
       image: spaceinvaderone/auto_slack_pack
@@ -33,9 +33,8 @@ jobs:
       with:
         path: /var/cache/slackpkg/
         key: slackpkg
-    - name: Update and install packages
+    - name: Update slackpkg
       run: |
-        echo "================================= Updating packages ================================="
         CONF_FILE="/etc/slackpkg/slackpkg.conf"
         sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
         sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
@@ -62,5 +61,5 @@ jobs:
     - name: Upload
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
-        -H "Authorization: Bearer bkpt_eyJfcmFpbHMiOnsiZGF0YSI6WyIwMTkzZGM5MS00MTIwLTQzYjAtYjU4Ny1iNzVjMzNjMmUzNWEiLCIwMTkzZGM5Mi0xZTk2LTdmMTctOWNlYS1lZTJhODE4OWI3OGMiXSwiZXhwIjoiMjAyNC0xMi0yOFQyMDoyNjozNi4zOTdaIn19--d8b37239772c73feec501ee7c0dcdb925b1575c7" \
+        -H "Authorization: Bearer ${{ secrets.PACKAGECLOUD_TOKEN }}" \
         -F "file=@/tmp/libbpf-1.5.0-x86_64-1cf.txz"
