@@ -54,8 +54,10 @@ jobs:
         mkdir -p ${REPO_DIR}/${{ inputs.NAME }}
         cd ./SlackBuilds/${{ inputs.NAME }}
         wget ${{ inputs.SOURCE }}
-        sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild
-        find / -name *.txz
+        # sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild
+        output=$(sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild)
+        package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
+        echo "Package created at: $package_path"
     - name: Upload
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
