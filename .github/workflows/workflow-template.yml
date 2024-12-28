@@ -58,6 +58,7 @@ jobs:
         output=$(sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo "Package created at: $package_path"
+        find / -name *.tgz
     - name: Upload
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
