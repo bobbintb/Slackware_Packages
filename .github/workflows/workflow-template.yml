@@ -46,15 +46,17 @@ jobs:
     - name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: slackpkg install ${{ inputs.PACKAGES }}
+    - name: Download source code
+      if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
+      run: |
+        cd ./SlackBuilds/${{ inputs.NAME }}
+        wget ${{ inputs.SOURCE }}
     - name: Build
       run: |
-        echo "================================= Downloading source code ================================="
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/${{ inputs.NAME }}
         cd ./SlackBuilds/${{ inputs.NAME }}
-        wget ${{ inputs.SOURCE }}
-        # sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild
         output=$(sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo "package_path=${package_path}" >> $GITHUB_ENV
