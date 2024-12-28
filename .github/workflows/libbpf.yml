@@ -1,4 +1,4 @@
-name: test-libbpf
+name: Build libbpf
 on:
   workflow_dispatch:
 jobs:
