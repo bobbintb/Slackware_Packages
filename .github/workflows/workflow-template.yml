@@ -62,4 +62,4 @@ jobs:
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
         -H "Authorization: Bearer ${{ secrets.packagecloud_token }}" \
-        -F "file=@$package_path"
+        -F "file=@/tmp/libbpf-1.5.0-x86_64-1cf.txz"
