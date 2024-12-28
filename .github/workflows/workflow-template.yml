@@ -61,5 +61,5 @@ jobs:
     - name: Upload
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
-        -H "Authorization: Bearer bkua_db925872d4733dad69034b9c984ffd561dc9981e" \
+        -H "Authorization: Bearer ${{ secrets.PACKAGECLOUD_TOKEN }}" \
         -F "file=@${package_path}"
