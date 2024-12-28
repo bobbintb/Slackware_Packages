@@ -55,9 +55,9 @@ jobs:
         cd ./SlackBuilds/${{ inputs.NAME }}
         wget ${{ inputs.SOURCE }}
         sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild
-        find / -name *.tgz
+        find / -name *.txz
     - name: Upload
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
         -H "Authorization: Bearer ${{ secrets.packagecloud_token }}" \
-        -F "file=@${REPO_DIR}/${{ inputs.NAME }}/*.tgz"
+        -F "file=@${REPO_DIR}/${{ inputs.NAME }}/*.txz"
