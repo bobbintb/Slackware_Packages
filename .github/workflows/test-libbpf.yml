@@ -2,7 +2,12 @@ name: test-libbpf
 on:
   workflow_dispatch:
 jobs:
-  call-reusable-workflow:
+  call-workflow-passing-data:
+    permissions:
+      contents: write
+      actions: write
+      issues: write
+      pull-requests: write
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     with:
       VERSION: "1.5.0"
