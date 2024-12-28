@@ -57,10 +57,9 @@ jobs:
         # sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild
         output=$(sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
-        echo "Package created at: $package_path"
-        find / -name *.tgz
+        echo "package_path=${package_path}" >> $GITHUB_ENV
     - name: Upload
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
         -H "Authorization: Bearer bkua_9898eb8f04941032f8d971c828f1108bfebdc123" \
-        -F "file=@/tmp/libbpf-1.5.0-x86_64-1cf.txz"
+        -F "file=@${package_path}"
