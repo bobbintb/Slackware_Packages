@@ -59,9 +59,7 @@ jobs:
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo "package_path=${package_path}" >> $GITHUB_ENV
     - name: Upload
-      env:
-        PACKAGECLOUD_TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
-        -H 'Authorization: Bearer "$PACKAGECLOUD_TOKEN"' \
+        -H "Authorization: Bearer bkua_db925872d4733dad69034b9c984ffd561dc9981e" \
         -F "file=@${package_path}"
