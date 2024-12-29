@@ -80,6 +80,7 @@ jobs:
         # Slackers.it
         SOURCE=https://slackers.it/repository/slackware64-current/
         EOF
+        slapt-get --update
     - name: Upgrade all packages
       if: ${{ inputs.UPGRADE-ALL == true }}
       run: |
