@@ -48,7 +48,7 @@ jobs:
         slackpkg update gpg <<< y
         slackpkg update <<< y
     - name: Upgrade all packages
-      if: ${{ inputs.UPGRADE-ALL = true }}
+      if: ${{ inputs.UPGRADE-ALL == true }}
       run: |
         slackpkg upgrade-all || true
         slackpkg upgrade-all || true
