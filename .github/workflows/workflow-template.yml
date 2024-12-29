@@ -60,7 +60,7 @@ jobs:
         wget https://software.jaos.org/slackpacks/slackware64-15.0/slapt-get/slapt-get-0.11.10-x86_64-1.txz
         installpkg *.txz
         rm *.txz
-        slackpkg install gpgme libassuan openssl11
+        slackpkg install gpgme libassuan openssl11 nghttp3
         slapt-get --add-keys
         cat >> /etc/slapt-get/slapt-getrc <<EOF
         # Alien Bob Multilib compat32 packages
