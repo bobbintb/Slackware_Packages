@@ -7,5 +7,6 @@ jobs:
     with:
       VERSION: "0.32.0"
       NAME: "bcc"
+      UPGRADE-ALL: true
       PACKAGES: "llvm ccache libssh2"
       SOURCE: "https://github.com/iovisor/bcc/releases/download/v0.32.0/bcc-src-with-submodule.tar.gz"
