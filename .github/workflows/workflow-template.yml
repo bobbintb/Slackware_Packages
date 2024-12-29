@@ -90,7 +90,7 @@ jobs:
         slackpkg upgrade-all || true
     - name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
-      run: slackpkg install ${{ inputs.PACKAGES }}
+      run: slapt-get --install ${{ inputs.PACKAGES }}
     - name: Download source code
       if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
       run: |
