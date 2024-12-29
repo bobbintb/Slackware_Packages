@@ -47,6 +47,16 @@ jobs:
         sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-current\//' /etc/slackpkg/mirrors
         slackpkg update gpg <<< y
         slackpkg update <<< y
+    - name: Upgrade all packages
+      if: ${{ inputs.UPGRADE-ALL == true }}
+      run: |
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+    - name: Update slackpkg
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
         wget https://software.jaos.org/slackpacks/slackware64-15.0/slapt-get/slapt-get-0.11.10-x86_64-1.txz
         installpkg *.txz
         rm *.txz
@@ -81,13 +91,7 @@ jobs:
         SOURCE=https://slackers.it/repository/slackware64-current/
         EOF
         slapt-get --update
-    - name: Upgrade all packages
-      if: ${{ inputs.UPGRADE-ALL == true }}
-      run: |
-        slackpkg upgrade-all || true
-        slackpkg upgrade-all || true
-        slackpkg upgrade-all || true
-        slackpkg upgrade-all || true
+
     - name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: slapt-get --install ${{ inputs.PACKAGES }}
