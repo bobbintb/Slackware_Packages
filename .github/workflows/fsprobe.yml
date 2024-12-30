@@ -1,4 +1,4 @@
-name: Build fsprobe
+name: -Build fsprobe
 on:
   workflow_dispatch:
 env:
