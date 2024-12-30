@@ -1,4 +1,4 @@
-name: Build ValKey
+name: -Build ValKey
 on:
   workflow_dispatch:
 env:
