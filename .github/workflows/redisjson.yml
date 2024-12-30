@@ -1,4 +1,4 @@
-name: Build redisjson
+name: -Build redisjson
 on:
   workflow_dispatch:
 env:
