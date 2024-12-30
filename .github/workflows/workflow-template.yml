@@ -51,7 +51,7 @@ jobs:
         sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
         sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
         sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-current\//' /etc/slackpkg/mirrors
-        echo "##########################cache"##########################"
+        echo "##########################cache##########################"
         ls -ls /var/cache/packages
         slackpkg update gpg <<< y
         slackpkg update <<< y
