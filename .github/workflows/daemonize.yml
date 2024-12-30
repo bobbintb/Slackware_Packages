@@ -1,4 +1,4 @@
-name: Build daemonize
+name: -Build daemonize
 on:
   workflow_dispatch:
 env:
