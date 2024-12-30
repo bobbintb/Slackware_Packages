@@ -1,0 +1,832 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+# slackrepo - Automated SlackBuilding from git repo into package repo,
+#             for more details see /usr/doc/slackrepo-*/HOWTO
+#
+# Copyright 2014 David Spencer, Baildon, West Yorkshire, U.K.
+# All rights reserved.
+#
+# Redistribution and use of this script, with or without modification, is
+# permitted provided that the following conditions are met:
+#
+# 1. Redistributions of this script must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+#
+#  THIS SOFTWARE IS PROVIDED BY THE AUTHOR "AS IS" AND ANY EXPRESS OR IMPLIED
+#  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+#  MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO
+#  EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+#  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+#  PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+#  OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+#  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+#  OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+#  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#-------------------------------------------------------------------------------
+
+function print_version
+{
+  echo "%PKGID%"
+  return 0
+}
+
+#-------------------------------------------------------------------------------
+
+function print_usage
+{
+  echo 'Usage:'
+  echo "  $(basename "$0") build   [--control_args] [item...]"
+  echo "  $(basename "$0") rebuild [--control_args] [item...]"
+  echo "  $(basename "$0") update  [--control_args] [item...]"
+  echo "  $(basename "$0") remove  [--control_args] item..."
+  echo "  $(basename "$0") info    [--control_args]"
+  echo 'Control args:'
+  echo '  --repo=ID'
+  echo '  --preview | --dry-run | --install'
+  echo '  --debug (-d)'
+  echo 'For the complete usage and list of control args, please see'
+  echo '  man slackrepo'
+  return 0
+}
+
+#-------------------------------------------------------------------------------
+
+function exit_cleanup
+# Cleanup everything and exit
+# $1 = status to set on exit
+# 0 completed ok
+# 1 interrupted
+# 2 bad usage
+# 3 config not found
+# 4 initialisation error
+# 5 another instance is running
+# 6 internal error
+{
+  stty sane   # in case we're killed waiting for the gpg passphrase
+  [ "$1" = 1 ] && echo -e "\nInterrupted! Cleaning up ..." >/dev/tty
+  if [ -n "$resmonpid" ]; then
+    ${SUDO}/bin/kill -9 "$resmonpid" 2>/dev/null || true
+    wait "$resmonpid" 2>/dev/null || true
+  fi
+  if [ -n "$DBUS_SESSION_BUS_PID" ]; then
+    ${SUDO}/bin/kill -15 "$DBUS_SESSION_BUS_PID" 2>/dev/null || true
+    sleep 1
+  fi
+  # unmount any chroot mounts, in reverse order
+  for rev in $(seq $(( ${#CHRMOUNTS[@]} - 1)) -1 0); do
+    ${SUDO}umount -l "${CHRMOUNTS[$rev]}" 2>/dev/null || true
+  done
+  # and MYTMP is possibly mounted too
+  if [ -n "$MYTMP" ]; then
+    ${SUDO}umount -l "$MYTMP" 2>/dev/null || true
+    rmdir --ignore-fail-on-non-empty "$MYTMP"
+  fi
+  [ -n "$BIGTMP" ] && rm -rf "$BIGTMP"
+  exit ${1:-0}
+}
+
+#-------------------------------------------------------------------------------
+
+if [ $# = 0 ] || [ $# = 1 -a \( "$1" = '-?' -o "$1" = '-h' -o "$1" = '--help' -o "$1" = '-v' -o "$1" = '--version' \) ]; then
+  print_version
+  echo ""
+  print_usage
+  echo ""
+  exit_cleanup 0
+fi
+
+starttime=$(date +%s)
+
+#-------------------------------------------------------------------------------
+# Command modes and options
+#-------------------------------------------------------------------------------
+
+# General rule:
+# OPT_XXXX is the internal representation of command line option XXXX
+# SR_XXXX is the internal representation of config file variable XXXX
+# These are not documented. Users should set the XXXX variable (no prefix).
+# But we can inherit OPT_ and SR_ variables for multi-repo support ;-)
+
+# The command modes and options are extensible by adding more source files in
+#   /usr/libexec/slackrepo/functions.d
+# To define an extended command mode 'foo', add a function named foo_command
+# To define an extended option '--bar', do OPTIONLIST+=( 'BAR' )
+
+# Initialise OPTIONLIST first so that any extended options are at the end
+OPTIONLIST=( 'REPO' 'VERBOSE' 'VERY_VERBOSE' 'NOWARNING' \
+  'PREVIEW' 'DRY_RUN' 'INSTALL' 'LINT' 'KEEP_TMP' 'CHROOT' 'COLOR' 'NICE' 'REPRODUCIBLE' )
+
+# Get the support functions
+LIBEXECDIR="/usr/libexec/$(basename "$0")"
+for f in "${LIBEXECDIR}"/functions.d/*.sh; do
+  if [ -x "$f" ]; then
+    . "$f"
+  fi
+done
+
+# Initialise all the undefined options to null, set -u friendly ;-)
+for opt in "${OPTIONLIST[@]}" ; do
+  optopt="OPT_$opt"
+  [ "${!optopt-unset}" = 'unset' ] && [ -z "${!optopt}" ] && eval "$optopt"=''
+done
+# Initialise OPT_REPO from env var $REPO
+OPT_REPO="${OPT_REPO:-$REPO}"
+# Default for OPT_COLOR
+OPT_COLOR="${OPT_COLOR:-auto}"
+# Default for OPT_NICE
+OPT_NICE="${OPT_NICE:-5}"
+# No default for the command (build/rebuild/update/remove/...):
+CMD=''
+
+while [ $# != 0 ]; do
+  case "$1" in
+    # we'll accept add/build/rebuild/update/remove/revert with or without '--'
+    build | --build | add | --add )
+      [ -n "$CMD" ] && { print_usage; exit_cleanup 2; }
+      CMD='build'
+      shift; continue ;;
+    rebuild | --rebuild )
+      [ -n "$CMD" ] && { print_usage; exit_cleanup 2; }
+      CMD='rebuild'
+      shift; continue ;;
+    update | --update )
+      [ -n "$CMD" ] && { print_usage; exit_cleanup 2; }
+      CMD='update'
+      shift; continue ;;
+    install )
+      [ -n "$CMD" ] && { print_usage; exit_cleanup 2; }
+      # transform the 'install' command into 'build --install'
+      CMD='build'
+      OPT_INSTALL='y'
+      shift; continue ;;
+    remove | --remove )
+      [ -n "$CMD" ] && { print_usage; exit_cleanup 2; }
+      CMD='remove'
+      shift; continue ;;
+    revert | --revert | restore | --restore )
+      [ -n "$CMD" ] && { print_usage; exit_cleanup 2; }
+      CMD='revert'
+      shift; continue ;;
+    --repo=* )
+      OPT_REPO="${1/--repo=/}"
+      shift; continue ;;
+    --verbose | -v )
+      [ "$OPT_VERBOSE" = 'y' ] && OPT_VERY_VERBOSE='y'
+      OPT_VERBOSE='y'
+      shift; continue ;;
+    --very-verbose | -vv )
+      OPT_VERY_VERBOSE='y'
+      shift; continue ;;
+    --debug | -d )
+      OPT_VERY_VERBOSE='y'
+      OPT_DRY_RUN='y'
+      OPT_LINT='y'
+      OPT_KEEP_TMP='y'
+      shift; continue ;;
+    --color=* | --colour=* )
+      OPT_COLOR="${1/--colo*r=/}"
+      shift; continue ;;
+    --nowarning=* | --nowarnings=* )
+      OPT_NOWARNING="${1/--nowarning*=/}"
+      [ "${OPT_NOWARNING}" = '' ] && OPT_NOWARNING='.*'
+      shift; continue ;;
+    -* )
+      found='n'
+      for opt in "${OPTIONLIST[@]}"; do
+        arg=$(echo "$opt" | tr '_' '-' | tr '[:upper:]' '[:lower:]')
+        if [ "$1" = "--${arg}" ] || [ "$1" = "--${arg}=yes" ] || [ "$1" = "--${arg}=y" ]; then
+          eval OPT_"${opt}"='y'
+          found='y'; break
+        elif [ "$1" = "--no-${arg}" ] || [ "$1" = "--${arg}=no" ] || [ "$1" = "--${arg}=n" ] || [ "$1" = "--${arg}=none" ]; then
+          eval OPT_"${opt}"='n'
+          found='y'; break
+        elif [ "${1/=*/=}" = "--${arg}=" ]; then
+          eval OPT_"${opt}"="${1#*=}"
+          found='y'; break
+        fi
+      done
+      [ "$found" = 'n' ] && { echo "$(basename "$0"): Error: invalid control argument: $1" >&2; exit_cleanup 2; }
+      shift; continue ;;
+    * )
+      if [ "$(type -t "${1}_command")" = 'function' ]; then
+        [ -n "$CMD" ] && { print_usage; exit_cleanup 2; }
+        CMD="$1"
+        shift; continue
+      else
+        break
+      fi
+      ;;
+  esac
+done
+
+if [ -z "$CMD" ]; then
+  print_usage
+  exit_cleanup 2
+elif [ $# = 0 ]; then
+  if [ "$CMD" = 'remove' ]; then
+    echo "Usage: $(basename "$0") remove [--repo=ID] item..."
+    echo "(you must specify the items to be removed)"
+    exit_cleanup 2
+  elif [ "$CMD" = 'revert' ] ; then
+    echo "Usage: $(basename "$0") revert [--repo=ID] item..."
+    echo "(you must specify the items to be reverted)"
+    exit_cleanup 2
+  fi
+fi
+
+#-------------------------------------------------------------------------------
+# Startup
+#-------------------------------------------------------------------------------
+
+if [ "$EUID" != 0 ]; then
+  if [ ! -x /usr/bin/fakeroot ]; then
+    echo "$(basename "$0"): Running as non-root user, but fakeroot is not installed."
+    echo "$(basename "$0"): You should either install fakeroot or run slackrepo as root."
+    exit_cleanup 4
+  elif ! sudo -v >/dev/null 2>&1; then
+    echo "$(basename "$0"): Running as non-root user, but sudo is not configured."
+    echo "$(basename "$0"): You need to edit /etc/sudoers.d/slackrepo."
+    exit_cleanup 4
+  fi
+  SUDO="/usr/bin/sudo "
+  export PATH="${LIBEXECDIR}:/usr/local/sbin:/usr/sbin:/sbin:$PATH"
+else
+  SUDO=''
+  export PATH="${LIBEXECDIR}:$PATH"
+fi
+
+# If there is no existing dbus session instance for root, create one.  We need
+# to have a dbus session instance for root outside the chroot, to prevent
+# commands like gconftool-2 (in doinst.sh) launching a dbus in the chroot that
+# would persist after chroot exits and stop us unmounting the overlay (*BIG SIGH*)
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+  dbuscrap="$(DISPLAY='' ${SUDO}dbus-launch --sh-syntax 2>/dev/null)"
+  eval "${dbuscrap}"
+fi
+
+# Ensure ctrl-c (etc) exits the whole thing, not just a random subshell
+trap "exit_cleanup 1" SIGINT SIGQUIT SIGTERM
+
+#-------------------------------------------------------------------------------
+# Configuration
+#-------------------------------------------------------------------------------
+
+# Find out about the host system.
+if [ -f /etc/os-release ]; then
+  # Lennart is my copilot <3
+  . /etc/os-release
+  SYS_OSNAME="${ID:-linux}"
+  SYS_OSVER="${VERSION_ID:-}"
+elif [ -f /etc/slackware-version ]; then
+  SYS_OSNAME='slackware'
+  SYS_OSVER="$(sed 's/^Slackware //' /etc/slackware-version)"
+else
+  echo "$(basename "$0"): Error: /etc/slackware-version not found"
+  exit_cleanup 4
+fi
+SYS_KERNEL=$(uname -r)
+SYS_ARCH=$(uname -m)
+SYS_MULTILIB='n'
+[ "$SYS_ARCH" = 'x86_64' ] && [ -f /etc/profile.d/32dev.sh ] && SYS_MULTILIB='y'
+SYS_NPROC=$(nproc)
+[ -f /proc/cpuinfo ] && SYS_MHz=$(awk '/^cpu MHz/ {sum+=$4} END {print sum}' < /proc/cpuinfo)
+# If that's jiggered (stupid Pi kernels), try this. Then give up like W.C. Fields said.
+[ -z "$SYS_MHz" ] && [ -f /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq ] && \
+  SYS_MHz=$(cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq | sed 's/...$//')
+SYS_OVERLAYFS='n'
+# don't look at the kernel version -- somebody might have the old patchset,
+# or we might be in something like an OpenVZ instance
+if \
+  [ -d /sys/module/overlay ] || \
+  [ -f /lib/modules/"$(uname -r)"/kernel/fs/overlayfs/overlay.ko ] || \
+  grep -q overlay /proc/filesystems
+then
+  SYS_OVERLAYFS='y'
+fi
+# Detect current
+SYS_CURRENT='n'
+if [ -f /var/lib/slackpkg/ChangeLog.txt ] && ! grep -q "${SYS_OSVER}.*is released" /var/lib/slackpkg/ChangeLog.txt; then
+  # we must be in-between updating aaa_base and the real release
+  SYS_CURRENT='y'
+elif [ "${SYS_OSNAME}${SYS_OSVER}" = "slackware14.2" ]; then
+  # file-5.25 was the first package superseded in this cycle of current
+  for filefile in /var/log/packages/file-5.25-*-1; do
+    if [ ! -f "$filefile" ]; then
+      SYS_CURRENT='y'
+      break
+    fi
+  done
+# else we're not going to support someone stuck in a 14.1 cycle timewarp
+fi
+
+# Next, do the config variables.
+# These config vars are prefixed with SR_ to stop SlackBuilds picking them up.
+# However, they do NOT have the SR_ prefix in the config files or environment.
+varnames="SBREPO SRCREPO PKGREPO PKGBACKUP \
+          HINTDIR DEFAULT_HINTDIR LOGDIR DATABASE TMP \
+          ARCH TAG PKGTYPE NUMJOBS"
+# These config vars don't need to be obfuscated:
+genrepnames="USE_GENREPOS REPOSROOT REPOSOWNER REPOSOWNERGPG DL_URL \
+             RSS_TITLE RSS_ICON RSS_LINK RSS_CLURL RSS_DESCRIPTION RSS_FEEDMAX RSS_UUID \
+             GPGBIN USE_GPGAGENT FOR_SLAPTGET FOLLOW_SYMLINKS REPO_SUBDIRS REPO_EXCLUDES"
+initnames="INIT_GITCLONE INIT_GITBRANCH"
+# Initialise the SR_variables from the environment:
+for envvar in $varnames $genrepnames $initnames "${OPTIONLIST[@]}" ; do
+  srvar="SR_$envvar"
+  eval "$srvar=\"${!envvar}\""
+done
+
+# Per-user config files:
+userconf=~/.slackreporc
+genrepconf=~/.genreprc
+# Read the user config file to get $REPO:
+if [ -f "$userconf" ]; then
+  . "$userconf"
+fi
+
+# If we didn't get a repo id from env or cmd line, drop $REPO from the user config file into $OPT_REPO:
+if [ -z "$OPT_REPO" ]; then
+  if [ "$SYS_CURRENT" = "y" ]; then
+    OPT_REPO="${REPO:-ponce}"
+  else
+    OPT_REPO="${REPO:-SBo}"
+  fi
+fi
+# Read the main repo config file, overriding anything that came from the user config file:
+repoconf="${CONFIGDIR:-/etc/slackrepo}/slackrepo_${OPT_REPO}.conf"
+if [ -f "$repoconf" ]; then
+  . "$repoconf"
+else
+  echo "$(basename "$0"): Error: No repo '${OPT_REPO}' (configuration file not found: $repoconf)" >&2; exit_cleanup 3
+fi
+# Read the user config files to override everything in the main repo config file.
+# (Yes, we're reading ~/.slackreporc twice, but that's a lot easier than a proper solution)
+for conf in "$userconf" "$genrepconf"; do
+  if [ -f "$conf" ]; then
+    . "$conf"
+  fi
+done
+
+# Save the LINT config variable, we need it as a default for '--lint=y' or '--lint'
+# (see below!)
+LINT_DEFAULTS="$LINT"
+
+# Backfill the SR_ variables from config file variables,
+# and unset the config file variables to prevent SlackBuilds from seeing them:
+for name in $varnames $genrepnames $initnames; do
+  srvar="SR_$name"
+  [ -z "${!srvar}" ] && eval "$srvar=\"${!name}\""
+  eval unset "$name"
+done
+# and do something similar for the OPT_ variables:
+for name in "${OPTIONLIST[@]}" ; do
+  optvar="OPT_$name"
+  [ -z "${!optvar}" ] && eval "$optvar=\"${!name}\""
+  eval unset "$name"
+  # simplify anything that looks like a Boolean:
+  if   [ "${!optvar}" = '1' ] || [ "${!optvar}" = 'yes' ] || [ "${!optvar}" = 'y' ] || [ "${!optvar}" = 'YES' ] || [ "${!optvar}" = 'Y' ]; then
+    eval "$optvar"='y'
+  elif [ "${!optvar}" = '0' ] || [ "${!optvar}" = 'no'  ] || [ "${!optvar}" = 'n' ] || [ "${!optvar}" = 'NO'  ] || [ "${!optvar}" = 'N' ] || [ "${!optvar}" = 'none' ] || [ "${!optvar}" = '' ]; then
+    eval "$optvar"='n'
+  fi
+done
+
+# Resolve conflicting options:
+# --very-verbose implies --verbose
+[ "$OPT_VERY_VERBOSE" = 'y' ] && OPT_VERBOSE='y'
+# --preview or --dry-run overrides --install
+[ "$OPT_PREVIEW" = 'y' ] && OPT_INSTALL='n'
+[ "$OPT_DRY_RUN" = 'y' ] && OPT_INSTALL='n'
+# lazy implementation of --very-verbose ;-)
+[ "$OPT_VERY_VERBOSE" = 'y' ] && export VERBOSE=1 V=1
+# compatibility fix, OPT_CHROOT is now a pathname or 'n'
+[ "$OPT_CHROOT" = 'y' ] && OPT_CHROOT='/'
+# chroot will only work if overlayfs is available
+[ "$SYS_OVERLAYFS" != 'y' ] && OPT_CHROOT='n'
+# accept null niceness, map to zero
+[ -z "$OPT_NICE" ] && OPT_NICE='0'
+# fixup NOWARNING (if you really want the regex to match 'n', see a doctor)
+[ "$OPT_NOWARNING" = 'n' ] && OPT_NOWARNING=''
+
+# Set up the OPT_LINT_* suboptions. This is horrible, sorry.
+LINT_ALL="sb,dl,x,net,pkg,inst"
+[ "${LINT_DEFAULTS}" = 'y' ] && LINT_DEFAULTS="${LINT_ALL}"
+# start by turning them all off
+for vopt in $(echo "${LINT_ALL}" | sed 's/,/ /g'); do
+  eval OPT_LINT_"${vopt^^}"='n'
+done
+# handle yes/no/etc
+case "${OPT_LINT}" in
+  y|yes|1)      OPT_LINT="${LINT_DEFAULTS}" ;;
+  a|all)        OPT_LINT="${LINT_ALL}" ;;
+  n|none|''|0)  OPT_LINT="n" ;;
+  *)            : ;;
+esac
+# turn them on individually
+if [ "$OPT_LINT" != 'n' ]; then
+  foundopts=''
+  for uopt in $(echo "$OPT_LINT" | sed 's/,/ /g'); do
+    found='n'
+    for vopt in $(echo "${LINT_ALL}" | sed 's/,/ /g'); do
+      if [ "$uopt" = "$vopt" ]; then
+        found='y'
+        foundopts="${foundopts}${vopt},"
+        eval OPT_LINT_"${vopt^^}"='y'
+        break
+      fi
+    done
+    [ "$found" = 'n' ] && echo "$(basename "$0"): lint option not valid: $uopt" >&2
+  done
+  OPT_LINT="${foundopts%%,}"
+fi
+
+# Set up the dependency substitutions in SUBST
+declare -A SUBST
+if [ -n "$SR_SUBSTITUTE" ]; then
+  for sub in $(echo $(echo $SR_SUBSTITUTE | sed -e 's/,/ /g') | sed -e 's/ *=> */=>/g') ; do
+    depdel="${sub/=>*/}"
+    depadd="${sub/*=>/}"
+    [ "${depdel:0:1}" = '!' ] && depadd='!'
+    [ -z "$depadd" ] && depadd='!'
+    SUBST[${depdel##!}]="$depadd"
+  done
+fi
+
+# If SR_NUMJOBS or SR_ARCH not set, work them out and set them explicitly
+if [ -z "$SR_NUMJOBS" ]; then
+  SR_NUMJOBS="-j$(( SYS_NPROC * 2 )) -l$(( SYS_NPROC + 1 ))"
+fi
+# setting ARCH breaks lots of SlackBuilds, which is why we do it ;-)
+if [ -z "$SR_ARCH" ] || [ "$SR_ARCH" = '%ARCH%' ]; then
+  case "$SYS_ARCH" in
+    i?86) if [ "$SYS_OSVER" = '14.1' ]; then
+            SR_ARCH='i486'
+          else
+            SR_ARCH='i586'
+          fi
+          ;;
+    arm*) SR_ARCH='arm' ;;
+       *) SR_ARCH="$SYS_ARCH" ;;
+  esac
+fi
+
+# Substitute %REPO%, %SLACKVER% and %ARCH%
+for name in $varnames $genrepnames $initnames; do
+  srvar="SR_$name"
+  eval "$srvar=\"$(echo "${!srvar}" | sed -e "s/%REPO%/$OPT_REPO/g" -e "s/%SLACKVER%/$SYS_OSVER/g" -e "s/%ARCH%/$SR_ARCH/g")\""
+done
+for name in OPT_CHROOT; do
+  eval "$name=\"$(echo "${!name}" | sed -e "s/%REPO%/$OPT_REPO/g" -e "s/%SLACKVER%/$SYS_OSVER/g" -e "s/%ARCH%/$SR_ARCH/g")\""
+done
+
+#-------------------------------------------------------------------------------
+
+# Run the 'info' command right now.
+# It's completely passive, we don't want to initialise the repo.
+[ "${CMD}" = 'info' ] && { info_command; exit_cleanup 0; }
+
+#-------------------------------------------------------------------------------
+# Initialisation
+#-------------------------------------------------------------------------------
+
+# Setup locking and logging:
+LOCKFILE="$(dirname "$SR_SBREPO")/.lock"
+if ! mkdir -p "$(dirname "$LOCKFILE")"; then
+  echo "$(basename "$0"): Failed to create repository root directory: $(dirname "$LOCKFILE")" >&2
+  [ "$EUID" != 0 ] && echo "You're not root, you need to set SBREPO to a writable directory." >&2
+  exit_cleanup 4
+fi
+if ! touch "$LOCKFILE"; then
+  echo "$(basename "$0"): Failed to create lock file: $LOCKFILE" >&2
+  [ "$EUID" != 0 ] && echo "You're not root, you need to set SBREPO to a writable directory." >&2
+  exit_cleanup 4
+fi
+if ! mkdir -p "$SR_LOGDIR"; then
+  echo "$(basename "$0"): Failed to create log directory: $SR_LOGDIR" >&2
+  [ "$EUID" != 0 ] && echo "You're not root, you need to set LOGDIR to a writable directory." >&2
+  exit_cleanup 4
+fi
+MAINLOG="$SR_LOGDIR"/$(basename "$0")_$(date '+%F_%T').log
+init_colour
+if [ "$DOCOLOUR" = 'y' ]; then
+  exec 40>"$LOCKFILE" 41>&1 &> >( tee >(sed -u -e 's/\x1b\[[0-9?;]*[]a-zA-Z]//g' -e 's/\x9b[0-9?;]*[]a-zA-Z]//g' -e 's/\x1b[()].//' -e 's/\x0e//g' -e 's/\x0f//g' >"$MAINLOG") )
+else
+  exec 40>"$LOCKFILE" 41>&1 &> >( tee "$MAINLOG" )
+fi
+flock -x --nb 40
+if [ $? != 0 ]; then
+  echo "$(basename "$0"): Repository ${OPT_REPO} is locked by another process." >&2
+  exit_cleanup 5
+fi
+
+# Arrays for tracking outcomes:
+declare -a OKLIST WARNINGLIST SKIPPEDLIST FAILEDLIST ABORTEDLIST
+
+# Validate $OPT_CHROOT:
+if [ "$OPT_CHROOT" != 'n' ]; then
+  if [ ! -d "$OPT_CHROOT" ]; then
+    log_error "chroot is not a directory: $OPT_CHROOT"; exit_cleanup 4
+  elif [ ! -x "$OPT_CHROOT"/bin/bash ]; then
+    log_error "Not a usable chroot: $OPT_CHROOT"; exit_cleanup 4
+  else
+    OPT_CHROOT=$(realpath "$OPT_CHROOT")
+  fi
+fi
+
+# Create directories:
+[ -d "$SR_SBREPO" ]   || \
+  { log_normal "Creating SlackBuild repository: $SR_SBREPO" ; mkdir -p "$SR_SBREPO"    || \
+  { log_error "Failed to create repository"; exit_cleanup 4; }; }
+[ -d "$SR_SRCREPO" ]  || \
+  { log_normal "Creating source repository: $SR_SRCREPO"    ; mkdir -p "$SR_SRCREPO"   || \
+  { log_error "Failed to create repository"; exit_cleanup 4; }; }
+[ -d "$SR_PKGREPO" ]  || \
+  { log_normal "Creating package repository: $SR_PKGREPO"   ; mkdir -p "$SR_PKGREPO"   || \
+  { log_error "Failed to create repository"; exit_cleanup 4; }; }
+[ -z "$SR_PKGBACKUP" ] || [ -d "$SR_PKGBACKUP" ] || \
+  { log_normal "Creating backup repository: $SR_PKGBACKUP"  ; mkdir -p "$SR_PKGBACKUP" || \
+  { log_error "Failed to create repository"; exit_cleanup 4; }; }
+[ -d "$SR_HINTDIR" ]  || \
+  { log_normal "Creating hintfile directory: $SR_HINTDIR"   ; mkdir -p "$SR_HINTDIR"   || \
+  { log_error "Failed to create directory";  exit_cleanup 4; }; }
+
+# sqlite database for revision details, package identification, build times etc
+# This is now *required* so here is a default path:
+[ -n "$SR_DATABASE" ] || SR_DATABASE="$(dirname "$SR_SBREPO")/database_${OPT_REPO}.sqlite3"
+db_init || { log_error "Failed to initialise database"; exit_cleanup 4; }
+
+# Temporary directory:
+SR_TMP=${SR_TMP:-/tmp/SBo}
+# really really don't want the next bit to go badly ;-)
+if [ -n "$SR_TMP" ] && [ -d "$SR_TMP" ]; then
+  log_normal "Cleaning $SR_TMP ... "
+  find "${SR_TMP:?NotSetSR_TMP}" -mindepth 1 -maxdepth 1 -exec ${SUDO}rm -rf {} \;
+  log_done
+fi
+mkdir -p "$SR_TMP" || { log_error "Failed to create $SR_TMP"; exit_cleanup 4; }
+[ -n "$SUDO" ] && ${SUDO}chown "$USER" "$SR_TMP"
+
+# We need a slackrepo-specific temporary directory, for small stuff only
+MYTMP=$(mktemp -t -d slackrepo.XXXXXX) || { log_error "Failed to create temporary directory"; exit_cleanup 4; }
+# Mount a tmpfs on MYTMP: (1) it's fast, (2) we might already be in an overlay,
+# and you can't have upperdir or workdir on an overlay
+${SUDO}mount -t tmpfs -o defaults,mode=1777 tmpfs "$MYTMP" || { log_error "Failed to mount $MYTMP"; exit_cleanup 4; }
+
+# We need a temporary directory for big stuff too
+BIGTMP=$(mktemp -t -p "$SR_TMP" -d slackrepo.XXXXXX) || { log_error "Failed to create directory in $SR_TMP"; exit_cleanup 4; }
+
+#### Probably should make --keep-tmp force $TMP into $MYTMP
+
+# Disposable package repository for dry run:
+if [ "$OPT_DRY_RUN" = 'y' ]; then
+  TMP_DRYREPO="$BIGTMP"/dryrun-packages
+  rm -rf "$TMP_DRYREPO"
+  mkdir -p "$TMP_DRYREPO"
+fi
+
+#-------------------------------------------------------------------------------
+
+# We will use $SR_SBREPO as the working directory; it simplifies lots of git stuff.
+cd "$SR_SBREPO" || { log_error "Failed to access SlackBuilds repository"; exit_cleanup 4; }
+
+#-------------------------------------------------------------------------------
+
+# We used to check whether this is a git repo with...
+# if [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = "true" ]; then
+# ... but it's painfully slow, so instead we'll just do this:
+GOTGIT=n
+[ -d "$SR_SBREPO/.git" ] && GOTGIT='y'
+
+# git: initialise, or check and update
+if [ -z "$(ls "$SR_SBREPO" 2>/dev/null)" ]; then
+  if [ -n "${SR_INIT_GITCLONE}" ]; then
+    log_normal "Cloning SlackBuilds repository $SR_SBREPO from ${SR_INIT_GITCLONE}."
+    git clone "${SR_INIT_GITCLONE}" "$SR_SBREPO" || \
+      { log_error "Failed to clone from ${SR_INIT_GITCLONE}"; exit_cleanup 4; }
+    git fetch -a
+    git remote update
+    mybranch="${SR_INIT_GITBRANCH:-${SYS_OSVER:-master}}"
+    if [ "$(git rev-parse --abbrev-ref HEAD)" != "$mybranch" ]; then
+      git checkout -b "$mybranch" -t origin/"$mybranch"
+    fi
+    db_set_misc "git_fetch_${SR_INIT_GITBRANCH}" "$(date +%s)"
+    log_normal "Finished cloning SlackBuilds repository."
+    GOTGIT='y'
+  fi
+fi
+
+# Run the start hooks here, probably including gitfetch_hook
+run_hooks start
+
+# Index the slackbuilds, for speed
+sbindexed="$(db_get_misc "indexed_slackbuilds")"
+[ "$GOTGIT" = 'y' ] && gitdate="$(git log -n 1 --format=%ct)"
+if [ "$GOTGIT" = 'n' ] || [ -n "$muck" ] || [ "${sbindexed:-0}" != "$gitdate" ]; then
+  log_normal "Indexing SlackBuilds ... "
+  db_index_slackbuilds
+  if [ "$GOTGIT" = 'n' ] || [ -n "$muck" ]; then
+    db_set_misc "indexed_slackbuilds" "$(date +%s)"
+  else
+    db_set_misc "indexed_slackbuilds" "$gitdate"
+  fi
+  log_done
+fi
+
+# Show some info about the repo
+if [ "$GOTGIT" = 'y' ]; then
+  [ -n "$(git status -s .)" ] && dirty=' (DIRTY)'
+  log_info "git repo: $SR_SBREPO"
+  log_info "branch:   $(git rev-parse --abbrev-ref HEAD)"
+  log_info "date:     $(date --date=@${gitdate})"
+  log_info "revision: $(git rev-parse HEAD)$dirty"
+  log_info "title:    $(git log -n 1 --format=%s)"
+else
+  log_info "SlackBuild repo: $SR_SBREPO (not git)"
+fi
+
+# Changelog:
+CHANGELOG="$SR_PKGREPO"/.changelog
+if [ -s "$CHANGELOG" ]; then
+  log_important "Continuing changelog from previous run."
+else
+  mkdir -p "$(dirname "$CHANGELOG")"
+  true > "$CHANGELOG"
+fi
+
+declare -A KEEPINSTALLED
+# Warn about already installed packages (using package tag)
+if [ -n "$SR_TAG" ] && [ "$OPT_INSTALL" != 'y' ] && [ "$CMD" != 'remove' ]; then
+  for pkg in /var/log/packages/*"$SR_TAG"; do
+    if [ -f "$pkg" ]; then
+      pkgid="${pkg##*/}"
+      [ "${#KEEPINSTALLED[@]}" = 0 ] && log_warning -s "Packages with tag $SR_TAG are already installed"
+      log_normal "  $pkgid"
+      KEEPINSTALLED[${pkgid%-*-*-*}]="$pkgid"
+    fi
+  done
+fi
+
+log_normal ""
+
+#-------------------------------------------------------------------------------
+# Main loop
+#-------------------------------------------------------------------------------
+
+if [ $# = 0 ]; then
+  # no args => process everything
+  set -- '*'
+fi
+
+while [ $# != 0 ]; do
+  arg="$1"
+  shift
+  [ "$arg" = '*' ] && log_normal "Calculating list of items to process ... "
+  parse_arg "$arg"
+  [ "$arg" = '*' ] && log_done && log_normal ""
+  # Note that we set the variable $ITEMID (upper case) so that other functions
+  # called recursively (which get $itemid as an argument) can test whether they
+  # are dealing with the top level item.
+  for ITEMID in "${PARSEDARGS[@]}"; do
+    log_start "$ITEMID"
+    # Commands are extensible, just put a script defining CMD_command() into functions.d/
+    cmdfunction="${CMD}_command"
+    if [ "$(type -t "$cmdfunction")" = 'function' ]; then
+      eval "${CMD}_command" "$ITEMID"
+    else
+      log_error "$(basename "$0"): Unrecognised CMD = $CMD"
+      exit_cleanup 6
+    fi
+  done
+done
+
+#-------------------------------------------------------------------------------
+# Print a summary of what happened
+#-------------------------------------------------------------------------------
+
+log_start "SUMMARY"
+log_normal "Logfile:     $MAINLOG"
+secs=$(( $(date +%s) - starttime ))
+h=$(( secs / 3600 )); m=$(( ( secs / 60) % 60 )); s=$(( secs % 60 ))
+log_normal "Runtime:     ${h}h ${m}m ${s}s"
+
+if [ "$OPT_PREVIEW" = 'y' ]; then
+  knownitems=( ${!STATUSINFO[@]} )
+  PENDINGLIST=()
+  totalbuildsecs=60  # always estimate at least 1 min ;-)
+  unknownbuildsecs=0
+  for i in ${knownitems[@]}; do
+    case "${STATUS[$i]}" in
+      ok|updated|skipped|unsupported|aborted)
+        : ;;
+      *)
+        PENDINGLIST+=( "$(printf '%s (%s)\n' "$i" "${STATUSINFO[$i]}")" )
+        estbuildsecs=''
+        read -r prevsecs prevmhz guessflag < <(db_get_buildsecs "$i")
+        if [ -n "$prevsecs" ] && [ -n "$prevmhz" ] && [ -n "$SYS_MHz" ]; then
+          estbuildsecs=$(echo "scale=3; ${prevsecs}*${prevmhz}/${SYS_MHz}+1" | bc | sed 's/\..*//')
+        fi
+        if [ -z "$estbuildsecs" ]; then
+          unknownbuildsecs=$(( unknownbuildsecs + 1 ))
+        else
+          totalbuildsecs=$(( totalbuildsecs + estbuildsecs ))
+        fi
+        ;;
+    esac
+  done
+  pendingcount="${#PENDINGLIST[@]}"
+  if [ "$pendingcount" != 0 ]; then
+    log_normal "Pending:     $pendingcount"
+    log_info "$(printf '  %s\n' "${PENDINGLIST[@]}" | sort)"
+    ((hr=${totalbuildsecs}/3600))
+    ((mn=(${totalbuildsecs}%3600)/60))
+    if [ "$unknownbuildsecs" = 0 ]; then
+      log_normal "Estimated build time ${hr}h ${mn}m"
+    else
+      log_normal "Estimated build time ${hr}h ${mn}m (+ $unknownbuildsecs unknown)"
+    fi
+  fi
+elif [ "$OPT_DRY_RUN" = 'y' ]; then
+  OKLIST=( $(printf '%s\n' "${OKLIST[@]}" | sort -u) )
+  okcount="${#OKLIST[@]}"
+  if [ "$okcount" != 0 ]; then
+    log_normal "Dry run OK:  $okcount"
+    log_info "$(printf '  %s\n' "${OKLIST[@]}")"
+  fi
+else
+  if [ "$CMD" = 'build' ] || [ "$CMD" = 'rebuild' ] || [ "$CMD" = 'update' ]; then
+    addedcount=$(grep -c ': Added'   "$CHANGELOG")
+    if [ "$addedcount" != 0 ]; then
+      log_normal "Added:       $addedcount"
+      log_info "$(grep ': Added'    "$CHANGELOG" | sed -e 's/^/  /' -e 's/:.*//' | sort)"
+    fi
+    updatedcount=$(grep -c ': Updated' "$CHANGELOG")
+    if [ "$updatedcount" != 0 ]; then
+      log_normal "Updated:     $updatedcount"
+      log_info "$(grep ': Updated'  "$CHANGELOG" | sed -e 's/^/  /' -e 's/:.*//' | sort)"
+    fi
+    rebuiltcount=$(grep -c ': Rebuilt' "$CHANGELOG")
+    if [ "$rebuiltcount" != 0 ]; then
+      log_normal "Rebuilt:     $rebuiltcount"
+      log_info "$(grep ': Rebuilt'  "$CHANGELOG" | sed -e 's/^/  /' -e 's/:.*//' | sort)"
+    fi
+  fi
+  if [ "$CMD" = 'update' ] || [ "$CMD" = 'remove' ]; then
+    log_normal "Removed:     $(grep -c ': Removed' "$CHANGELOG")"
+    log_info "$(grep ': Removed'  "$CHANGELOG" | sed -e 's/^/  /' -e 's/:.*//' | sort)"
+  fi
+  if [ "$CMD" = 'revert' ]; then
+    log_normal "Reverted:    $(grep -c ': Reverted' "$CHANGELOG")"
+    log_info "$(grep ': Reverted' "$CHANGELOG" | sed -e 's/^/  /' -e 's/:.*//' | sort)"
+  fi
+fi
+
+SKIPPEDLIST=( $(printf '%s\n' "${SKIPPEDLIST[@]}" | sort -u) )
+skippedcount="${#SKIPPEDLIST[@]}"
+if [ "$skippedcount" != 0 ]; then
+  log_normal "Skipped:     $skippedcount"
+  log_info "$(printf '  %s\n' "${SKIPPEDLIST[@]}")"
+fi
+UNSUPPORTEDLIST=( $(printf '%s\n' "${UNSUPPORTEDLIST[@]}" | sort -u) )
+unsupportedcount="${#UNSUPPORTEDLIST[@]}"
+if [ "$unsupportedcount" != 0 ]; then
+  log_normal "Unsupported: $unsupportedcount"
+  log_info "$(printf '  %s\n' "${UNSUPPORTEDLIST[@]}")"
+fi
+FAILEDLIST=( $(printf '%s\n' "${FAILEDLIST[@]}" | sort -u) )
+failedcount="${#FAILEDLIST[@]}"
+if [ "$failedcount" != 0 ]; then
+  log_normal "Failed:      $failedcount"
+  log_info "$(printf '  %s\n' "${FAILEDLIST[@]}")"
+fi
+ABORTEDLIST=( $(printf '%s\n' "${ABORTEDLIST[@]}" | sort -u) )
+abortedcount="${#ABORTEDLIST[@]}"
+if [ "$abortedcount" != 0 ]; then
+  log_normal "Aborted:     $abortedcount"
+  log_info "$(printf '  %s\n' "${ABORTEDLIST[@]}")"
+fi
+# Don't bother enumerating 'bad' items (not found, etc)
+uniquewarnings=()
+[ "${#WARNINGLIST[@]}" != 0 ] && while read -r warning; do uniquewarnings+=( "$warning" ); done < <(printf '%s\n' "${WARNINGLIST[@]}" | sort -u )
+warningcount="${#uniquewarnings[@]}"
+if [ "$warningcount" != 0 ]; then
+  log_normal "Warnings:    $warningcount"
+  log_info "$(printf '  %s\n' "${uniquewarnings[@]}")"
+fi
+
+#-------------------------------------------------------------------------------
+# Run the finish hooks, probably including gen_repos_files.sh
+
+# Hooks can prevent removal of the changelog by setting $changelogstat nonzero.
+# (The changelog is for gen_repos_files.sh, and if gen_repos_files.sh fails e.g.
+# because of signing problems, we want to keep the changelog. But if the genrepos
+# hook isn't being run, we want to remove the changelog.)
+changelogstat=0
+
+run_hooks finish
+
+[ "$changelogstat" = 0 ] && rm -f "$CHANGELOG"
+
+#-------------------------------------------------------------------------------
+
+log_normal ""
+exit_cleanup 0
