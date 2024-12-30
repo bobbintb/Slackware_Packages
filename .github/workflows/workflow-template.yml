@@ -89,12 +89,12 @@ jobs:
         # Slackers.it
         SOURCE=https://slackers.it/repository/slackware64-current/
         EOF
-        slapt-get --add-keys
-        slapt-get --update
+        # slapt-get --add-keys
+        # slapt-get --update
 
     - name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
-      run: slapt-get --install ${{ inputs.PACKAGES }}
+      run: slackpkg install ${{ inputs.PACKAGES }}
     - name: Download source code
       if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
       run: |
