@@ -1,4 +1,4 @@
-name: Build laurel
+name: -Build laurel
 on:
   workflow_dispatch:
 env:
