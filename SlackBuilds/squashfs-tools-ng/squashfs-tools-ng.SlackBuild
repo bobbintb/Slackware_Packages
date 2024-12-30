@@ -109,7 +109,8 @@ find -L . \
 # these are provided as an example only.
 # Be sure to build only shared libraries unless there's some need for
 # static.
-./configure.ac
+./autogen.sh
+./configure
 
 # Compile the application and install it into the $PKG directory
 make
