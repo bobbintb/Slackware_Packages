@@ -1,0 +1,116 @@
+name: Workflow template
+on:
+  workflow_call:
+    inputs:
+      NAME:
+        description: 'Program name'
+        required: true
+        type: string
+      VERSION:
+        description: 'Program version'
+        required: true
+        type: string
+      PACKAGES:
+        description: 'Build dependencies to install, space seperated'
+        required: false
+        type: string
+      SOURCE:
+        description: 'URL of program source archive'
+        required: false
+        type: string
+      UPGRADE-ALL:
+        description: 'Upgrade all slackpkg files'
+        required: false
+        type: boolean
+jobs:
+  slackbuild_and_upload:
+    runs-on: ubuntu-latest
+    container:
+      image: spaceinvaderone/auto_slack_pack
+      options: --privileged
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/slackpkg/
+        key: slackpkg
+    - name: Update slackpkg
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
+        CONF_FILE="/etc/slackpkg/slackpkg.conf"
+        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
+        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
+        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
+        sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-current\//' /etc/slackpkg/mirrors
+        slackpkg update gpg <<< y
+        slackpkg update <<< y
+    - name: Upgrade all packages
+      if: ${{ inputs.UPGRADE-ALL == true }}
+      run: |
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+    - name: Update slackpkg
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
+        wget https://software.jaos.org/slackpacks/slackware64-15.0/slapt-get/slapt-get-0.11.10-x86_64-1.txz
+        installpkg *.txz
+        rm *.txz
+        slackpkg install gpgme libassuan openssl11 nghttp3 gnupg gnupg2
+        cat >> /etc/slapt-get/slapt-getrc <<EOF
+        # Alien Bob Multilib compat32 packages
+        SOURCE=http://slackware.nl/people/alien/multilib/15.0/
+        
+        # Repository 64bit from Alien Bob (slackware.com/~alien)
+        SOURCE=http://slackware.nl/people/alien/sbrepos/15.0/x86_64/
+        
+        # Repository 64bit from Alien Bob (slackware.com/~alien) for software that has US patent restrictions
+        SOURCE=http://slackware.nl/people/alien/restricted_sbrepos/15.0/x86_64/
+        
+        # Repository 64bit from Ponce (https://github.com/Ponce)
+        SOURCE=https://ponce.cc/slackware/slackware64-15.0/packages/
+        
+        # Repository 64bit for Salix OS (https://salixos.org/) packages fully compatible with Slackware
+        SOURCE=https://download.salixos.org/x86_64/15.0/
+        
+        # Repository 64bit for Salix OS Extra (https://salixos.org/) packages fully compatible with Slackware
+        SOURCE=https://download.salixos.org/x86_64/extra-15.0/
+        
+        # Slackware 64bit Official Extra Packages for 15.0 Version
+        SOURCE=http://ftp.osuosl.org/pub/slackware/slackware64-15.0/
+        
+        # SlackOnly
+        SOURCE=https://slackonly.com/pub/packages/15.0-x86_64/
+        
+        # Slackers.it
+        SOURCE=https://slackers.it/repository/slackware64-current/
+        EOF
+        # slapt-get --add-keys
+        # slapt-get --update
+
+    - name: Install dependencies
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: slackpkg install ${{ inputs.PACKAGES }}
+    - name: Download source code
+      if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
+      run: |
+        cd ./SlackBuilds/${{ inputs.NAME }}
+        wget ${{ inputs.SOURCE }}
+    - name: Build
+      run: |
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        mkdir -p ${REPO_DIR}/${{ inputs.NAME }}
+        cd ./SlackBuilds/${{ inputs.NAME }}
+        output=$(sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild)
+        package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
+        echo "package_path=${package_path}" >> $GITHUB_ENV
+    - name: Upload
+      run: |
+        curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
+        -H "Authorization: Bearer bkua_db925872d4733dad69034b9c984ffd561dc9981e" \
+        -F "file=@${package_path}"
