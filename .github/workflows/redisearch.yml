@@ -1,4 +1,4 @@
-name: Build redisearch
+name: -Build redisearch
 on:
   workflow_dispatch:
 env:
