@@ -1,10 +1,9 @@
-name: -Build ValKey
+name: AAA-Build ValKey
 on:
   workflow_dispatch:
 env:
   VERSION: "8.0.1"
   NAME: "valkey"
-  TOKEN: bkua_4031d6e16ab365eb6367a654d45e173d0ba0b651
 jobs:
   slackware-job:
     permissions: write-all
