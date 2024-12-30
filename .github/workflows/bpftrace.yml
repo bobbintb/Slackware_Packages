@@ -1,6 +1,19 @@
 name: Build bpftrace
 on:
   workflow_dispatch:
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    with:
+      VERSION: "0.21.3"
+      NAME: "bpftrace"
+      PACKAGES: "ccache vim asciidoctor libedit libssh2 ruby nghttp3 llvm fmt"
+      PIP: setuptools
+      SOURCE: "https://github.com/iovisor/bpftrace/archive/refs/tags/v0.21.3/bpftrace-0.21.3.tar.gz"
+
+name: Build bpftrace
+on:
+  workflow_dispatch:
 env:
   VERSION: "0.21.3"
   NAME: "bpftrace"
