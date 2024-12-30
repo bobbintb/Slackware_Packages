@@ -115,7 +115,7 @@ find -L . \
 # Compile the application and install it into the $PKG directory
 make
 make install DESTDIR=$PKG
-make doxygen-doc
+# make doxygen-doc
 
 # Strip binaries and libraries - this can be done with 'make install-strip'
 # in many source trees, and that's usually acceptable if so, but if not,
