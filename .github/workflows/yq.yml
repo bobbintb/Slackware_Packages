@@ -1,4 +1,4 @@
-name: Build yq
+name: -Build yq
 on:
   workflow_dispatch:
 env:
