@@ -40,7 +40,9 @@ jobs:
       uses: actions/cache@v4
       with:
         path: /var/cache/slackpkg/
-        key: slackpkg
+        key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
+        restore-keys: |
+          slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
     - name: Update slackpkg
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
