@@ -61,7 +61,6 @@ jobs:
         installpkg *.txz
         rm *.txz
         slackpkg install gpgme libassuan openssl11 nghttp3 gnupg gnupg2
-        # slapt-get --add-keys
         cat >> /etc/slapt-get/slapt-getrc <<EOF
         # Alien Bob Multilib compat32 packages
         SOURCE=http://slackware.nl/people/alien/multilib/15.0/
@@ -90,6 +89,7 @@ jobs:
         # Slackers.it
         SOURCE=https://slackers.it/repository/slackware64-current/
         EOF
+        slapt-get --add-keys
         slapt-get --update
 
     - name: Install dependencies
