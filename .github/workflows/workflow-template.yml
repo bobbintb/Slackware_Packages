@@ -130,5 +130,7 @@ jobs:
     #     params: '{ "-F": "file=@${package_path}" }'
     - name: curl
       uses: sozo-design/curl@v1.0.2
+      env:
+          package_path: ${{ env.package_path }}
       with:
         args: '-X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages -H "Authorization: Bearer ${{ secrets.PACKAGECLOUD_TOKEN }} -F "file=@${package_path}"'
