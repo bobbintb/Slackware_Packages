@@ -14,6 +14,10 @@ on:
         description: 'Build dependencies to install, space seperated'
         required: false
         type: string
+      PIP:
+        description: 'Python build dependencies to install (pip), space seperated'
+        required: false
+        type: string
       SOURCE:
         description: 'URL of program source archive'
         required: false
@@ -95,6 +99,9 @@ jobs:
     - name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: slackpkg install ${{ inputs.PACKAGES }}
+    - name: Install Python dependencies
+      if: ${{ inputs.PIP != '' && inputs.PIP != null }}
+      run: pip install ${{ inputs.PIP }}
     - name: Download source code
       if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
       run: |
