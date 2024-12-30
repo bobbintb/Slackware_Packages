@@ -1,0 +1,10 @@
+name: Build slackrepo
+on:
+  workflow_dispatch:
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    with:
+      VERSION: "20241108"
+      NAME: "slackrepo"
+      SOURCE: "https://github.com/aclemons/slackrepo/archive/refs/tags/v20241108.tar.gz"
