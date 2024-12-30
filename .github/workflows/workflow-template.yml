@@ -39,7 +39,7 @@ jobs:
       id: cache-packages
       uses: actions/cache@v4
       with:
-        path: /var/cache/packages/\./
+        path: "/var/cache/packages/./"
         key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
         restore-keys: |
           slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
