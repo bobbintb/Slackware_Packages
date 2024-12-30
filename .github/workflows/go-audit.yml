@@ -1,4 +1,4 @@
-name: Build go-audit
+name: -Build go-audit
 on:
   workflow_dispatch:
 env:
