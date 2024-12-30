@@ -7,3 +7,4 @@ jobs:
     with:
       VERSION: "1.5.0"
       NAME: "ply"
+      TOKEN: ${{ secrets.PACKAGECLOUD_TOKEN }}
