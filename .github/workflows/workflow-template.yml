@@ -30,7 +30,7 @@ jobs:
   slackbuild_and_upload:
     runs-on: ubuntu-latest
     container:
-      image: spaceinvaderone/auto_slack_pack
+      image: bobbintb/unraid:CICD-7.0.0
       options: --privileged
     steps:
     - name: Checkout
