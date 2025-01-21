@@ -30,7 +30,7 @@ jobs:
   slackbuild_and_upload:
     runs-on: ubuntu-latest
     container:
-      image: bobbintb/unraid:CICD-7.0.0
+      image: bobbintb/unraid-cicd
       options: --privileged
     steps:
     - name: Checkout
