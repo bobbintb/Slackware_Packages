@@ -60,41 +60,7 @@ jobs:
     - name: Update slackpkg
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
-        wget https://software.jaos.org/slackpacks/slackware64-15.0/slapt-get/slapt-get-0.11.10-x86_64-1.txz
-        installpkg *.txz
-        rm *.txz
-        slackpkg install gpgme libassuan openssl11 nghttp3 gnupg gnupg2
-        cat >> /etc/slapt-get/slapt-getrc <<EOF
-        # Alien Bob Multilib compat32 packages
-        SOURCE=http://slackware.nl/people/alien/multilib/15.0/
-        
-        # Repository 64bit from Alien Bob (slackware.com/~alien)
-        SOURCE=http://slackware.nl/people/alien/sbrepos/15.0/x86_64/
-        
-        # Repository 64bit from Alien Bob (slackware.com/~alien) for software that has US patent restrictions
-        SOURCE=http://slackware.nl/people/alien/restricted_sbrepos/15.0/x86_64/
-        
-        # Repository 64bit from Ponce (https://github.com/Ponce)
-        SOURCE=https://ponce.cc/slackware/slackware64-15.0/packages/
-        
-        # Repository 64bit for Salix OS (https://salixos.org/) packages fully compatible with Slackware
-        SOURCE=https://download.salixos.org/x86_64/15.0/
-        
-        # Repository 64bit for Salix OS Extra (https://salixos.org/) packages fully compatible with Slackware
-        SOURCE=https://download.salixos.org/x86_64/extra-15.0/
-        
-        # Slackware 64bit Official Extra Packages for 15.0 Version
-        SOURCE=http://ftp.osuosl.org/pub/slackware/slackware64-15.0/
-        
-        # SlackOnly
-        SOURCE=https://slackonly.com/pub/packages/15.0-x86_64/
-        
-        # Slackers.it
-        SOURCE=https://slackers.it/repository/slackware64-current/
-        EOF
-        # slapt-get --add-keys
-        # slapt-get --update
-
+        slackpkg install ${{ inputs.PACKAGES }}
     - name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: slackpkg install ${{ inputs.PACKAGES }}
