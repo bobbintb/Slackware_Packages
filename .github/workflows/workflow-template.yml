@@ -218,7 +218,6 @@ jobs:
           echo "MIRRORPLUS['slackonly-current']=https://packages.slackonly.com/pub/packages/current-x86_64/" >> /etc/slackpkg/slackpkgplus.conf
           REPOPLUS+=" slackonly-current"
         fi
-          echo "MIRRORPLUS['slackpkgplus']=https://slakfinder.org/slackpkg+15/" >> /etc/slackpkg/slackpkgplus.conf
         if [ "${{ inputs.slint }}" == "true" ]; then
           echo "MIRRORPLUS['slint']=https://slackware.uk/slint/x86_64/slint-15.0/" >> /etc/slackpkg/slackpkgplus.conf
           REPOPLUS+=" slint"
