@@ -125,8 +125,15 @@ jobs:
       image: bobbintb/unraid-cicd
       options: --privileged
     steps:
-    - name: Checkout
+    - 
+      name: Checkout
       uses: actions/checkout@v4
+    -
+      name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
     # - name: Cache packages
     #   id: cache-packages
     #   uses: actions/cache@v4
@@ -135,7 +142,8 @@ jobs:
     #     key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
     #     restore-keys: |
     #       slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
-    - name: Enable additional repos
+    - 
+      name: Enable additional repos
       run: | 
         REPOPLUS="slackpkgplus"
         if [ "${{ inputs.alien-multilib-15 }}" == "true" ]; then
@@ -227,47 +235,55 @@ jobs:
           REPOPLUS+=" official-15-extra"
         fi
         sed -i 's|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|' /etc/slackpkg/slackpkgplus.conf
-    - name: Update slackpkg
+    - 
+      name: Update slackpkg
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
         echo "##########################cache##########################"
         ls -ls /var/cache/packages
         slackpkg update gpg <<< y
         slackpkg update <<< y
-    - name: Upgrade all packages
+    - 
+      name: Upgrade all packages
       if: ${{ inputs.UPGRADE-ALL == true }}
       run: |
         slackpkg upgrade-all || true
         slackpkg upgrade-all || true
         slackpkg upgrade-all || true
         slackpkg upgrade-all || true
-    - name: Install dependencies
+    - 
+      name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
         slackpkg install ${{ inputs.PACKAGES }}
         echo "==================== installed packages ===================="
         ls -1 /var/log/packages/
-    - name: Re-install dependencies
+    - 
+      name: Re-install dependencies
       if: ${{ inputs.REINSTALL != '' && inputs.REINSTALL != null }}
       run: |
         slackpkg reinstall ${{ inputs.REINSTALL }}
         echo "==================== reinstalled packages ===================="
         ls -1 /var/log/packages/
-    - name: Install PIP dependencies
+    - 
+      name: Install PIP dependencies
       if: ${{ inputs.PIP != '' && inputs.PIP != null }}
       run: pip install ${{ inputs.PIP }}
-    - name: Update version
+    - 
+      name: Update version
       if: ${{ inputs.VERSION != '' && inputs.VERSION != null }}
       run: |
         cd ./SlackBuilds/${{ inputs.NAME }}
         sed -i 's/^DOWNLOAD=.*/DOWNLOAD=${{ inputs.VERSION }}/' ${{ inputs.NAME }}.info
-    - name: Download source code
+    - 
+      name: Download source code
       if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
       run: |
         cd ./SlackBuilds/${{ inputs.NAME }}
         sed -i 's|^DOWNLOAD=.*|DOWNLOAD=${{ inputs.SOURCE }}|' ${{ inputs.NAME }}.info
         wget ${{ inputs.SOURCE }}
-    - name: Build
+    - 
+      name: Build
       run: |
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
@@ -276,7 +292,8 @@ jobs:
         output=$(sh ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo "package_path=${package_path}" >> $GITHUB_ENV
-    - name: Upload
+    - 
+      name: Upload
       run: |
         curl -X POST https://api.buildkite.com/v2/packages/organizations/bobbintb/registries/slackware/packages \
         -H "Authorization: Bearer ${{ secrets.PACKAGECLOUD_TOKEN }}" \
