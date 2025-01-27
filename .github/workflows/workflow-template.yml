@@ -256,6 +256,11 @@ jobs:
     - name: Install PIP dependencies
       if: ${{ inputs.PIP != '' && inputs.PIP != null }}
       run: pip install ${{ inputs.PIP }}
+    - name: Update version
+      if: ${{ inputs.VERSION != '' && inputs.VERSION != null }}
+      run: |
+        cd ./SlackBuilds/${{ inputs.NAME }}
+        sed -i 's/^DOWNLOAD=.*/DOWNLOAD=${{ inputs.VERSION }}/' ${{ inputs.NAME }}.info
     - name: Download source code
       if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
       run: |
