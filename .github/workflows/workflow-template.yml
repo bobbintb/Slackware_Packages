@@ -300,4 +300,5 @@ jobs:
         ls -ls /__w/Slackware_Packages/Slackware_Packages
         cd ./builds/${{ inputs.NAME }}
         export REPOSOWNER="${{ github.repository_owner }}"
-        echo ${{ github.repository_owner }}
+        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
+        /usr/libexec/slackrepo/gen_repos_files.sh
