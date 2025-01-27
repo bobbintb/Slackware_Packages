@@ -9,4 +9,4 @@ jobs:
       VERSION: "1.5.0"
       NAME: "libbpf"
       SOURCE: "https://github.com/libbpf/libbpf/archive/refs/tags/v1.5.0.tar.gz"
-      PACKAGES: make guile gc
+      PACKAGES: make guile gc pkg-config gcc
