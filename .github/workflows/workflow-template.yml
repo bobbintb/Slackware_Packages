@@ -222,6 +222,7 @@ jobs:
           echo "MIRRORPLUS['official-15+extra']=https://ftp.osuosl.org/pub/slackware/slackware64-15.0/" >> /etc/slackpkg/slackpkgplus.conf
           REPOPLUS+=" official-15+extra"
         fi
+        sed -i 's|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|' /etc/slackpkg/slackpkgplus.conf
     - name: Update slackpkg
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
