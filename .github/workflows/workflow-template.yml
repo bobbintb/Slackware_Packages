@@ -265,7 +265,7 @@ jobs:
       if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
       run: |
         cd ./SlackBuilds/${{ inputs.NAME }}
-        sed -i 's/^DOWNLOAD=.*/DOWNLOAD=${{ inputs.SOURCE }}/' ${{ inputs.NAME }}.info
+        sed -i 's|^DOWNLOAD=.*|DOWNLOAD=${{ inputs.SOURCE }}|' ${{ inputs.NAME }}.info
         wget ${{ inputs.SOURCE }}
     - name: Build
       run: |
