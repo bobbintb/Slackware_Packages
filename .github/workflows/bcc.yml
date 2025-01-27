@@ -8,6 +8,6 @@ jobs:
     with:
       VERSION: "0.32.0"
       NAME: "bcc"
-      PACKAGES: "slackware64:llvm slackware64:ccache slackware64:libssh2 slackware64:libedit slackware64:fmt slackware64:cmake"
+      PACKAGES: "llvm ccache libssh2 libedit fmt"
       PIP: setuptools
       SOURCE: "https://github.com/iovisor/bcc/releases/download/v0.32.0/bcc-src-with-submodule.tar.gz"
