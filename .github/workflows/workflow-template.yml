@@ -298,3 +298,6 @@ jobs:
         pwd
         echo ${GITHUB_REPOSITORY##*/}
         ls -ls /__w/Slackware_Packages/Slackware_Packages
+        cd ./builds/${{ inputs.NAME }}
+        export REPOSOWNER="${{ github.repository_owner }}"
+        echo ${{ github.repository_owner }}
