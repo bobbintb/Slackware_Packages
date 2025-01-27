@@ -239,7 +239,10 @@ jobs:
         slackpkg upgrade-all || true
     - name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
-      run: slackpkg install ${{ inputs.PACKAGES }}
+      run: |
+        slackpkg install ${{ inputs.PACKAGES }}
+        echo "==================== installed packages ===================="
+        ls -1 /var/log/packages/
     - name: Install PIP dependencies
       if: ${{ inputs.PIP != '' && inputs.PIP != null }}
       run: pip install ${{ inputs.PIP }}
