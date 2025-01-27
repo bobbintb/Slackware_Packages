@@ -110,8 +110,8 @@ on:
         description: 'Enable slint repo'
         required: false
         type: boolean
-      official-15+extra:
-        description: 'Enable official-15+extra repo'
+      official-15-extra:
+        description: 'Enable official-15-extra repo'
         required: false
         type: boolean
 jobs:
@@ -218,9 +218,9 @@ jobs:
           echo "MIRRORPLUS['slint']=https://slackware.uk/slint/x86_64/slint-15.0/" >> /etc/slackpkg/slackpkgplus.conf
           REPOPLUS+=" slint"
         fi
-        if [ "${{ inputs.official-15+extra }}" == "true" ]; then
-          echo "MIRRORPLUS['official-15+extra']=https://ftp.osuosl.org/pub/slackware/slackware64-15.0/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" official-15+extra"
+        if [ "${{ inputs.official-15-extra }}" == "true" ]; then
+          echo "MIRRORPLUS['official-15-extra']=https://ftp.osuosl.org/pub/slackware/slackware64-15.0/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" official-15-extra"
         fi
         sed -i 's|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|' /etc/slackpkg/slackpkgplus.conf
     - name: Update slackpkg
