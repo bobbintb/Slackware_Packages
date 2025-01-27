@@ -8,4 +8,4 @@ jobs:
     with:
       VERSION: "1.5.0"
       NAME: "ply"
-      PACKAGES: autoconf automake m4
+      PACKAGES: autoconf automake m4 flex bison
