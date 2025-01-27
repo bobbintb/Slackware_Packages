@@ -301,5 +301,6 @@ jobs:
         cd ./builds/${{ inputs.NAME }}
         export REPOSOWNER="${{ github.repository_owner }}"
         export RSS_UUID=$(uuidgen -t)
+        export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         /usr/libexec/slackrepo/gen_repos_files.sh
