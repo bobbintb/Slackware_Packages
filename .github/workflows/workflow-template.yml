@@ -123,16 +123,16 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Cache packages
-      id: cache-packages
-      uses: actions/cache@v4
-      with:
-        path: "/var/cache/"
-        key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
-        restore-keys: |
-          slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
+    # - name: Cache packages
+    #   id: cache-packages
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: "/var/cache/"
+    #     key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
+    #     restore-keys: |
+    #       slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
     - name: Enable additional repos
-      run: |
+      run: | 
         REPOPLUS="slackpkgplus"
         if [ "${{ inputs.alien-multilib-15 }}" == "true" ]; then
           echo "MIRRORPLUS['alien-multilib-15']=http://slackware.nl/people/alien/multilib/15.0/" >> /etc/slackpkg/slackpkgplus.conf
