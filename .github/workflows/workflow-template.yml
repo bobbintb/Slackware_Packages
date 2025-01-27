@@ -14,6 +14,10 @@ on:
         description: 'Build dependencies to install, space seperated'
         required: false
         type: string
+      REINSTALL:
+        description: 'Build dependencies to re-install, space seperated'
+        required: false
+        type: string
       PIP:
         description: 'PIP dependencies to install, space seperated'
         required: false
@@ -242,6 +246,12 @@ jobs:
       run: |
         slackpkg install ${{ inputs.PACKAGES }}
         echo "==================== installed packages ===================="
+        ls -1 /var/log/packages/
+    - name: Re-install dependencies
+      if: ${{ inputs.REINSTALL != '' && inputs.REINSTALL != null }}
+      run: |
+        slackpkg reinstall ${{ inputs.REINSTALL }}
+        echo "==================== reinstalled packages ===================="
         ls -1 /var/log/packages/
     - name: Install PIP dependencies
       if: ${{ inputs.PIP != '' && inputs.PIP != null }}
