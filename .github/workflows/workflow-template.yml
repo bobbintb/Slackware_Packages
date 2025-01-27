@@ -14,10 +14,6 @@ on:
         description: 'Build dependencies to install, space seperated'
         required: false
         type: string
-      REPOS:
-        description: 'Other repos to enable'
-        required: false
-        type: string
       PIP:
         description: 'PIP dependencies to install, space seperated'
         required: false
