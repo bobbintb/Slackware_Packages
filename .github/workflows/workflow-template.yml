@@ -297,4 +297,4 @@ jobs:
       run: |
         pwd
         echo ${GITHUB_REPOSITORY##*/}
-        ls -ls ${GITHUB_REPOSITORY##*/}
+        ls -ls pwd
