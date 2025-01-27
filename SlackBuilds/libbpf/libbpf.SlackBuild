@@ -38,7 +38,7 @@ TMP=${TMP:-/tmp/pkg}
 PKG=$TMP/package-$PKGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
-. /$PRGNAM.info
+. ./$PRGNAM.info
 
 DOCFILES="*COMMIT LICENSE* *.md"
 
