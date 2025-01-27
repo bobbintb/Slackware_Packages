@@ -38,6 +38,8 @@ TMP=${TMP:-/tmp/pkg}
 PKG=$TMP/package-$PKGNAM
 OUTPUT=${OUTPUT:-/tmp}
 
+. /$PRGNAM.info
+
 DOCFILES="*COMMIT LICENSE* *.md"
 
 if [ -z ${ARCH:=""} ]; then
@@ -71,7 +73,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$SRCVERSION
-tar xvf $CWD/$PRGNAM-$SRCVERSION.tar.gz || tar xvf $CWD/v$SRCVERSION.tar.gz
+tar xvf $CWD/$PRGNAM-$SRCVERSION.tar.gz || tar xvf $CWD/v$SRCVERSION.tar.gz || wget $DOWNLOAD && tar xvf $CWD/$PRGNAM-$SRCVERSION.tar.gz || wget $DOWNLOAD && tar xvf $CWD/v$SRCVERSION.tar.gz
 cd $PRGNAM-$SRCVERSION
 
 chown -R root:root .
