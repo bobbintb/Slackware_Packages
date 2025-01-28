@@ -121,6 +121,8 @@ on:
 jobs:
   slackbuild_and_upload:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: bobbintb/unraid-cicd
       options: --privileged
