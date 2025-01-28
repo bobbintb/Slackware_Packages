@@ -3,13 +3,13 @@
 ||   Package:  ./libbpf/libbpf-1.5.0-x86_64-1cf.txz
 ||
 ++========================================
-drwxr-xr-x root/root         0 2025-01-28 03:58 ./
-drwxr-xr-x root/root         0 2025-01-28 03:58 install/
--rw-r--r-- root/root       176 2025-01-28 03:58 install/doinst.sh
--rw-r--r-- root/root       761 2025-01-28 03:58 install/slack-desc
-drwxr-xr-x root/root         0 2025-01-28 03:58 usr/
-drwxr-xr-x root/root         0 2025-01-28 03:58 usr/doc/
-drwxr-xr-x root/root         0 2025-01-28 03:58 usr/doc/libbpf-1.5.0/
+drwxr-xr-x root/root         0 2025-01-28 04:40 ./
+drwxr-xr-x root/root         0 2025-01-28 04:40 install/
+-rw-r--r-- root/root       176 2025-01-28 04:40 install/doinst.sh
+-rw-r--r-- root/root       761 2025-01-28 04:40 install/slack-desc
+drwxr-xr-x root/root         0 2025-01-28 04:40 usr/
+drwxr-xr-x root/root         0 2025-01-28 04:40 usr/doc/
+drwxr-xr-x root/root         0 2025-01-28 04:40 usr/doc/libbpf-1.5.0/
 -rw-r--r-- root/root        41 2024-10-24 21:34 usr/doc/libbpf-1.5.0/BPF-CHECKPOINT-COMMIT
 -rw-r--r-- root/root        41 2024-10-24 21:34 usr/doc/libbpf-1.5.0/CHECKPOINT-COMMIT
 -rw-r--r-- root/root        25 2024-10-24 21:34 usr/doc/libbpf-1.5.0/LICENSE
@@ -17,30 +17,30 @@ drwxr-xr-x root/root         0 2025-01-28 03:58 usr/doc/libbpf-1.5.0/
 -rw-r--r-- root/root     27413 2024-10-24 21:34 usr/doc/libbpf-1.5.0/LICENSE.LGPL-2.1
 -rw-r--r-- root/root      8510 2024-10-24 21:34 usr/doc/libbpf-1.5.0/README.md
 -rw-r--r-- root/root     13232 2024-10-24 21:34 usr/doc/libbpf-1.5.0/SYNC.md
--rw-r--r-- root/root      4079 2025-01-28 03:58 usr/doc/libbpf-1.5.0/libbpf.SlackBuild
-drwxr-xr-x root/root         0 2025-01-28 03:58 usr/include/
-drwxr-xr-x root/root         0 2025-01-28 03:58 usr/include/bpf/
--rw-r--r-- root/root     25468 2025-01-28 03:58 usr/include/bpf/bpf.h
--rw-r--r-- root/root     22416 2025-01-28 03:58 usr/include/bpf/bpf_core_read.h
--rw-r--r-- root/root      3750 2025-01-28 03:58 usr/include/bpf/bpf_endian.h
--rw-r--r-- root/root    175686 2025-01-28 03:58 usr/include/bpf/bpf_helper_defs.h
--rw-r--r-- root/root     15932 2025-01-28 03:58 usr/include/bpf/bpf_helpers.h
--rw-r--r-- root/root     38530 2025-01-28 03:58 usr/include/bpf/bpf_tracing.h
--rw-r--r-- root/root     20659 2025-01-28 03:58 usr/include/bpf/btf.h
--rw-r--r-- root/root     75022 2025-01-28 03:58 usr/include/bpf/libbpf.h
--rw-r--r-- root/root      3437 2025-01-28 03:58 usr/include/bpf/libbpf_common.h
--rw-r--r-- root/root      5191 2025-01-28 03:58 usr/include/bpf/libbpf_legacy.h
--rw-r--r-- root/root       242 2025-01-28 03:58 usr/include/bpf/libbpf_version.h
--rw-r--r-- root/root      9393 2025-01-28 03:58 usr/include/bpf/skel_internal.h
--rw-r--r-- root/root      8514 2025-01-28 03:58 usr/include/bpf/usdt.bpf.h
-drwxr-xr-x root/root         0 2025-01-28 03:58 usr/include/linux/
--rw-r--r-- root/root    280058 2025-01-28 03:58 usr/include/linux/bpf.h
--rw-r--r-- root/root      1382 2025-01-28 03:58 usr/include/linux/bpf_common.h
--rw-r--r-- root/root      5606 2025-01-28 03:58 usr/include/linux/btf.h
-drwxr-xr-x root/root         0 2025-01-28 03:58 usr/lib64/
--rw-r--r-- root/root    667598 2025-01-28 03:58 usr/lib64/libbpf.a
--rwxr-xr-x root/root    453888 2025-01-28 03:58 usr/lib64/libbpf.so.1.5.0
-drwxr-xr-x root/root         0 2025-01-28 03:58 usr/lib64/pkgconfig/
--rw-r--r-- root/root       251 2025-01-28 03:58 usr/lib64/pkgconfig/libbpf.pc
+-rw-r--r-- root/root      4079 2025-01-28 04:40 usr/doc/libbpf-1.5.0/libbpf.SlackBuild
+drwxr-xr-x root/root         0 2025-01-28 04:40 usr/include/
+drwxr-xr-x root/root         0 2025-01-28 04:40 usr/include/bpf/
+-rw-r--r-- root/root     25468 2025-01-28 04:40 usr/include/bpf/bpf.h
+-rw-r--r-- root/root     22416 2025-01-28 04:40 usr/include/bpf/bpf_core_read.h
+-rw-r--r-- root/root      3750 2025-01-28 04:40 usr/include/bpf/bpf_endian.h
+-rw-r--r-- root/root    175686 2025-01-28 04:40 usr/include/bpf/bpf_helper_defs.h
+-rw-r--r-- root/root     15932 2025-01-28 04:40 usr/include/bpf/bpf_helpers.h
+-rw-r--r-- root/root     38530 2025-01-28 04:40 usr/include/bpf/bpf_tracing.h
+-rw-r--r-- root/root     20659 2025-01-28 04:40 usr/include/bpf/btf.h
+-rw-r--r-- root/root     75022 2025-01-28 04:40 usr/include/bpf/libbpf.h
+-rw-r--r-- root/root      3437 2025-01-28 04:40 usr/include/bpf/libbpf_common.h
+-rw-r--r-- root/root      5191 2025-01-28 04:40 usr/include/bpf/libbpf_legacy.h
+-rw-r--r-- root/root       242 2025-01-28 04:40 usr/include/bpf/libbpf_version.h
+-rw-r--r-- root/root      9393 2025-01-28 04:40 usr/include/bpf/skel_internal.h
+-rw-r--r-- root/root      8514 2025-01-28 04:40 usr/include/bpf/usdt.bpf.h
+drwxr-xr-x root/root         0 2025-01-28 04:40 usr/include/linux/
+-rw-r--r-- root/root    280058 2025-01-28 04:40 usr/include/linux/bpf.h
+-rw-r--r-- root/root      1382 2025-01-28 04:40 usr/include/linux/bpf_common.h
+-rw-r--r-- root/root      5606 2025-01-28 04:40 usr/include/linux/btf.h
+drwxr-xr-x root/root         0 2025-01-28 04:40 usr/lib64/
+-rw-r--r-- root/root    667598 2025-01-28 04:40 usr/lib64/libbpf.a
+-rwxr-xr-x root/root    453888 2025-01-28 04:40 usr/lib64/libbpf.so.1.5.0
+drwxr-xr-x root/root         0 2025-01-28 04:40 usr/lib64/pkgconfig/
+-rw-r--r-- root/root       251 2025-01-28 04:40 usr/lib64/pkgconfig/libbpf.pc
 
 
