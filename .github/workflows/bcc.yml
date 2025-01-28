@@ -13,3 +13,4 @@ jobs:
       PACKAGES: "llvm ccache libssh2 libedit fmt cmake make guile gc gcc binutils kernel-headers pkg-config"
       PIP: setuptools
       SOURCE: "https://github.com/iovisor/bcc/releases/download/v0.32.0/bcc-src-with-submodule.tar.gz"
+      REINSTALL: "zlib elfutils zstd glibc"
