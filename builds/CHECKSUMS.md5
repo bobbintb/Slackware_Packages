@@ -10,18 +10,18 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-e5651da69eacbfc428eb2f8d121abb7e  ./ChangeLog.rss
-ad732887c79874032b3341ff35a85408  ./ChangeLog.txt
-603837f57ec161ed1c18eaab5b947625  ./ChangeLog.txt.gz
-e8fed54f54f6f82d28d957a99d6ebc31  ./FILELIST.TXT
+79998071c0fb97fe4f39faae1eff3ff4  ./ChangeLog.rss
+1c365255f0505c7f099b14477f562ff9  ./ChangeLog.txt
+b01324651c7d54a52eb8395ed029bb06  ./ChangeLog.txt.gz
+2452e3add22ec0d60432d789501fdb18  ./FILELIST.TXT
 3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
-be227a776f53169a9c49b63a67157e25  ./MANIFEST.bz2
-49712b882978661d75a7528769da79dd  ./PACKAGES.TXT
-bb80e2bf9922cd2815f374ce74501ee1  ./PACKAGES.TXT.gz
-1483e2b14bdb15700f4cb3ad20ca4965  ./bcc/bcc-0.32.0-x86_64-1_SBo.lst
-823c40a60ac00ede4cfcf5e1e782a2f3  ./bcc/bcc-0.32.0-x86_64-1_SBo.meta
-faf07f0cd81dc3ece32b281aa208701c  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz
-1f23cc08cdcdddb80804c3536a99b32e  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz.md5
+0ec874cf0796f1f7fd669dfd08d9bad0  ./MANIFEST.bz2
+86573d47ae82c75b8674728d7ba200a1  ./PACKAGES.TXT
+40dd905a8545ff8799a1fb03d19ed458  ./PACKAGES.TXT.gz
+0dbfc5f27abe9ea79c9c3dc9a3d221e8  ./bcc/bcc-0.32.0-x86_64-1_SBo.lst
+25897c94e2355933f6b8486ecd401aa8  ./bcc/bcc-0.32.0-x86_64-1_SBo.meta
+392e212721fe9ac751302fdecb61e067  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz
+e21758393a317ade5a88cbcd04e9b2f3  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz.md5
 4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.32.0-x86_64-1_SBo.txt
 ced4bc900f1a81225adcf8c4068d3652  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.lst
 2e893d05f964473a0278509b81049797  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.meta
