@@ -1,0 +1,11 @@
+keydb: keydb (A Multithreaded Fork of Redis)
+keydb:
+keydb: KeyDB is a high performance fork of Redis with a focus on
+keydb: multithreading, memory efficiency, and high throughput. In addition
+keydb: to performance improvements, KeyDB offers features such as Active
+keydb: Replication, FLASH Storage and Subkey Expires. KeyDB has a MVCC
+keydb: architecture that allows you to execute queries such as KEYS and
+keydb: SCAN without blocking the database and degrading performance.
+keydb:
+keydb:
+keydb:

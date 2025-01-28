@@ -1,0 +1,11 @@
+libbpf: libbpf (kernel-agnostic library for writing BPF programs)
+libbpf:
+libbpf: This is the (recommended) version from the github repository, which
+libbpf: is synced from the kernel tree by a complicated script.
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+libbpf:

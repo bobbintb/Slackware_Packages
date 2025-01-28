@@ -1,0 +1,45 @@
+++========================================
+||
+||   Package:  ./keydb/keydb-6.3.4-x86_64-1loom.txz
+||
+++========================================
+drwxr-xr-x root/root         0 2024-10-26 05:31 ./
+drwxr-xr-x root/root         0 2024-10-26 05:31 etc/
+drwxr-xr-x root/root         0 2024-10-26 05:31 etc/keydb/
+-rw-r--r-- root/root     96964 2024-10-26 05:29 etc/keydb/keydb.conf.new
+-rw-r--r-- root/root     13768 2024-10-26 05:29 etc/keydb/sentinel.conf.new
+drwxr-xr-x root/root         0 2024-10-26 05:31 etc/logrotate.d/
+-rw-r--r-- root/root       127 2024-10-26 05:29 etc/logrotate.d/keydb.new
+drwxr-xr-x root/root         0 2024-10-26 05:31 etc/rc.d/
+-rwxr-xr-x root/root       970 2024-10-26 05:31 etc/rc.d/rc.keydb.new
+drwxr-xr-x root/root         0 2024-10-26 05:31 install/
+-rwxr-xr-x root/root      1034 2024-10-26 05:31 install/doinst.sh
+-rw-r--r-- root/root       953 2024-10-26 05:31 install/slack-desc
+drwxr-xr-x root/root         0 2024-10-26 05:31 usr/
+drwxr-xr-x root/root         0 2024-10-26 05:31 usr/bin/
+-rwxr-xr-x root/root    756544 2024-10-26 05:31 usr/bin/keydb-benchmark
+-rwxr-xr-x root/root    715560 2024-10-26 05:31 usr/bin/keydb-cli
+-rwxr-xr-x root/root    719968 2024-10-26 05:31 usr/bin/keydb-diagnostic-tool
+-rwxr-xr-x root/root   2649312 2024-10-26 05:31 usr/bin/keydb-server
+drwxr-xr-x root/root         0 2024-10-26 05:31 usr/doc/
+drwxr-xr-x root/root         0 2024-10-26 05:31 usr/doc/keydb-6.3.4/
+-rw-r--r-- root/root     33624 2024-10-26 05:29 usr/doc/keydb-6.3.4/00-RELEASENOTES
+-rw-r--r-- root/root        51 2024-10-26 05:29 usr/doc/keydb-6.3.4/BUGS
+-rw-r--r-- root/root      5026 2024-10-26 05:29 usr/doc/keydb-6.3.4/CONDUCT
+-rw-r--r-- root/root      1602 2024-10-26 05:29 usr/doc/keydb-6.3.4/COPYING
+-rw-r--r-- root/root        11 2024-10-26 05:29 usr/doc/keydb-6.3.4/INSTALL
+-rw-r--r-- root/root     15702 2024-10-26 05:29 usr/doc/keydb-6.3.4/README.md
+-rw-r--r-- root/root      2218 2024-10-26 05:29 usr/doc/keydb-6.3.4/TLS.md
+drwxr-xr-x root/root         0 2024-10-26 05:31 usr/man/
+drwxr-xr-x root/root         0 2024-10-26 05:31 usr/man/man1/
+-rwxr-xr-x root/root      2059 2024-10-26 05:29 usr/man/man1/keydb-benchmark.1.gz
+-rwxr-xr-x root/root      1154 2024-10-26 05:29 usr/man/man1/keydb-check-aof.1.gz
+-rwxr-xr-x root/root      1113 2024-10-26 05:29 usr/man/man1/keydb-check-rdb.1.gz
+-rwxr-xr-x root/root      2325 2024-10-26 05:29 usr/man/man1/keydb-cli.1.gz
+-rwxr-xr-x root/root      1523 2024-10-26 05:29 usr/man/man1/keydb-sentinel.1.gz
+-rwxr-xr-x root/root      1523 2024-10-26 05:29 usr/man/man1/keydb-server.1.gz
+drwxr-xr-x root/root         0 2024-10-26 05:31 usr/man/man5/
+-rwxr-xr-x root/root      1109 2024-10-26 05:29 usr/man/man5/keydb-sentinel.conf.5.gz
+-rwxr-xr-x root/root      1109 2024-10-26 05:29 usr/man/man5/keydb.conf.5.gz
+
+

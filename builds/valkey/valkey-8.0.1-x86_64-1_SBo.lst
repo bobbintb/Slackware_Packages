@@ -1,0 +1,40 @@
+++========================================
+||
+||   Package:  ./valkey/valkey-8.0.1-x86_64-1_SBo.tgz
+||
+++========================================
+drwxr-xr-x root/root         0 2024-10-30 03:02 ./
+drwxr-xr-x root/root         0 2024-10-30 03:02 etc/
+drwxr-xr-x root/root         0 2024-10-30 03:02 etc/logrotate.d/
+-rw-r--r-- root/root       131 2024-10-30 03:02 etc/logrotate.d/valkey.new
+drwxr-xr-x root/root         0 2024-10-30 03:02 etc/rc.d/
+-rw-r--r-- root/root       957 2024-10-30 03:02 etc/rc.d/rc.valkey.new
+drwxr-xr-x root/root         0 2024-10-30 03:02 etc/valkey/
+-rw-r--r-- root/root     14543 2024-10-30 03:02 etc/valkey/sentinel.conf.new
+-rw-r--r-- root/root    112759 2024-10-30 03:02 etc/valkey/valkey.conf.new
+drwxr-xr-x root/root         0 2024-10-30 03:02 install/
+-rw-r--r-- root/root      1539 2024-10-30 03:02 install/doinst.sh
+-rw-r--r-- root/root      1092 2024-10-30 03:02 install/slack-desc
+drwxr-xr-x root/root         0 2024-10-30 03:02 usr/
+drwxr-xr-x root/root         0 2024-10-30 03:02 usr/bin/
+-rwxr-xr-x root/root    909752 2024-10-30 03:02 usr/bin/valkey-benchmark
+-rwxr-xr-x root/root   1148856 2024-10-30 03:02 usr/bin/valkey-cli
+-rwxr-xr-x root/root   3268888 2024-10-30 03:02 usr/bin/valkey-server
+drwxr-xr-x root/root         0 2024-10-30 03:02 usr/doc/
+drwxr-xr-x root/root         0 2024-10-30 03:02 usr/doc/valkey-8.0.1/
+-rw-r--r-- root/root     20344 2024-10-02 21:09 usr/doc/valkey-8.0.1/00-RELEASENOTES
+-rw-r--r-- root/root      5032 2024-10-02 21:09 usr/doc/valkey-8.0.1/CODE_OF_CONDUCT.md
+-rw-r--r-- root/root      5335 2024-10-02 21:09 usr/doc/valkey-8.0.1/CONTRIBUTING.md
+-rw-r--r-- root/root      3052 2024-10-02 21:09 usr/doc/valkey-8.0.1/COPYING
+-rw-r--r-- root/root      4732 2024-10-02 21:09 usr/doc/valkey-8.0.1/GOVERNANCE.md
+-rw-r--r-- root/root      1141 2024-10-02 21:09 usr/doc/valkey-8.0.1/MAINTAINERS.md
+-rw-r--r-- root/root     10032 2024-10-02 21:09 usr/doc/valkey-8.0.1/README.md
+-rw-r--r-- root/root       467 2024-10-02 21:09 usr/doc/valkey-8.0.1/SECURITY.md
+-rw-r--r-- root/root      4499 2024-10-30 03:02 usr/doc/valkey-8.0.1/valkey.SlackBuild
+drwxr-xr-x root/root         0 2024-10-30 03:02 var/
+drwxr-xr-x root/root         0 2024-10-30 03:02 var/lib/
+drwx------ root/root         0 2024-10-30 03:02 var/lib/valkey/
+drwxr-xr-x root/root         0 2024-10-30 03:02 var/log/
+drwxr-xr-x root/root         0 2024-10-30 03:02 var/log/valkey/
+
+

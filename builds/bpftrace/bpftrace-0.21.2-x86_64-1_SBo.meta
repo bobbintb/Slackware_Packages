@@ -1,0 +1,17 @@
+PACKAGE NAME:  bpftrace-0.21.2-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./bpftrace
+PACKAGE SIZE (compressed):  1788 K
+PACKAGE SIZE (uncompressed):  4660 K
+PACKAGE DESCRIPTION:
+bpftrace: bpftrace (bpftrace is a high-level tracing language for Linux BPF)
+bpftrace:
+bpftrace: bpftrace is a high-level tracing language for Linux enhanced
+bpftrace: Berkeley Packet Filter (eBPF) available in recent Linux kernels.
+bpftrace: bpftrace uses LLVM as a backend to compile scripts to BPF-bytecode
+bpftrace: and makes use of BCC for interacting with the Linux BPF system, as
+bpftrace: well as existing Linux tracing capabilities: kernel dynamic tracing
+bpftrace: (kprobes), user-level dynamic tracing (uprobes), and tracepoints.
+bpftrace: The bpftrace language is inspired by awk and C, and predecessor
+bpftrace: tracers such as DTrace and SystemTap.
+bpftrace:
+
