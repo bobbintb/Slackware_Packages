@@ -6,6 +6,7 @@ permissions:
 jobs:
   make_slackware_package:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
     with:
       VERSION: "0.21.3"
       NAME: "bpftrace"
