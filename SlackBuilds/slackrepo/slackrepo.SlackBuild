@@ -25,7 +25,7 @@
 PRGNAM=slackrepo
 VERSION=${VERSION:-20241108}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_SBo}
+TAG=${TAG:-_loom}
 
 ARCH='noarch'
 
