@@ -10,7 +10,8 @@ jobs:
     with:
       VERSION: "0.21.1"
       NAME: "bpftrace"
-      PACKAGES: "ccache vim asciidoctor libedit libssh2 ruby nghttp3 llvm fmt cmake"
+      PACKAGES: "make cmake"
+      # PACKAGES: "ccache vim asciidoctor libedit libssh2 ruby nghttp3 llvm fmt cmake"
       PIP: setuptools
       SOURCE: "https://github.com/iovisor/bpftrace/archive/refs/tags/v0.21.1/bpftrace-0.21.1.tar.gz"
 
