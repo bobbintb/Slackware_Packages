@@ -309,6 +309,7 @@ jobs:
         export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
+        git config --global --add safe.directory $REPO_DIR
     - 
       name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
