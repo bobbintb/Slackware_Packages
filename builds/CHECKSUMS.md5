@@ -10,19 +10,19 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-6456fe7fe22bbcb962b031885d7afb31  ./ChangeLog.rss
-664944cfcdcca81c33c1540fd975df5c  ./ChangeLog.txt
-189424ec55a055f4142f9ab32d986d1a  ./ChangeLog.txt.gz
-31fbe4717a7a3a7944a4f2f670d11ec0  ./FILELIST.TXT
+3ef76f824ea42d75ba87914f3f36767a  ./ChangeLog.rss
+af5f0648747baecea3a2c119be8d7f20  ./ChangeLog.txt
+181e61ca572197d9aa81ee3b570ed70e  ./ChangeLog.txt.gz
+d5e44a554d9fa4753e7b3fc87e62a1f8  ./FILELIST.TXT
 3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
-a672e74529f512232c72ab29a09c95eb  ./MANIFEST.bz2
-1358ef91fb5641358c29eb3eae3583f9  ./PACKAGES.TXT
-2dd919dff7a9d9db29f98803b729955d  ./PACKAGES.TXT.gz
-10e116f57a8b7305df6fe17f3b459ed1  ./bcc/bcc-0.32.0-x86_64-1_SBo.lst
-25897c94e2355933f6b8486ecd401aa8  ./bcc/bcc-0.32.0-x86_64-1_SBo.meta
-faf07f0cd81dc3ece32b281aa208701c  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz
-98f4e21be3230e3785929edd27e4c211  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz.md5
-4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.32.0-x86_64-1_SBo.txt
+684d832cfef41eb44a7d7c4fba4c89d6  ./MANIFEST.bz2
+878bfdfdb7ff9a6ec457ba9b9b51f530  ./PACKAGES.TXT
+ce45943a298e8d8d37a49a692d4b2bdf  ./PACKAGES.TXT.gz
+130cc4a33b00a49ba6bc54a0a4f559fa  ./bcc/bcc-0.32.0-x86_64-1_loom.lst
+244cfd843564b46be47e5ddc411b6585  ./bcc/bcc-0.32.0-x86_64-1_loom.meta
+660e0d4b38b9ebac49072b0bc4f6a4ca  ./bcc/bcc-0.32.0-x86_64-1_loom.tgz
+477f80cd496e1a99302ed4bb0792f235  ./bcc/bcc-0.32.0-x86_64-1_loom.tgz.md5
+4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.32.0-x86_64-1_loom.txt
 ced4bc900f1a81225adcf8c4068d3652  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.lst
 2e893d05f964473a0278509b81049797  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.meta
 37e2eb73c86f3a4de275f703b169e22d  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.tgz
@@ -62,7 +62,6 @@ eff92eb6f69e6d17e4d5004f1e5fa003  ./redisjson/2.8.4/librejson.so
 f8168b14560a978f525e3e7b80400370  ./retry/retry-1.0.4.tgz
 cbeecbf5c1c5018097fdf074eb048de4  ./slackrepo/slackrepo-20241108-noarch-1_SBo.lst
 aff454181f2ab3f13f4320b24d3c5f6b  ./slackrepo/slackrepo-20241108-noarch-1_SBo.meta
-f32b592ba76d4c670bcce70c60c14ff1  ./slackrepo/slackrepo-20241108-noarch-1_SBo.tgz
 efc6641cc800532200f30f4fca65df09  ./slackrepo/slackrepo-20241108-noarch-1_SBo.tgz.md5
 b7624e5d203700fa870f41e5edc2953a  ./slackrepo/slackrepo-20241108-noarch-1_SBo.txt
 3f6d05d6320de717ecc9ded47b199835  ./valkey/valkey-8.0.1-x86_64-1_SBo.lst
