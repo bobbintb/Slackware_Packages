@@ -300,6 +300,7 @@ jobs:
         echo ${GITHUB_REPOSITORY##*/}
         ls -ls /__w/Slackware_Packages/Slackware_Packages
         cd ./builds/${{ inputs.NAME }}
+        rm *
         echo $package_path
         mv $package_path ./
         ls -ls
