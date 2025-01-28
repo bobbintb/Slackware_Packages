@@ -274,7 +274,7 @@ jobs:
       if: ${{ inputs.VERSION != '' && inputs.VERSION != null }}
       run: |
         cd ./SlackBuilds/${{ inputs.NAME }}
-        sed -i 's/^DOWNLOAD=.*/DOWNLOAD=${{ inputs.VERSION }}/' ${{ inputs.NAME }}.info
+        sed -i 's/^VERSION=.*/VERSION=${{ inputs.VERSION }}/' ${{ inputs.NAME }}.info
     - 
       name: Download source code
       if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
