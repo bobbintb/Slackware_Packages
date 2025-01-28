@@ -1,6 +1,8 @@
 name: Build libbpf
 on:
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   make_slackware_package:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
