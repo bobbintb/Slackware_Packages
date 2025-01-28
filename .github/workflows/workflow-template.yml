@@ -295,6 +295,7 @@ jobs:
     - 
       name: Upload
       run: |
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2
         pwd
         echo ${GITHUB_REPOSITORY##*/}
         ls -ls /__w/Slackware_Packages/Slackware_Packages
