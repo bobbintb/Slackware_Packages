@@ -10,17 +10,21 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-3ef76f824ea42d75ba87914f3f36767a  ./ChangeLog.rss
-af5f0648747baecea3a2c119be8d7f20  ./ChangeLog.txt
-181e61ca572197d9aa81ee3b570ed70e  ./ChangeLog.txt.gz
-d5e44a554d9fa4753e7b3fc87e62a1f8  ./FILELIST.TXT
+8eb1bacdc658e84a8fabea062a7d878b  ./ChangeLog.rss
+20ced891f50e676661980cb5e5728611  ./ChangeLog.txt
+b2174ac72d9a3ceaaf12d7331be0d841  ./ChangeLog.txt.gz
+999305bf5a2e2b970ef70772aaaa9890  ./FILELIST.TXT
 3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
-684d832cfef41eb44a7d7c4fba4c89d6  ./MANIFEST.bz2
-878bfdfdb7ff9a6ec457ba9b9b51f530  ./PACKAGES.TXT
-ce45943a298e8d8d37a49a692d4b2bdf  ./PACKAGES.TXT.gz
+b4d5eeadab9be2a13b43070c92a059cd  ./MANIFEST.bz2
+f7c305af0211c3dff50d9025171de545  ./PACKAGES.TXT
+9f2ca268cf59cb0903e03290baa86c6d  ./PACKAGES.TXT.gz
+1483e2b14bdb15700f4cb3ad20ca4965  ./bcc/bcc-0.32.0-x86_64-1_SBo.lst
+823c40a60ac00ede4cfcf5e1e782a2f3  ./bcc/bcc-0.32.0-x86_64-1_SBo.meta
+faf07f0cd81dc3ece32b281aa208701c  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz
+1f23cc08cdcdddb80804c3536a99b32e  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz.md5
+4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.32.0-x86_64-1_SBo.txt
 130cc4a33b00a49ba6bc54a0a4f559fa  ./bcc/bcc-0.32.0-x86_64-1_loom.lst
 244cfd843564b46be47e5ddc411b6585  ./bcc/bcc-0.32.0-x86_64-1_loom.meta
-660e0d4b38b9ebac49072b0bc4f6a4ca  ./bcc/bcc-0.32.0-x86_64-1_loom.tgz
 477f80cd496e1a99302ed4bb0792f235  ./bcc/bcc-0.32.0-x86_64-1_loom.tgz.md5
 4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.32.0-x86_64-1_loom.txt
 ced4bc900f1a81225adcf8c4068d3652  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.lst
@@ -40,11 +44,11 @@ f9f68239099b46232681380795ce7d8f  ./keydb/keydb-6.3.4-x86_64-1loom.txt
 985ea44f1937440a3b04469883c8537a  ./keydb/keydb-6.3.4-x86_64-1loom.txz
 ad1170010d97a2f6581936937bb85f27  ./keydb/keydb-6.3.4-x86_64-1loom.txz.md5
 cfad62cadc19b8f17468a9bde2f20319  ./laurel/laurel-v0.6.3.txz
-99f30d244f49dab009bfeacf1d29d0dc  ./libbpf/libbpf-1.5.0-x86_64-1cf.lst
-25db1577322724bdc9fad3d4559848ee  ./libbpf/libbpf-1.5.0-x86_64-1cf.meta
-cfd034bd527b6f6d6a9eddf8ff9adab5  ./libbpf/libbpf-1.5.0-x86_64-1cf.txt
-c5fe03521399847972ffb840dc31a2d5  ./libbpf/libbpf-1.5.0-x86_64-1cf.txz
-fed628ba5fca3182566e413a4c811817  ./libbpf/libbpf-1.5.0-x86_64-1cf.txz.md5
+0457015b85bfbeaabc4c3fdc0f286d2a  ./libbpf/libbpf-1.5.0-x86_64-1_loom.lst
+7b48681d565b71e887df290d25e20bae  ./libbpf/libbpf-1.5.0-x86_64-1_loom.meta
+cfd034bd527b6f6d6a9eddf8ff9adab5  ./libbpf/libbpf-1.5.0-x86_64-1_loom.txt
+919bfbcd1de56ed9abf90b36cd51db73  ./libbpf/libbpf-1.5.0-x86_64-1_loom.txz
+43020c055cf69e722e388b68dfdc1690  ./libbpf/libbpf-1.5.0-x86_64-1_loom.txz.md5
 657a6eab7f18d0e65cf16703934c069d  ./ply/ply-2.3.0-x86_64-1_SBo.lst
 9407f0450f62a977b9396a5bd13258e5  ./ply/ply-2.3.0-x86_64-1_SBo.meta
 a796f31ed041d88cbb4f41b2f70ef7fc  ./ply/ply-2.3.0-x86_64-1_SBo.tgz

@@ -1,9 +1,9 @@
-PACKAGES.TXT;  Tue Jan 28 06:13:42 UTC 2025
+PACKAGES.TXT;  Tue Jan 28 06:25:30 UTC 2025
 
-PACKAGE NAME:  bcc-0.32.0-x86_64-1_loom.tgz
+PACKAGE NAME:  bcc-0.32.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
-PACKAGE SIZE (compressed):  39024 K
-PACKAGE SIZE (uncompressed):  114250 K
+PACKAGE SIZE (compressed):  4448 K
+PACKAGE SIZE (uncompressed):  17180 K
 PACKAGE DESCRIPTION:
 bcc: bcc (BPF Compiler Collection)
 bcc:
@@ -68,7 +68,7 @@ keydb:
 keydb:
 keydb:
 
-PACKAGE NAME:  libbpf-1.5.0-x86_64-1cf.txz
+PACKAGE NAME:  libbpf-1.5.0-x86_64-1_loom.txz
 PACKAGE LOCATION:  ./libbpf
 PACKAGE SIZE (compressed):  356 K
 PACKAGE SIZE (uncompressed):  1860 K
