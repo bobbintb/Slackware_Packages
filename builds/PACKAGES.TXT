@@ -1,9 +1,9 @@
-PACKAGES.TXT;  Tue Jan 28 06:32:30 UTC 2025
+PACKAGES.TXT;  Tue Jan 28 06:42:26 UTC 2025
 
-PACKAGE NAME:  bcc-0.32.0-x86_64-1_SBo.tgz
+PACKAGE NAME:  bcc-0.32.0-x86_64-1_loom.tgz
 PACKAGE LOCATION:  ./bcc
-PACKAGE SIZE (compressed):  4448 K
-PACKAGE SIZE (uncompressed):  17180 K
+PACKAGE SIZE (compressed):  39024 K
+PACKAGE SIZE (uncompressed):  114250 K
 PACKAGE DESCRIPTION:
 bcc: bcc (BPF Compiler Collection)
 bcc:

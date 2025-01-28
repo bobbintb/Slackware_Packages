@@ -10,22 +10,18 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-5589f80ca942fcdc854806ddca5ab551  ./ChangeLog.rss
-714a9baec5242d6ad7b6a3f8150b2b76  ./ChangeLog.txt
-df3ca8e2d82410f0ee222e65703facf3  ./ChangeLog.txt.gz
-6c4ff8e8f14638738090bf4788c0e5c0  ./FILELIST.TXT
+b4b9f719a780e8857b3112decdeb2d3e  ./ChangeLog.rss
+a3df0c1b00ce013192b4fce0fcceb1df  ./ChangeLog.txt
+3b438f34db8d344e9789b7271361bd7a  ./ChangeLog.txt.gz
+257b8df3d7b5d535e486aab52369d752  ./FILELIST.TXT
 3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
-b39cda9daed234b93a4bbfbe43d24f58  ./MANIFEST.bz2
-ceb4e270beed7758a4a47fe098591c00  ./PACKAGES.TXT
-308d41350ef232b0894ab307e4861b41  ./PACKAGES.TXT.gz
-1483e2b14bdb15700f4cb3ad20ca4965  ./bcc/bcc-0.32.0-x86_64-1_SBo.lst
-823c40a60ac00ede4cfcf5e1e782a2f3  ./bcc/bcc-0.32.0-x86_64-1_SBo.meta
-faf07f0cd81dc3ece32b281aa208701c  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz
-1f23cc08cdcdddb80804c3536a99b32e  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz.md5
-4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.32.0-x86_64-1_SBo.txt
-130cc4a33b00a49ba6bc54a0a4f559fa  ./bcc/bcc-0.32.0-x86_64-1_loom.lst
+ef5827a3eb1824bab6235a783f32cf0e  ./MANIFEST.bz2
+f5d4c7379c44ba3be1b65df10cda83ac  ./PACKAGES.TXT
+97d31e1a94cc9c2a3d758310d8bd2769  ./PACKAGES.TXT.gz
+546def9d7e007daa8756fb28cb8e73e9  ./bcc/bcc-0.32.0-x86_64-1_loom.lst
 244cfd843564b46be47e5ddc411b6585  ./bcc/bcc-0.32.0-x86_64-1_loom.meta
-477f80cd496e1a99302ed4bb0792f235  ./bcc/bcc-0.32.0-x86_64-1_loom.tgz.md5
+c9ce677ec8f14b10c3112688b5f5e735  ./bcc/bcc-0.32.0-x86_64-1_loom.tgz
+3823cce9db6a83bae354731618f8f39b  ./bcc/bcc-0.32.0-x86_64-1_loom.tgz.md5
 4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.32.0-x86_64-1_loom.txt
 ced4bc900f1a81225adcf8c4068d3652  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.lst
 2e893d05f964473a0278509b81049797  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.meta
