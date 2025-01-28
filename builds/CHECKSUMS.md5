@@ -10,14 +10,14 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-8eb1bacdc658e84a8fabea062a7d878b  ./ChangeLog.rss
-20ced891f50e676661980cb5e5728611  ./ChangeLog.txt
-b2174ac72d9a3ceaaf12d7331be0d841  ./ChangeLog.txt.gz
-999305bf5a2e2b970ef70772aaaa9890  ./FILELIST.TXT
+5589f80ca942fcdc854806ddca5ab551  ./ChangeLog.rss
+714a9baec5242d6ad7b6a3f8150b2b76  ./ChangeLog.txt
+df3ca8e2d82410f0ee222e65703facf3  ./ChangeLog.txt.gz
+6c4ff8e8f14638738090bf4788c0e5c0  ./FILELIST.TXT
 3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
-b4d5eeadab9be2a13b43070c92a059cd  ./MANIFEST.bz2
-f7c305af0211c3dff50d9025171de545  ./PACKAGES.TXT
-9f2ca268cf59cb0903e03290baa86c6d  ./PACKAGES.TXT.gz
+b39cda9daed234b93a4bbfbe43d24f58  ./MANIFEST.bz2
+ceb4e270beed7758a4a47fe098591c00  ./PACKAGES.TXT
+308d41350ef232b0894ab307e4861b41  ./PACKAGES.TXT.gz
 1483e2b14bdb15700f4cb3ad20ca4965  ./bcc/bcc-0.32.0-x86_64-1_SBo.lst
 823c40a60ac00ede4cfcf5e1e782a2f3  ./bcc/bcc-0.32.0-x86_64-1_SBo.meta
 faf07f0cd81dc3ece32b281aa208701c  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz
@@ -44,11 +44,11 @@ f9f68239099b46232681380795ce7d8f  ./keydb/keydb-6.3.4-x86_64-1loom.txt
 985ea44f1937440a3b04469883c8537a  ./keydb/keydb-6.3.4-x86_64-1loom.txz
 ad1170010d97a2f6581936937bb85f27  ./keydb/keydb-6.3.4-x86_64-1loom.txz.md5
 cfad62cadc19b8f17468a9bde2f20319  ./laurel/laurel-v0.6.3.txz
-0457015b85bfbeaabc4c3fdc0f286d2a  ./libbpf/libbpf-1.5.0-x86_64-1_loom.lst
+6b11b1595e421f45ad86a726496fe2ef  ./libbpf/libbpf-1.5.0-x86_64-1_loom.lst
 7b48681d565b71e887df290d25e20bae  ./libbpf/libbpf-1.5.0-x86_64-1_loom.meta
 cfd034bd527b6f6d6a9eddf8ff9adab5  ./libbpf/libbpf-1.5.0-x86_64-1_loom.txt
-919bfbcd1de56ed9abf90b36cd51db73  ./libbpf/libbpf-1.5.0-x86_64-1_loom.txz
-43020c055cf69e722e388b68dfdc1690  ./libbpf/libbpf-1.5.0-x86_64-1_loom.txz.md5
+8b8ea366396494163037fb3b8874b4c0  ./libbpf/libbpf-1.5.0-x86_64-1_loom.txz
+8838479e04c18ea2b8f2569bc3173fdf  ./libbpf/libbpf-1.5.0-x86_64-1_loom.txz.md5
 657a6eab7f18d0e65cf16703934c069d  ./ply/ply-2.3.0-x86_64-1_SBo.lst
 9407f0450f62a977b9396a5bd13258e5  ./ply/ply-2.3.0-x86_64-1_SBo.meta
 a796f31ed041d88cbb4f41b2f70ef7fc  ./ply/ply-2.3.0-x86_64-1_SBo.tgz
