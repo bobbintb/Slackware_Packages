@@ -1,0 +1,7 @@
+PRGNAM="bpftrace"
+VERSION="0.21.3"
+HOMEPAGE="https://github.com/iovisor/bpftrace/"
+DOWNLOAD="https://github.com/iovisor/bpftrace/archive/refs/tags/v0.21.3/bpftrace-0.21.3.tar.gz"
+REQUIRES="bcc cereal pahole gtest"
+MAINTAINER="bobbintb"
+EMAIL="bobbintb@gmail.com"
