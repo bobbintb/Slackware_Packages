@@ -317,4 +317,4 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: 'updated ${{ env.NAME }}'
-        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT'
+        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt Slackware_Packages/**/*.gz *.bz2 *.TXT'
