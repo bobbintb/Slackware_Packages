@@ -1,40 +1,40 @@
 ++========================================
 ||
-||   Package:  ./slackrepo/slackrepo-20241108-noarch-1_SBo.tgz
+||   Package:  ./slackrepo/slackrepo-20241108-noarch-1_loom.tgz
 ||
 ++========================================
-drwxr-xr-x root/root         0 2025-01-28 07:23 ./
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/slackrepo/
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/slackrepo/SBo/
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/slackrepo/SBo/hintfiles/
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/slackrepo/csb/
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/slackrepo/csb/hintfiles/
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/slackrepo/msb/
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/slackrepo/msb/hintfiles/
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/slackrepo/ponce/
-drwxr-xr-x root/root         0 2025-01-28 07:23 etc/slackrepo/ponce/hintfiles/
+drwxr-xr-x root/root         0 2025-01-28 07:26 ./
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/slackrepo/
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/slackrepo/SBo/
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/slackrepo/SBo/hintfiles/
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/slackrepo/csb/
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/slackrepo/csb/hintfiles/
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/slackrepo/msb/
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/slackrepo/msb/hintfiles/
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/slackrepo/ponce/
+drwxr-xr-x root/root         0 2025-01-28 07:26 etc/slackrepo/ponce/hintfiles/
 -rw-r--r-- root/root      7730 2024-11-08 23:47 etc/slackrepo/slackrepo_SBo.conf.new
 -rw-r--r-- root/root      7402 2024-11-08 23:47 etc/slackrepo/slackrepo_csb.conf.new
 -rw-r--r-- root/root      7420 2024-11-08 23:47 etc/slackrepo/slackrepo_msb.conf.new
 -rw-r--r-- root/root      9486 2024-11-08 23:47 etc/slackrepo/slackrepo_ponce.conf.new
-drwxr-x--- root/root         0 2025-01-28 07:23 etc/sudoers.d/
--rw-r----- root/root       153 2025-01-28 07:23 etc/sudoers.d/slackrepo.new
-drwxr-xr-x root/root         0 2025-01-28 07:23 install/
--rw-r--r-- root/root      3303 2025-01-28 07:23 install/doinst.sh
--rw-r--r-- root/root      1008 2025-01-28 07:23 install/slack-desc
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/bin/
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/doc/
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/doc/slackrepo-20241108/
+drwxr-x--- root/root         0 2025-01-28 07:26 etc/sudoers.d/
+-rw-r----- root/root       153 2025-01-28 07:26 etc/sudoers.d/slackrepo.new
+drwxr-xr-x root/root         0 2025-01-28 07:26 install/
+-rw-r--r-- root/root      3303 2025-01-28 07:26 install/doinst.sh
+-rw-r--r-- root/root      1008 2025-01-28 07:26 install/slack-desc
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/bin/
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/doc/
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/doc/slackrepo-20241108/
 -rw-r--r-- root/root       477 2024-11-08 23:47 usr/doc/slackrepo-20241108/BUGS
 -rw-r--r-- root/root      3483 2024-11-08 23:47 usr/doc/slackrepo-20241108/LICENCE
 -rw-r--r-- root/root      4881 2024-11-08 23:47 usr/doc/slackrepo-20241108/NEWS
 -rw-r--r-- root/root       460 2024-11-08 23:47 usr/doc/slackrepo-20241108/README
 -rw-r--r-- root/root      1157 2024-11-08 23:47 usr/doc/slackrepo-20241108/TODO
--rw-r--r-- root/root      3102 2025-01-28 07:23 usr/doc/slackrepo-20241108/slackrepo.SlackBuild
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/libexec/
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/libexec/slackrepo/
+-rw-r--r-- root/root      3103 2025-01-28 07:26 usr/doc/slackrepo-20241108/slackrepo.SlackBuild
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/libexec/
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/libexec/slackrepo/
 drwxr-xr-x root/root         0 2024-11-08 23:47 usr/libexec/slackrepo/functions.d/
 -rwxr-xr-x root/root     31751 2024-11-08 23:47 usr/libexec/slackrepo/functions.d/buildfunctions.sh
 -rwxr-xr-x root/root     25420 2024-11-08 23:47 usr/libexec/slackrepo/functions.d/cmdfunctions.sh
@@ -51,15 +51,15 @@ drwxr-xr-x root/root         0 2024-11-08 23:47 usr/libexec/slackrepo/functions.
 -rwxr-xr-x root/root      1106 2024-11-08 23:47 usr/libexec/slackrepo/s_reinstall
 -rwxr-xr-x root/root       493 2024-11-08 23:47 usr/libexec/slackrepo/sudo
 -rwxr-xr-x root/root       640 2024-11-08 23:47 usr/libexec/slackrepo/unbuffer
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/man/
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/man/man5/
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/man/
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/man/man5/
 -rw-r--r-- root/root      4275 2024-11-08 23:47 usr/man/man5/slackrepo.conf.5.gz
 -rw-r--r-- root/root      4443 2024-11-08 23:47 usr/man/man5/slackrepo.hint.5.gz
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/man/man8/
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/man/man8/
 -rw-r--r-- root/root      4202 2024-11-08 23:47 usr/man/man8/slackrepo.8.gz
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/sbin/
--rwxr-xr-x root/root     31048 2025-01-28 07:23 usr/sbin/slackrepo
-drwxr-xr-x root/root         0 2025-01-28 07:23 usr/share/
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/sbin/
+-rwxr-xr-x root/root     31049 2025-01-28 07:26 usr/sbin/slackrepo
+drwxr-xr-x root/root         0 2025-01-28 07:26 usr/share/
 drwxr-xr-x root/root         0 2024-11-08 23:47 usr/share/slackrepo/
 drwxr-xr-x root/root         0 2024-11-08 23:47 usr/share/slackrepo/SBo/
 -rw-r--r-- root/root    911424 2024-11-08 23:47 usr/share/slackrepo/SBo/buildsecs_i686.sql
@@ -76,10 +76,10 @@ drwxr-xr-x root/root         0 2024-11-08 23:47 usr/share/slackrepo/ponce/
 -rw-r--r-- root/root    708798 2024-11-08 23:47 usr/share/slackrepo/ponce/buildsecs_x86_64.sql
 -rw-r--r-- root/root       537 2024-11-08 23:47 usr/share/slackrepo/stubs-32.h
 -rwxr-xr-x root/root       151 2024-11-08 23:47 usr/share/slackrepo/uname
-drwxr-xr-x root/root         0 2025-01-28 07:23 var/
-drwxr-xr-x root/root         0 2025-01-28 07:23 var/lib/
-drwxr-xr-x root/root         0 2025-01-28 07:23 var/lib/slackrepo/
-drwxr-xr-x root/root         0 2025-01-28 07:23 var/log/
-drwxr-xr-x root/root         0 2025-01-28 07:23 var/log/slackrepo/
+drwxr-xr-x root/root         0 2025-01-28 07:26 var/
+drwxr-xr-x root/root         0 2025-01-28 07:26 var/lib/
+drwxr-xr-x root/root         0 2025-01-28 07:26 var/lib/slackrepo/
+drwxr-xr-x root/root         0 2025-01-28 07:26 var/log/
+drwxr-xr-x root/root         0 2025-01-28 07:26 var/log/slackrepo/
 
 
