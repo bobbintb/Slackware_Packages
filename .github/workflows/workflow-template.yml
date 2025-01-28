@@ -300,6 +300,7 @@ jobs:
         echo ${GITHUB_REPOSITORY##*/}
         ls -ls /__w/Slackware_Packages/Slackware_Packages
         cd ./builds/${{ inputs.NAME }}
+        echo $package_path
         export REPOSOWNER="${{ github.repository_owner }}"
         export RSS_UUID=$(uuidgen -t)
         export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
