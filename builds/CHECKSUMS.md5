@@ -10,17 +10,17 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-8f02b8de91f7115c770d1f5239c12c70  ./ChangeLog.rss
-8e312f751727282138e5b930245cd589  ./ChangeLog.txt
-cf2421286ad2deb6dd6159e79366b6c3  ./ChangeLog.txt.gz
-04c9780ef74ef227c92515de8786bd5b  ./FILELIST.TXT
+6456fe7fe22bbcb962b031885d7afb31  ./ChangeLog.rss
+664944cfcdcca81c33c1540fd975df5c  ./ChangeLog.txt
+189424ec55a055f4142f9ab32d986d1a  ./ChangeLog.txt.gz
+31fbe4717a7a3a7944a4f2f670d11ec0  ./FILELIST.TXT
 3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
-6e1b24c1bdbae4d6d7823fcd269679a2  ./MANIFEST.bz2
-9deed27362a9133560bac6bf7c655761  ./PACKAGES.TXT
-dccd36729d7a6979962e409c8e40fea6  ./PACKAGES.TXT.gz
+a672e74529f512232c72ab29a09c95eb  ./MANIFEST.bz2
+1358ef91fb5641358c29eb3eae3583f9  ./PACKAGES.TXT
+2dd919dff7a9d9db29f98803b729955d  ./PACKAGES.TXT.gz
 10e116f57a8b7305df6fe17f3b459ed1  ./bcc/bcc-0.32.0-x86_64-1_SBo.lst
 25897c94e2355933f6b8486ecd401aa8  ./bcc/bcc-0.32.0-x86_64-1_SBo.meta
-f873ad434902a16ff60004838739c207  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz
+faf07f0cd81dc3ece32b281aa208701c  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz
 98f4e21be3230e3785929edd27e4c211  ./bcc/bcc-0.32.0-x86_64-1_SBo.tgz.md5
 4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.32.0-x86_64-1_SBo.txt
 ced4bc900f1a81225adcf8c4068d3652  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.lst
@@ -60,11 +60,11 @@ d4ad625a2cdfa64c7bb57289ee8424f1  ./redisearch/2.10.7/redisearch.so
 729830b318a4a382d87331e2114016c3  ./redisearch/2.6.22/redisearch.so
 eff92eb6f69e6d17e4d5004f1e5fa003  ./redisjson/2.8.4/librejson.so
 f8168b14560a978f525e3e7b80400370  ./retry/retry-1.0.4.tgz
-dd94d5f56dfacc0dec833542e3a07c25  ./slackrepo/slackrepo-20240823-noarch-1_SBo.lst
-181f410e60feb75f775e093de9f62a49  ./slackrepo/slackrepo-20240823-noarch-1_SBo.meta
-f85c68d95a9f47c39b51bfa77403ff6c  ./slackrepo/slackrepo-20240823-noarch-1_SBo.txt
-753ed66cfe4ce65b84d6fda730ad492b  ./slackrepo/slackrepo-20240823-noarch-1_SBo.txz
-71ac4b646018d58d7933d07ffc565b6d  ./slackrepo/slackrepo-20240823-noarch-1_SBo.txz.md5
+cbeecbf5c1c5018097fdf074eb048de4  ./slackrepo/slackrepo-20241108-noarch-1_SBo.lst
+aff454181f2ab3f13f4320b24d3c5f6b  ./slackrepo/slackrepo-20241108-noarch-1_SBo.meta
+f32b592ba76d4c670bcce70c60c14ff1  ./slackrepo/slackrepo-20241108-noarch-1_SBo.tgz
+efc6641cc800532200f30f4fca65df09  ./slackrepo/slackrepo-20241108-noarch-1_SBo.tgz.md5
+b7624e5d203700fa870f41e5edc2953a  ./slackrepo/slackrepo-20241108-noarch-1_SBo.txt
 3f6d05d6320de717ecc9ded47b199835  ./valkey/valkey-8.0.1-x86_64-1_SBo.lst
 66749346d0f7b2b98dce8ebaa2b59710  ./valkey/valkey-8.0.1-x86_64-1_SBo.meta
 8917da4a65f2938c511bf270c284f93c  ./valkey/valkey-8.0.1-x86_64-1_SBo.tgz
