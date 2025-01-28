@@ -8,8 +8,8 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      VERSION: "0.32.0"
+      VERSION: "0.33.0"
       NAME: "bcc"
       PACKAGES: "llvm ccache libssh2 libedit fmt cmake make guile gc binutils gcc kernel-headers"
       PIP: setuptools
-      SOURCE: "https://github.com/iovisor/bcc/releases/download/v0.32.0/bcc-src-with-submodule.tar.gz"
+      SOURCE: "https://github.com/iovisor/bcc/releases/download/v0.33.0/bcc-src-with-submodule.tar.gz"
