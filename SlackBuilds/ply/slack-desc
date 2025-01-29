@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+   |-----handy-ruler------------------------------------------------------|
+ply: ply (A light-weight dynamic tracer for Linux that leverages eBPF.)
+ply:
+ply: A light-weight dynamic tracer for Linux that leverages the
+ply: kernel's BPF VM in concert with kprobes and tracepoints to
+ply: attach probes to arbitrary points in the kernel. Most tracers that
+ply: generate BPF bytecode are based on the LLVM based BCC toolchain. ply
+ply: on the other hand has no required external dependencies except
+ply: for libc.
+ply:
+ply:
+ply: Home: https://wkz.github.io/ply/

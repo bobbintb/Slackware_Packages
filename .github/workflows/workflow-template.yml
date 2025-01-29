@@ -1,0 +1,358 @@
+name: Workflow template
+on:
+  workflow_call:
+    inputs:
+      NAME:
+        description: 'Program name'
+        required: true
+        type: string
+      VERSION:
+        description: 'Program version'
+        required: true
+        type: string
+      PACKAGES:
+        description: 'Build dependencies to install, space seperated'
+        required: false
+        type: string
+      REINSTALL:
+        description: 'Build dependencies to re-install, space seperated'
+        required: false
+        type: string
+      PIP:
+        description: 'PIP dependencies to install, space seperated'
+        required: false
+        type: string
+      SOURCE:
+        description: 'URL of program source archive'
+        required: false
+        type: string
+      UPGRADE-ALL:
+        description: 'Upgrade all slackpkg files'
+        required: false
+        type: boolean
+      SBOPKG:
+        description: 'Use sbopkg instead of a local slackbuild file'
+        required: false
+        type: boolean
+      alien-multilib-15:
+        description: 'Enable alien-multilib-15 repo'
+        required: false
+        type: boolean
+      alien-multilib-current:
+        description: 'Enable alien-multilib-current repo'
+        required: false
+        type: boolean      
+      alien-15:
+        description: 'Enable alien-15 repo'
+        required: false
+        type: boolean
+      alien-current:
+        description: 'Enable alien-current repo'
+        required: false
+        type: boolean
+      alien-restr-15:
+        description: 'Enable alien-restr-15 repo'
+        required: false
+        type: boolean
+      alien-restr-current:
+        description: 'Enable alien-restr-current repo'
+        required: false
+        type: boolean
+      alien-slackbuilds:
+        description: 'Enable alien-slackbuilds repo'
+        required: false
+        type: boolean
+      conraid-current:
+        description: 'Enable conraid-current repo'
+        required: false
+        type: boolean
+      conraid-extra:
+        description: 'Enable conraid-extra repo'
+        required: false
+        type: boolean
+      conraid-testing:
+        description: 'Enable conraid-testing repo'
+        required: false
+        type: boolean
+      csb-15:
+        description: 'Enable csb-15 repo'
+        required: false
+        type: boolean
+      csb-current:
+        description: 'Enable csb-current repo'
+        required: false
+        type: boolean
+      msb-15:
+        description: 'Enable msb-15 repo'
+        required: false
+        type: boolean
+      msb-current:
+        description: 'Enable msb-current repo'
+        required: false
+        type: boolean
+      ponce-current:
+        description: 'Enable ponce-current repo'
+        required: false
+        type: boolean
+      salix-15:
+        description: 'Enable salix-15 repo'
+        required: false
+        type: boolean
+      salix-extra-15:
+        description: 'Enable salix-extra-15 repo'
+        required: false
+        type: boolean
+      slackel-current:
+        description: 'Enable slackel-current repo'
+        required: false
+        type: boolean
+      slackonly-15:
+        description: 'Enable slackonly-15 repo'
+        required: false
+        type: boolean
+      slackonly-current:
+        description: 'Enable slackonly-current repo'
+        required: false
+        type: boolean
+      slint:
+        description: 'Enable slint repo'
+        required: false
+        type: boolean
+      official-15-extra:
+        description: 'Enable official-15-extra repo'
+        required: false
+        type: boolean
+      bobbintb:
+        description: 'Enable bobbintb repo'
+        required: false
+        type: boolean
+jobs:
+  slackbuild_and_upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: bobbintb/unraid-cicd
+      options: --privileged
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+    -
+      name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+    # - name: Cache packages
+    #   id: cache-packages
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: "/var/cache/"
+    #     key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
+    #     restore-keys: |
+    #       slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
+    - 
+      name: Enable additional repos
+      run: | 
+        REPOPLUS="slackpkgplus"
+        if [ "${{ inputs.alien-multilib-15 }}" == "true" ]; then
+          echo "MIRRORPLUS['alien-multilib-15']=http://slackware.nl/people/alien/multilib/15.0/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" alien-multilib-15"
+        fi
+        if [ "${{ inputs.alien-multilib-current }}" == "true" ]; then
+          echo "MIRRORPLUS['alien-multilib-current']=http://slackware.nl/people/alien/multilib/current/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" alien-multilib-current"
+        fi
+        if [ "${{ inputs.alien-15 }}" == "true" ]; then
+          echo "MIRRORPLUS['alien-15']=https://slackware.nl/people/alien/sbrepos/15.0/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" alien-15"
+        fi
+        if [ "${{ inputs.alien-current }}" == "true" ]; then
+          echo "MIRRORPLUS['alien-current']=http://slackware.nl/people/alien/sbrepos/current/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" alien-current"
+        fi
+        if [ "${{ inputs.alien-restr-15 }}" == "true" ]; then
+          echo "MIRRORPLUS['alien-restr-15']=https://slackware.nl/people/alien/restricted_sbrepos/15.0/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" alien-restr-15"
+        fi
+        if [ "${{ inputs.alien-restr-current }}" == "true" ]; then
+          echo "MIRRORPLUS['alien-restr-current']=https://slackware.nl/people/alien/restricted_sbrepos/current/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" alien-restr-current"
+        fi
+        if [ "${{ inputs.alien-slackbuilds }}" == "true" ]; then
+          echo "MIRRORPLUS['alien-slackbuilds']=https://slackware.nl/people/alien/slackbuilds/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" alien-slackbuilds"
+        fi
+        if [ "${{ inputs.conraid-current }}" == "true" ]; then
+          echo "MIRRORPLUS['conraid-current']=https://slackers.it/repository/slackware64-current/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" conraid-current"
+        fi
+        if [ "${{ inputs.conraid-extra }}" == "true" ]; then
+          echo "MIRRORPLUS['conraid-extra']=https://slackers.it/repository/slackware64-current-extra/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" conraid-extra"
+        fi
+        if [ "${{ inputs.conraid-testing }}" == "true" ]; then
+          echo "MIRRORPLUS['conraid-testing']=https://slackers.it/repository/slackware64-current-testing/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" conraid-testing"
+        fi
+        if [ "${{ inputs.csb-15 }}" == "true" ]; then
+          echo "MIRRORPLUS['csb-15']=https://slackware.uk/csb/15.0/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" csb-15"
+        fi
+        if [ "${{ inputs.csb-current }}" == "true" ]; then
+          echo "MIRRORPLUS['csb-current']=https://slackware.uk/csb/current/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" csb-current"
+        fi
+        if [ "${{ inputs.msb-15 }}" == "true" ]; then
+          echo "MIRRORPLUS['msb-15']=https://slackware.uk/msb/15.0/latest/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" msb-15"
+        fi
+        if [ "${{ inputs.msb-current }}" == "true" ]; then
+          echo "MIRRORPLUS['msb-current']=https://slackware.uk/msb/current/latest/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" msb-current"
+        fi
+        if [ "${{ inputs.ponce-current }}" == "true" ]; then
+          echo "MIRRORPLUS['ponce-current']=https://ponce.cc/slackware/slackware64-current/packages/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" ponce-current"
+        fi
+        if [ "${{ inputs.salix-15 }}" == "true" ]; then
+          echo "MIRRORPLUS['salix-15']=https://download.salixos.org/x86_64/15.0/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" salix-15"
+        fi
+        if [ "${{ inputs.salix-15-extra }}" == "true" ]; then
+          echo "MIRRORPLUS['salix-15-extra']=https://download.salixos.org/x86_64/extra-15.0/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" salix-15-extra"
+        fi
+        if [ "${{ inputs.slackel-current }}" == "true" ]; then
+          echo "MIRRORPLUS['slackel-current']=http://www.slackel.gr/repo/x86_64/current/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" slackel-current"
+        fi
+        if [ "${{ inputs.slackonly-15 }}" == "true" ]; then
+          echo "MIRRORPLUS['slackonly-15']=https://packages.slackonly.com/pub/packages/15.0-x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" slackonly-15"
+        fi
+        if [ "${{ inputs.slackonly-current }}" == "true" ]; then
+          echo "MIRRORPLUS['slackonly-current']=https://packages.slackonly.com/pub/packages/current-x86_64/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" slackonly-current"
+        fi
+        if [ "${{ inputs.slint }}" == "true" ]; then
+          echo "MIRRORPLUS['slint']=https://slackware.uk/slint/x86_64/slint-15.0/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" slint"
+        fi
+        if [ "${{ inputs.official-15-extra }}" == "true" ]; then
+          echo "MIRRORPLUS['official-15-extra']=https://ftp.osuosl.org/pub/slackware/slackware64-15.0/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" official-15-extra"
+        fi
+        if [ "${{ inputs.bobbintb }}" == "true" ]; then
+          echo "MIRRORPLUS['bobbintb']=https://raw.githubusercontent.com/bobbintb/Slackware_Packages/refs/heads/main/builds/" >> /etc/slackpkg/slackpkgplus.conf
+          REPOPLUS+=" bobbintb"
+        fi
+        sed -i 's|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|' /etc/slackpkg/slackpkgplus.conf
+    - 
+      name: Update slackpkg
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
+        echo "##########################cache##########################"
+        ls -ls /var/cache/packages
+        slackpkg update gpg <<< y > /dev/null
+        slackpkg update <<< y > /dev/null
+    - 
+      name: Upgrade all packages
+      if: ${{ inputs.UPGRADE-ALL == true }}
+      run: |
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+    - 
+      name: Install dependencies
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
+        slackpkg -checkgpg=off install ${{ inputs.PACKAGES }} > /dev/null
+        # echo "==================== installed packages ===================="
+        # ls -1 /var/log/packages/
+    - 
+      name: Re-install dependencies
+      if: ${{ inputs.REINSTALL != '' && inputs.REINSTALL != null }}
+      run: |
+        slackpkg reinstall ${{ inputs.REINSTALL }} > /dev/null
+        # echo "==================== reinstalled packages ===================="
+        # ls -1 /var/log/packages/
+    - 
+      name: Install PIP dependencies
+      if: ${{ inputs.PIP != '' && inputs.PIP != null }}
+      run: pip install ${{ inputs.PIP }}
+    # - 
+    #   name: Update version
+    #   if: ${{ inputs.VERSION != '' && inputs.VERSION != null }}
+    #   run: |
+    #     cd ./SlackBuilds/${{ inputs.NAME }}
+    #     sed -i 's/^VERSION=.*/VERSION=${{ inputs.VERSION }}/' ${{ inputs.NAME }}.info
+    # - 
+      # name: Download source code
+      # if: ${{ inputs.SOURCE != '' && inputs.SOURCE != null }}
+      # run: |
+      #   if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
+      #     mkdir -p ./SlackBuilds/${{ inputs.NAME }}
+      #     cd ./SlackBuilds/${{ inputs.NAME }}
+      #     # sed -i 's|^DOWNLOAD=.*|DOWNLOAD=${{ inputs.SOURCE }}|' ${{ inputs.NAME }}.info
+      #     wget -P /var/cache/sbopkg/ ${{ inputs.SOURCE }}
+      #   fi
+    - 
+      name: Build
+      run: |
+        export VERSION=${{ inputs.VERSION }}
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        mkdir -p ${REPO_DIR}/builds/${{ inputs.NAME }}
+        if [ "${{ inputs.SBOPKG }}" == "true" ]; then
+          INFO=$(find / -name ${{ inputs.NAME }}.info | head -n 1)
+          DIR=$(dirname "$INFO")
+          cd $DIR
+          sbopkg -r
+          sbopkg -d ${{ inputs.NAME }} <<< q
+          . $INFO
+          if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
+            DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
+            DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
+            # sed -i "/^DOWNLOAD=/s/$VERSION/${{ inputs.VERSION }}/g" $INFO
+            # . $INFO
+            export VERSION=${{ inputs.VERSION }}
+          fi
+          wget $DOWNLOAD || wget $DOWNLOAD_x86_64
+          else
+            cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
+            wget ${{ inputs.SOURCE }}
+        fi
+          # cd ./SlackBuilds/${{ inputs.NAME }}
+          #cd /var/cache/sbopkg
+        pwd
+        ls -ls
+        output=$(sh ${{ inputs.NAME }}.SlackBuild)
+        package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
+        echo "package_path=${package_path}" >> $GITHUB_ENV
+        git config --global --add safe.directory $REPO_DIR
+    - 
+      name: Upload
+      run: |
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2
+        # pwd
+        # echo ${GITHUB_REPOSITORY##*/}
+        # ls -ls /__w/Slackware_Packages/Slackware_Packages
+        cd ./builds/${{ inputs.NAME }}
+        rm *
+        # echo $package_path
+        mv $package_path ./
+        # ls -ls
+        export REPOSOWNER="${{ github.repository_owner }}"
+        export RSS_UUID=$(uuidgen -t)
+        export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
+        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
+        echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
+    - 
+      name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated ${{ env.NAME }}'
+        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT'

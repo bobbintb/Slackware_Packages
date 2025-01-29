@@ -1,0 +1,172 @@
+PACKAGES.TXT;  Wed Jan 29 06:10:31 UTC 2025
+
+PACKAGE NAME:  bcc-0.32.0-x86_64-1_loom.tgz
+PACKAGE LOCATION:  ./bcc
+PACKAGE SIZE (compressed):  39024 K
+PACKAGE SIZE (uncompressed):  114250 K
+PACKAGE DESCRIPTION:
+bcc: bcc (BPF Compiler Collection)
+bcc:
+bcc: BCC is a toolkit for creating efficient kernel tracing and
+bcc: manipulation programs, and includes several useful tools and
+bcc: examples. It makes use of extended BPF (Berkeley Packet Filters),
+bcc: formally known as eBPF, a new feature that was first added to Linux
+bcc: 3.15. Much of what BCC uses requires Linux 4.1 and above.
+bcc:
+bcc:
+bcc:
+bcc:
+
+PACKAGE NAME:  bpftrace-0.21.2-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./bpftrace
+PACKAGE SIZE (compressed):  1788 K
+PACKAGE SIZE (uncompressed):  4660 K
+PACKAGE DESCRIPTION:
+bpftrace: bpftrace (bpftrace is a high-level tracing language for Linux BPF)
+bpftrace:
+bpftrace: bpftrace is a high-level tracing language for Linux enhanced
+bpftrace: Berkeley Packet Filter (eBPF) available in recent Linux kernels.
+bpftrace: bpftrace uses LLVM as a backend to compile scripts to BPF-bytecode
+bpftrace: and makes use of BCC for interacting with the Linux BPF system, as
+bpftrace: well as existing Linux tracing capabilities: kernel dynamic tracing
+bpftrace: (kprobes), user-level dynamic tracing (uprobes), and tracepoints.
+bpftrace: The bpftrace language is inspired by awk and C, and predecessor
+bpftrace: tracers such as DTrace and SystemTap.
+bpftrace:
+
+PACKAGE NAME:  daemonize-1.7.8-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./daemonize
+PACKAGE SIZE (compressed):  12 K
+PACKAGE SIZE (uncompressed):  40 K
+PACKAGE DESCRIPTION:
+daemonize: daemonize (run a program as a daemon)
+daemonize:
+daemonize: daemonize allows you to run a program as a Unix daemon.
+daemonize:
+daemonize: Homepage: http://software.clapper.org/daemonize/
+daemonize:
+daemonize:
+daemonize:
+daemonize:
+daemonize:
+daemonize:
+
+PACKAGE NAME:  keydb-6.3.4-x86_64-1loom.txz
+PACKAGE LOCATION:  ./keydb
+PACKAGE SIZE (compressed):  1232 K
+PACKAGE SIZE (uncompressed):  4940 K
+PACKAGE DESCRIPTION:
+keydb: keydb (A Multithreaded Fork of Redis)
+keydb:
+keydb: KeyDB is a high performance fork of Redis with a focus on
+keydb: multithreading, memory efficiency, and high throughput. In addition
+keydb: to performance improvements, KeyDB offers features such as Active
+keydb: Replication, FLASH Storage and Subkey Expires. KeyDB has a MVCC
+keydb: architecture that allows you to execute queries such as KEYS and
+keydb: SCAN without blocking the database and degrading performance.
+keydb:
+keydb:
+keydb:
+
+PACKAGE NAME:  libbpf-1.5.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./libbpf
+PACKAGE SIZE (compressed):  512 K
+PACKAGE SIZE (uncompressed):  1550 K
+PACKAGE DESCRIPTION:
+libbpf: libbpf (kernel-agnostic library for writing BPF programs)
+libbpf:
+libbpf: This is the (recommended) version from the github repository, which
+libbpf: is synced from the kernel tree by a complicated script.
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+
+PACKAGE NAME:  ply-2.3.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./ply
+PACKAGE SIZE (compressed):  3564 K
+PACKAGE SIZE (uncompressed):  10770 K
+PACKAGE DESCRIPTION:
+ply: ply (A light-weight dynamic tracer for Linux that leverages eBPF.)
+ply:
+ply: A light-weight dynamic tracer for Linux that leverages the
+ply: kernel's BPF VM in concert with kprobes and tracepoints to
+ply: attach probes to arbitrary points in the kernel. Most tracers that
+ply: generate BPF bytecode are based on the LLVM based BCC toolchain. ply
+ply: on the other hand has no required external dependencies except
+ply: for libc.
+ply:
+ply:
+ply: Home: https://wkz.github.io/ply/
+
+PACKAGE NAME:  redis-7.4.0-x86_64-1loom.txz
+PACKAGE LOCATION:  ./redis
+PACKAGE SIZE (compressed):  1308 K
+PACKAGE SIZE (uncompressed):  5130 K
+PACKAGE DESCRIPTION:
+redis: Redis (Key-Value Store)
+redis:
+redis: Redis is an advanced key-value store.  It is similar to memcached but
+redis: the dataset is not volatile, and values can be strings, exactly like
+redis: in memcached, but also lists, sets, and ordered sets.  These data
+redis: types can be manipulated with atomic operations to push/pop elements,
+redis: add/remove elements, perform server side union, intersection,
+redis: Records are organized in hash table, B+ tree, or a fixed-length array.
+redis: Redis supports different kinds of sorting abilities.
+redis:
+redis:
+
+PACKAGE NAME:  slackrepo-20241108-noarch-1_SBo.tgz
+PACKAGE LOCATION:  ./slackrepo
+PACKAGE SIZE (compressed):  356 K
+PACKAGE SIZE (uncompressed):  3610 K
+PACKAGE DESCRIPTION:
+slackrepo: slackrepo (Automated SlackBuild package builder)
+slackrepo:
+slackrepo: slackrepo is a tool for making and managing package repositories on
+slackrepo: Slackware, by building from repositories of SlackBuilds.
+slackrepo:
+slackrepo: https://github.com/aclemons/slackrepo
+slackrepo:
+slackrepo:
+slackrepo:
+slackrepo:
+slackrepo:
+
+PACKAGE NAME:  valkey-8.0.2-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./valkey
+PACKAGE SIZE (compressed):  2172 K
+PACKAGE SIZE (uncompressed):  5440 K
+PACKAGE DESCRIPTION:
+valkey: valkey (Key-Value Store)
+valkey:
+valkey: Valkey is an advanced key-value store.  It is similar to memcached but
+valkey: the dataset is not volatile, and values can be strings, exactly like
+valkey: in memcached, but also lists, sets, and ordered sets.  These data
+valkey: types can be manipulated with atomic operations to push/pop elements,
+valkey: add/remove elements, perform server side union, intersection,
+valkey: Records are organized in hash table, B+ tree, or a fixed-length array.
+valkey: Valkey supports different kinds of sorting abilities.
+valkey:
+valkey: Homepage: https://valkey.io/
+
+PACKAGE NAME:  yq-4.44.5-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./yq
+PACKAGE SIZE (compressed):  4048 K
+PACKAGE SIZE (uncompressed):  10070 K
+PACKAGE DESCRIPTION:
+yq: yq (portable command-line YAML, JSON, XML, CSV, TOML processor)
+yq:
+yq: A lightweight and portable command-line YAML, JSON and XML processor.
+yq: yq uses jq like syntax but works with yaml files as well as json,
+yq: xml, properties, csv and tsv. It doesn't yet support everything jq
+yq: does - but it does support the most common operations and functions,
+yq: and more is being added continuously.
+yq:
+yq: Homepage: https://github.com/mikefarah/yq
+yq:
+yq:
+

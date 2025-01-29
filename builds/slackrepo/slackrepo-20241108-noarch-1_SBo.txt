@@ -1,0 +1,11 @@
+slackrepo: slackrepo (Automated SlackBuild package builder)
+slackrepo:
+slackrepo: slackrepo is a tool for making and managing package repositories on
+slackrepo: Slackware, by building from repositories of SlackBuilds.
+slackrepo:
+slackrepo: https://github.com/aclemons/slackrepo
+slackrepo:
+slackrepo:
+slackrepo:
+slackrepo:
+slackrepo:

@@ -1,0 +1,17 @@
+PACKAGE NAME:  libbpf-1.5.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./libbpf
+PACKAGE SIZE (compressed):  512 K
+PACKAGE SIZE (uncompressed):  1550 K
+PACKAGE DESCRIPTION:
+libbpf: libbpf (kernel-agnostic library for writing BPF programs)
+libbpf:
+libbpf: This is the (recommended) version from the github repository, which
+libbpf: is synced from the kernel tree by a complicated script.
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+libbpf:
+

@@ -1,0 +1,66 @@
+name: -Build laurel
+on:
+  workflow_dispatch:
+env:
+  VERSION: "0.6.3"
+  NAME: "laurel"
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    container:
+      image: spaceinvaderone/auto_slack_pack
+      options: --privileged
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Build
+      run: |
+        echo "================================= Downloading source code ================================="
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        ARCHIVE_DIR=${REPO_DIR}/${NAME}/
+        mkdir -p ${ARCHIVE_DIR}
+        echo "Archive dir"
+        echo ${ARCHIVE_DIR}
+        cd ${ARCHIVE_DIR}
+        echo "Current dir"
+        pwd
+        wget https://github.com/threathunters-io/laurel/releases/download/v${VERSION}/${NAME}-v${VERSION}-x86_64-glibc.tar.gz
+        tar -xf ${NAME}-v${VERSION}-x86_64-glibc.tar.gz ${NAME}
+                
+        echo "Copying files to temporary folder to archive..."
+
+        dest="./tmp/usr/local/sbin/"
+        mkdir -p "$dest"
+        mv ./${NAME} "$dest"
+        
+        dest="./tmp/etc/audit/plugins.d/"
+        mkdir -p "$dest"
+        wget https://raw.githubusercontent.com/threathunters-io/laurel/refs/heads/master/etc/audit/plugins.d/laurel.conf
+        mv ./laurel.conf "$dest"
+        
+        dest="./tmp/etc/laurel/"
+        mkdir -p "$dest"
+        wget https://raw.githubusercontent.com/threathunters-io/laurel/refs/heads/master/etc/laurel/config.toml
+        mv ./config.toml "$dest"
+        
+        pushd ./tmp
+        FILE="${NAME}-v${VERSION}".txz
+        makepkg ../${repo}/"${NAME}-v${VERSION}".txz <<< y
+        popd
+        
+        git config --global --add safe.directory $REPO_DIR
+
+        echo "current dir"
+        pwd
+        echo "find file"
+        find / -name *.txz
+        # mv ${NAME}-v${VERSION}.txz ${ARCHIVE_DIR}
+        echo "ARCHIVE_DIR"
+        ls -ls ${ARCHIVE_DIR}
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated ${{ env.NAME }}'
+        file_pattern: '*.txz'

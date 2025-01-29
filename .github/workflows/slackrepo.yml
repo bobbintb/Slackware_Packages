@@ -1,0 +1,13 @@
+name: Build slackrepo
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "20241108"
+      NAME: "slackrepo"
+      SBOPKG: true

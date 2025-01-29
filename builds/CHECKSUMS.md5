@@ -1,0 +1,77 @@
+These are the MD5 message digests for the files in this directory.
+If you want to test your files, use 'md5sum' and compare the values to
+the ones listed here.
+
+To test all these files, use this command:
+
+tail +13 CHECKSUMS.md5 | md5sum --check | less
+
+'md5sum' can be found in the GNU coreutils package on ftp.gnu.org in
+/pub/gnu, or at any GNU mirror site.
+
+MD5 message digest                Filename
+1da11a16f99a4fdd71fb2f720e7d2d82  ./ChangeLog.rss
+4bbb07e51a5ca2a849d6526c79bf2eb6  ./ChangeLog.txt
+4dbc35987e36855dd52ef4fba64e8895  ./ChangeLog.txt.gz
+55d92bda00473030b7e3f1af25fc2c38  ./FILELIST.TXT
+3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
+76d14f40a191f573a0336d560c8ba913  ./MANIFEST.bz2
+7c27ba709319e5cbcb94ac85c60c90ae  ./PACKAGES.TXT
+c3ffa9f0f32ba36cc7c823bc8e9d7633  ./PACKAGES.TXT.gz
+71879e2684f7d9d7594bd3bef0b5762c  ./bcc/bcc-0.32.0-x86_64-1_loom.lst
+244cfd843564b46be47e5ddc411b6585  ./bcc/bcc-0.32.0-x86_64-1_loom.meta
+ddf73c5e1dc9952a73d1dec2e8293dbc  ./bcc/bcc-0.32.0-x86_64-1_loom.tgz
+84e83cfb905258f9a53e2910ea0ff462  ./bcc/bcc-0.32.0-x86_64-1_loom.tgz.md5
+4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.32.0-x86_64-1_loom.txt
+ced4bc900f1a81225adcf8c4068d3652  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.lst
+2e893d05f964473a0278509b81049797  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.meta
+37e2eb73c86f3a4de275f703b169e22d  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.tgz
+df599b79c7cb12072dfdd007cf7530a0  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.tgz.md5
+011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.21.2-x86_64-1_SBo.txt
+96eb03a7c638d7615b0282c7d6c5e1f3  ./daemonize/daemonize-1.7.8-x86_64-1_SBo.lst
+2a98b919d912488d8ea0f0923dba8431  ./daemonize/daemonize-1.7.8-x86_64-1_SBo.meta
+89b4cc2be15494aabfee6a11ef2858fe  ./daemonize/daemonize-1.7.8-x86_64-1_SBo.tgz
+becccdf909dbf98d6034af35f034f31b  ./daemonize/daemonize-1.7.8-x86_64-1_SBo.tgz.md5
+a8303a81b85ef26382790a393805cf83  ./daemonize/daemonize-1.7.8-x86_64-1_SBo.txt
+f29b1c8fc4786f08d14b5ffacfb178c1  ./go-audit/go-audit-v1.2.0.txz
+4293375b4d9302b9edbff0509e26a60b  ./keydb/keydb-6.3.4-x86_64-1loom.lst
+b93ac7ec62043d9d0c036e117a624755  ./keydb/keydb-6.3.4-x86_64-1loom.meta
+f9f68239099b46232681380795ce7d8f  ./keydb/keydb-6.3.4-x86_64-1loom.txt
+985ea44f1937440a3b04469883c8537a  ./keydb/keydb-6.3.4-x86_64-1loom.txz
+ad1170010d97a2f6581936937bb85f27  ./keydb/keydb-6.3.4-x86_64-1loom.txz.md5
+cfad62cadc19b8f17468a9bde2f20319  ./laurel/laurel-v0.6.3.txz
+953f70429ae51a3926293f2938947a44  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.lst
+e9b28a53a08b4c66a03a03946cabfeab  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.meta
+8078cc4090dee916e1cf8f0ee7a59f5a  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.tgz
+1bd7bc369592aedc15bbbeab2e64ddee  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.tgz.md5
+cfd034bd527b6f6d6a9eddf8ff9adab5  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.txt
+657a6eab7f18d0e65cf16703934c069d  ./ply/ply-2.3.0-x86_64-1_SBo.lst
+9407f0450f62a977b9396a5bd13258e5  ./ply/ply-2.3.0-x86_64-1_SBo.meta
+a796f31ed041d88cbb4f41b2f70ef7fc  ./ply/ply-2.3.0-x86_64-1_SBo.tgz
+6ac5f11977418babad95f9aee51c61e5  ./ply/ply-2.3.0-x86_64-1_SBo.tgz.md5
+b8b1ac7d30ca54042f0ed66fb80f9204  ./ply/ply-2.3.0-x86_64-1_SBo.txt
+1caf6cc6617716c68c05125d8b540c3e  ./redis/redis-7.4.0-x86_64-1loom.lst
+775dc4ae76d1e4234f961d74472f25b3  ./redis/redis-7.4.0-x86_64-1loom.meta
+3d703d26e108bef7127dd5da63692aad  ./redis/redis-7.4.0-x86_64-1loom.txt
+12cd56b3dc1d7a773675dc466f5e7e39  ./redis/redis-7.4.0-x86_64-1loom.txz
+267610b7cb5a375296946df97da8bc0c  ./redis/redis-7.4.0-x86_64-1loom.txz.md5
+d4ad625a2cdfa64c7bb57289ee8424f1  ./redisearch/2.10.7/redisearch.so
+6fe3eaddd66a63789132e63c2298a365  ./redisearch/2.6.22-1/redisearch.so
+729830b318a4a382d87331e2114016c3  ./redisearch/2.6.22/redisearch.so
+eff92eb6f69e6d17e4d5004f1e5fa003  ./redisjson/2.8.4/librejson.so
+f8168b14560a978f525e3e7b80400370  ./retry/retry-1.0.4.tgz
+9f050febbc0bbcdb39c5309f5a4b29d9  ./slackrepo/slackrepo-20241108-noarch-1_SBo.lst
+4a04f6cf787e9d9d90f15b69e48e1c9e  ./slackrepo/slackrepo-20241108-noarch-1_SBo.meta
+d2fb00064d03c40c84d81c1d64a818cc  ./slackrepo/slackrepo-20241108-noarch-1_SBo.tgz
+962a41920d74352e214c695540821049  ./slackrepo/slackrepo-20241108-noarch-1_SBo.tgz.md5
+f85c68d95a9f47c39b51bfa77403ff6c  ./slackrepo/slackrepo-20241108-noarch-1_SBo.txt
+e69c53b7236a7916b9f296f40fcb6f17  ./valkey/valkey-8.0.2-x86_64-1_SBo.lst
+e3fccddeefa76676c6852e12cd5972fd  ./valkey/valkey-8.0.2-x86_64-1_SBo.meta
+3c60ca65f7d7a0b05327bc890ce523d8  ./valkey/valkey-8.0.2-x86_64-1_SBo.tgz
+b0622957fdadd389a8a9511ac23eea4d  ./valkey/valkey-8.0.2-x86_64-1_SBo.tgz.md5
+383ac25268382968a9c5da9662d4bc29  ./valkey/valkey-8.0.2-x86_64-1_SBo.txt
+630546a41cacf143bdf7b5c7a8ce83b8  ./yq/yq-4.44.5-x86_64-1_SBo.lst
+63b9606c66ccdd894b63a725fd2849fa  ./yq/yq-4.44.5-x86_64-1_SBo.meta
+fb9e78501c2e642b73dbe5b184889b63  ./yq/yq-4.44.5-x86_64-1_SBo.tgz
+ec26dffc71a8b0b8b6ea53088dbd4917  ./yq/yq-4.44.5-x86_64-1_SBo.tgz.md5
+f1e799e1a66ad30d2c6e4bc4ce84e441  ./yq/yq-4.44.5-x86_64-1_SBo.txt

@@ -1,0 +1,11 @@
+daemonize: daemonize (run a program as a daemon)
+daemonize:
+daemonize: daemonize allows you to run a program as a Unix daemon.
+daemonize:
+daemonize: Homepage: http://software.clapper.org/daemonize/
+daemonize:
+daemonize:
+daemonize:
+daemonize:
+daemonize:
+daemonize:

@@ -1,0 +1,41 @@
+name: -Build redis
+on:
+  workflow_dispatch:
+env:
+  VERSION: "7.4.0"
+  NAME: "redis"
+  
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    container: aclemons/slackrepo
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Update and install packages
+      run: |
+        echo "================================= Updating packages ================================="
+        CONF_FILE="/etc/slackpkg/slackpkg.conf"
+        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
+        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
+        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
+        slackpkg update <<< y
+    - name: Build
+      run: |
+        echo "================================= Downloading source code ================================="
+        URL="http://download.redis.io/releases/${NAME}-${VERSION}.tar.gz"
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        mkdir -p ${REPO_DIR}/${NAME}
+        cd ./SlackBuilds/$NAME
+        wget $URL
+        sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
+        git config --global --add safe.directory $REPO_DIR
+        find / -name redisearch.so
+        cp /tmp/*.txz ${REPO_DIR}/${NAME}
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated ${{ env.NAME }}'
+        file_pattern: '*.txz'

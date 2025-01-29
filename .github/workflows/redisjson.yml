@@ -1,0 +1,48 @@
+name: -Build redisjson
+on:
+  workflow_dispatch:
+env:
+  VERSION: "2.8.4"
+  NAME: "redisjson"
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Update and install packages
+      run: |
+        echo "================================= Updating packages ================================="
+        sudo apt upgrade -y
+        sudo apt install libclang-dev -y
+        echo "================================= Checkout RediSearch repo ================================="
+    - name: Checkout RedisJSON repo
+      uses: actions/checkout@v4
+      with:
+        repository: RedisJSON/RedisJSON
+        ref: 'v2.8.4'
+        path: RedisJSON
+    - name: Build
+      run: |
+        echo "================================= Building RediSearch ================================="
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        . "$HOME/.cargo/env"
+        cd RedisJSON/
+        cargo build --release
+        cp /home/runner/work/Slackware_Packages/Slackware_Packages/RedisJSON/target/release/librejson.so /tmp
+        cd ..
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Move
+      run: |
+        echo "================================= Moving artifact ================================="
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/home/runner/work/${REPO}/${REPO}"
+        git config --global --add safe.directory $REPO_DIR
+        mkdir -p ${REPO_DIR}/${NAME}/${VERSION}
+        mv /tmp/librejson.so ${REPO_DIR}/${NAME}/${VERSION}
+        cd $REPO_DIR
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated ${{ env.NAME }}'
+        file_pattern: '*.so'

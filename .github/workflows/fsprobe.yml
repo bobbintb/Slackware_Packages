@@ -1,0 +1,66 @@
+name: -Build fsprobe
+on:
+  workflow_dispatch:
+env:
+  VERSION: "2024.12.22"
+  NAME: "fsprobe"
+  PACKAGES: "ccache vim asciidoctor libedit libssh2 ruby nghttp3 llvm fmt"
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    container:
+      image: spaceinvaderone/auto_slack_pack
+      options: --privileged
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/slackpkg/
+        key: slackpkg
+    - name: Update and install packages
+      run: |
+        echo "================================= Updating packages ================================="
+        CONF_FILE="/etc/slackpkg/slackpkg.conf"
+        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
+        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
+        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
+        sed -i '$s/.*/https:\/\/mirrors\.slackware\.com\/slackware\/slackware64-current\//' /etc/slackpkg/mirrors
+        slackpkg update gpg <<< y
+        slackpkg update <<< y
+        ##############################################
+        slackpkg install ${PACKAGES}
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        ##############################################
+        ##############################################
+        #installpkg *.txz
+        #rm *.txz
+        #installpkg *.tgz
+        #rm *.tgz
+    - name: Build
+      run: |
+        echo "================================= Downloading source code ================================="
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        git config --global --add safe.directory $REPO_DIR
+        git rm ${REPO_DIR}/${NAME}
+        # rm -d ${REPO_DIR}/${NAME}
+        mkdir -p ${REPO_DIR}/${NAME}
+        ##############################################
+        git clone https://github.com/Gui774ume/fsprobe.git
+        cd ./fsprobe
+        ##############################################
+        make build
+        git config --global --add safe.directory $REPO_DIR
+        cp ./bin/fsprobe ${REPO_DIR}/${NAME}/${NAME}
+    - name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated ${{ env.NAME }}'
+        file_pattern: 'fsprobe'
