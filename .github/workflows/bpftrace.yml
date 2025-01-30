@@ -11,7 +11,9 @@ jobs:
       VERSION: "0.22.1"
       NAME: "bpftrace"
       SBOPKG: true
-      PACKAGES: "make cmake cc"
+      bobbintb: true
+      alien-15: true
+      PACKAGES: "make cmake cc gcc guile gc binutils bcc libbpf"
       # PACKAGES: "ccache vim asciidoctor libedit libssh2 ruby nghttp3 llvm fmt cmake"
       PIP: setuptools
 
