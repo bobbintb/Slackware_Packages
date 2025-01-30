@@ -1,8 +1,0 @@
-PRGNAM="llvm"
-VERSION="13.0.0"
-HOMEPAGE="https://llvm.org/"
-DOWNLOAD="https://github.com/llvm/llvm-project/archive/refs/tags/llvmorg-13.0.0.tar.gz"
-MD5SUM="bb05aef0cedd7f415f687840b081ac59"
-REQUIRES="python3"
-MAINTAINER="bobbintb"
-EMAIL="bobbintb@gmail.com"
