@@ -1,4 +1,4 @@
-name: -Build bpftrace
+name: Build bpftrace
 on:
   workflow_dispatch:
 permissions:
