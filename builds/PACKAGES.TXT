@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Wed Jan 29 06:10:31 UTC 2025
+PACKAGES.TXT;  Thu Jan 30 04:43:11 UTC 2025
 
 PACKAGE NAME:  bcc-0.32.0-x86_64-1_loom.tgz
 PACKAGE LOCATION:  ./bcc
@@ -17,10 +17,10 @@ bcc:
 bcc:
 bcc:
 
-PACKAGE NAME:  bpftrace-0.21.2-x86_64-1_SBo.tgz
+PACKAGE NAME:  bpftrace-0.22.1-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bpftrace
-PACKAGE SIZE (compressed):  1788 K
-PACKAGE SIZE (uncompressed):  4660 K
+PACKAGE SIZE (compressed):  3524 K
+PACKAGE SIZE (uncompressed):  9120 K
 PACKAGE DESCRIPTION:
 bpftrace: bpftrace (bpftrace is a high-level tracing language for Linux BPF)
 bpftrace:
