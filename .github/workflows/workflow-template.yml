@@ -307,7 +307,7 @@ jobs:
         REPO_DIR="/__w/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/builds/${{ inputs.NAME }}
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
-          INFO=$(find / -name ${{ inputs.NAME }}.info | head -n 1)
+          INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
           DIR=$(dirname "$INFO")
           cd $DIR
           sbopkg -r
