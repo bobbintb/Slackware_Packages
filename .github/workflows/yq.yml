@@ -10,4 +10,6 @@ jobs:
     with:
       VERSION: "4.45.1"
       NAME: "yq"
+      alien-15: true
+      PACKAGES: "go"
       SBOPKG: true
