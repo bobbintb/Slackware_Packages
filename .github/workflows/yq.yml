@@ -1,55 +1,13 @@
-name: -Build yq
+name: Build yq
 on:
   workflow_dispatch:
-env:
-  VERSION: "4.44.5"
-  NAME: "yq"
+permissions:
+  contents: write
 jobs:
-  slackware-job:
-    permissions: write-all
-    runs-on: ubuntu-latest
-    container: spaceinvaderone/auto_slack_pack
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-    - name: Update and install packages
-      run: |
-        echo "================================= Updating packages ================================="
-        CONF_FILE="/etc/slackpkg/slackpkg.conf"
-        sed -i "s/^DIALOG=.*/DIALOG=off/" "$CONF_FILE"
-        sed -i "s/^BATCH=.*/BATCH=on/" "$CONF_FILE"
-        sed -i "s/^DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/" "$CONF_FILE"
-        slackpkg update <<< y
-    - name: Install dependencies
-      run: |
-        echo "================================= Installing dependencies ================================="
-        slackpkg remove gcc-go
-        wget https://slackers.it/repository/slackware64-current/go/go-1.23.4-x86_64-1cf.txz
-        installpkg *.txz
-        rm *.txz
-    - name: Build
-      run: |
-        echo "================================= Downloading source code ================================="
-        export PATH=$PATH:/usr/lib64/go/bin
-        REPO=${GITHUB_REPOSITORY##*/}
-        REPO_DIR="/__w/${REPO}/${REPO}"
-        mkdir -p ${REPO_DIR}/${NAME}
-        cd ./SlackBuilds/$NAME
-        . ./${NAME}.info
-        wget $DOWNLOAD
-        sh ${REPO_DIR}/SlackBuilds/${NAME}/${NAME}.SlackBuild
-        git config --global --add safe.directory $REPO_DIR
-        cp /tmp/*.tgz ${REPO_DIR}/${NAME}
-    # - name: Commit changes
-    #   uses: stefanzweifel/git-auto-commit-action@v5
-    #   with:
-    #     commit_message: 'updated ${{ env.NAME }}'
-    #     file_pattern: '*.tgz'
-    - name: Release
-      uses: softprops/action-gh-release@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tag_name: v${{ env.NAME }} v${{ env.VERSION }}
-        make_latest: true
-        files: |
-          *.tgz
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "4.45.1"
+      NAME: "yq"
+      SBOPKG: true
