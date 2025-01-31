@@ -320,7 +320,7 @@ jobs:
             # . $INFO
             export VERSION=${{ inputs.VERSION }}
           fi
-          wget $DOWNLOAD || wget $DOWNLOAD_x86_64
+          git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || wget $DOWNLOAD || wget $DOWNLOAD_x86_64
           else
             cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
             wget ${{ inputs.SOURCE }}
