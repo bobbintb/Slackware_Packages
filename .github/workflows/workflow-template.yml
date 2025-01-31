@@ -320,7 +320,15 @@ jobs:
             # . $INFO
             export VERSION=${{ inputs.VERSION }}
           fi
-          git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || wget $DOWNLOAD || wget $DOWNLOAD_x86_64
+          if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
+            git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
+            . $DIR/${{ inputs.NAME }}.SlackBuild
+            echo $TARNAM
+            tar -czvf bcc.tar.gz bcc
+
+          fi
+           
+          wget $DOWNLOAD || wget $DOWNLOAD_x86_64
           else
             cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
             wget ${{ inputs.SOURCE }}
