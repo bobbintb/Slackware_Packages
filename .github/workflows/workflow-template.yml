@@ -323,6 +323,8 @@ jobs:
           if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
             git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
             . $DIR/${{ inputs.NAME }}.SlackBuild
+            pwd
+            ls -ls
             echo $TARNAM
             tar -czvf bcc.tar.gz bcc
 
