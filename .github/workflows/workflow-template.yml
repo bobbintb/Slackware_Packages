@@ -322,7 +322,7 @@ jobs:
           fi
           if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
             git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
-            . ${{ inputs.NAME }}.SlackBuild
+            . ./${{ inputs.NAME }}.SlackBuild
             pwd
             ls -ls
             echo $TARNAM
