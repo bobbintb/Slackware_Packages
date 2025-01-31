@@ -12,6 +12,6 @@ jobs:
       VERSION: "0.33.0"
       NAME: "bcc"
       SBOPKG: true
-      PACKAGES: "cmake make llvm"
+      PACKAGES: "cmake make llvm guile"
       #PACKAGES: "llvm ccache libssh2 libedit fmt cmake make guile gc binutils gcc kernel-headers bobbintb:libbpf"
       PIP: setuptools
