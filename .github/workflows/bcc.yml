@@ -1,4 +1,4 @@
-name: -Build bcc
+name: Build bcc
 on:
   workflow_dispatch:
 permissions:
