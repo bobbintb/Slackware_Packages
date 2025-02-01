@@ -1,4 +1,4 @@
-name: Build bcc
+name: Build redisearch
 on:
   workflow_dispatch:
 permissions:
