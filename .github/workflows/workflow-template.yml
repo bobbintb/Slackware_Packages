@@ -328,7 +328,7 @@ jobs:
             ls -ls
             TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
             echo $TARNAM
-            tar -czvf bcc.tar.gz bcc
+            tar -czvf $TARNAM.tar.gz bcc
           else
             wget $DOWNLOAD || wget $DOWNLOAD_x86_64
           fi  
