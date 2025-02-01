@@ -1,9 +1,9 @@
-PACKAGES.TXT;  Thu Jan 30 04:43:11 UTC 2025
+PACKAGES.TXT;  Sat Feb  1 00:39:02 UTC 2025
 
-PACKAGE NAME:  bcc-0.32.0-x86_64-1_loom.tgz
+PACKAGE NAME:  bcc-0.33.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
 PACKAGE SIZE (compressed):  39024 K
-PACKAGE SIZE (uncompressed):  114250 K
+PACKAGE SIZE (uncompressed):  114260 K
 PACKAGE DESCRIPTION:
 bcc: bcc (BPF Compiler Collection)
 bcc:
@@ -33,40 +33,6 @@ bpftrace: (kprobes), user-level dynamic tracing (uprobes), and tracepoints.
 bpftrace: The bpftrace language is inspired by awk and C, and predecessor
 bpftrace: tracers such as DTrace and SystemTap.
 bpftrace:
-
-PACKAGE NAME:  daemonize-1.7.8-x86_64-1_SBo.tgz
-PACKAGE LOCATION:  ./daemonize
-PACKAGE SIZE (compressed):  12 K
-PACKAGE SIZE (uncompressed):  40 K
-PACKAGE DESCRIPTION:
-daemonize: daemonize (run a program as a daemon)
-daemonize:
-daemonize: daemonize allows you to run a program as a Unix daemon.
-daemonize:
-daemonize: Homepage: http://software.clapper.org/daemonize/
-daemonize:
-daemonize:
-daemonize:
-daemonize:
-daemonize:
-daemonize:
-
-PACKAGE NAME:  keydb-6.3.4-x86_64-1loom.txz
-PACKAGE LOCATION:  ./keydb
-PACKAGE SIZE (compressed):  1232 K
-PACKAGE SIZE (uncompressed):  4940 K
-PACKAGE DESCRIPTION:
-keydb: keydb (A Multithreaded Fork of Redis)
-keydb:
-keydb: KeyDB is a high performance fork of Redis with a focus on
-keydb: multithreading, memory efficiency, and high throughput. In addition
-keydb: to performance improvements, KeyDB offers features such as Active
-keydb: Replication, FLASH Storage and Subkey Expires. KeyDB has a MVCC
-keydb: architecture that allows you to execute queries such as KEYS and
-keydb: SCAN without blocking the database and degrading performance.
-keydb:
-keydb:
-keydb:
 
 PACKAGE NAME:  libbpf-1.5.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./libbpf
