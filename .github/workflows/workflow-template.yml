@@ -326,7 +326,7 @@ jobs:
             echo $DIR/${{ inputs.NAME }}.SlackBuild
             pwd
             ls -ls
-            TARNAM=$(sed -n 's/^TARNAM=\(.*\)/\1/p' ${{ inputs.NAME }}.SlackBuild)
+            TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
             echo $TARNAM
             tar -czvf bcc.tar.gz bcc
           else
