@@ -11,4 +11,4 @@ jobs:
       VERSION: "22.13.1"
       NAME: "nodejs"
       SBOPKG: true
-      PACKAGES: "gcc make"
+      PACKAGES: "gcc make guile ninja kernel-headers binutils"
