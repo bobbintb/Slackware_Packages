@@ -10,14 +10,14 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-95ba105131138d45de29307af2a8a5c8  ./ChangeLog.rss
-1cfffc874dab50157c9641b75cef5161  ./ChangeLog.txt
-12d3cae26a3159f03b90df2123e2082e  ./ChangeLog.txt.gz
-1ab91fb14a4276d8894e223712059fcd  ./FILELIST.TXT
+961af4713d27b05100fd914d18d6ec59  ./ChangeLog.rss
+d0a143d547c5f6066651e2864b775535  ./ChangeLog.txt
+7c138348d05e7e00b87d243639f5691b  ./ChangeLog.txt.gz
+acfbd1cbafbe561e54f32f000a46916b  ./FILELIST.TXT
 3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
-f3bab39b2c422dbbcf9b27eeec0f8e7c  ./MANIFEST.bz2
-1588260c4a5a6f8f38307ee42e7f8d80  ./PACKAGES.TXT
-65df4a166631182251316943589ad5da  ./PACKAGES.TXT.gz
+e5563c7e7118e4f9e0de48e58b81560f  ./MANIFEST.bz2
+1b80fb2635d0d77f60d55515232b8841  ./PACKAGES.TXT
+69f6ddb391132e3ba346c8e900ff51f9  ./PACKAGES.TXT.gz
 a95711291c2097566d3ec07b4cb4c87f  ./bcc/bcc-0.33.0-x86_64-1_SBo.lst
 9bdc3c5b980fa493a485619afde5882c  ./bcc/bcc-0.33.0-x86_64-1_SBo.meta
 8d85c1ff7869c980b75c34aae332a61f  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz
@@ -34,6 +34,11 @@ e9b28a53a08b4c66a03a03946cabfeab  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.meta
 8078cc4090dee916e1cf8f0ee7a59f5a  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.tgz
 1bd7bc369592aedc15bbbeab2e64ddee  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.tgz.md5
 cfd034bd527b6f6d6a9eddf8ff9adab5  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.txt
+1c804f4161944d94b5e84f985bfc59b1  ./nodejs/nodejs-22.13.1-x86_64-1_SBo.lst
+2489ddcbb350c7ff6c4157f1ea46c651  ./nodejs/nodejs-22.13.1-x86_64-1_SBo.meta
+8c877966e9fff04ae73b09a34c31778b  ./nodejs/nodejs-22.13.1-x86_64-1_SBo.tgz
+93b6e951e236dd3effd8a853551184bb  ./nodejs/nodejs-22.13.1-x86_64-1_SBo.tgz.md5
+6af2a36e86ec60994dddbae09f731c9a  ./nodejs/nodejs-22.13.1-x86_64-1_SBo.txt
 657a6eab7f18d0e65cf16703934c069d  ./ply/ply-2.3.0-x86_64-1_SBo.lst
 9407f0450f62a977b9396a5bd13258e5  ./ply/ply-2.3.0-x86_64-1_SBo.meta
 a796f31ed041d88cbb4f41b2f70ef7fc  ./ply/ply-2.3.0-x86_64-1_SBo.tgz

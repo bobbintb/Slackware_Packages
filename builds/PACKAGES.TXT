@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Sat Feb  1 00:39:02 UTC 2025
+PACKAGES.TXT;  Tue Feb  4 18:02:20 UTC 2025
 
 PACKAGE NAME:  bcc-0.33.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
@@ -50,6 +50,23 @@ libbpf:
 libbpf:
 libbpf:
 libbpf:
+
+PACKAGE NAME:  nodejs-22.13.1-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./nodejs
+PACKAGE SIZE (compressed):  38508 K
+PACKAGE SIZE (uncompressed):  111930 K
+PACKAGE DESCRIPTION:
+nodejs: nodejs (JavaScript runtime)
+nodejs:
+nodejs: Node.js is a JavaScript runtime built on Chrome's V8 JavaScript
+nodejs: engine.
+nodejs:
+nodejs: https://nodejs.org/
+nodejs:
+nodejs:
+nodejs:
+nodejs:
+nodejs:
 
 PACKAGE NAME:  ply-2.3.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./ply
