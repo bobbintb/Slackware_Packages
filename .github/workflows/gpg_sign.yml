@@ -29,7 +29,6 @@ jobs:
     #       slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
     - 
       name: Update slackpkg
-      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
         echo "##########################cache##########################"
         ls -ls /var/cache/packages
