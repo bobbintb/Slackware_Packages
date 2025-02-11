@@ -135,7 +135,7 @@ cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p $PKG/install
 mkdir -p $PKG/usr/bin/valkey-modules
-mv $TMP/$PRGNAM/bin/linux-x64-release/search/redisearch.so /usr/bin/valkey-modules/redisearch.so
+mv $TMP/$PRGNAM/bin/linux-x64-release/search/redisearch.so $PKG/usr/bin/valkey-modules/redisearch.so
 cat $CWD/slack-desc > $PKG/install/slack-desc
 [ -f $CWD/doinst.sh ] && cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
