@@ -57,6 +57,7 @@ jobs:
         # wget -P /usr/libexec/slackrepo/ -O /usr/libexec/slackrepo/gen_repos_files.sh "http://www.slackware.com/~alien/tools/gen_repos_files.sh"
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         chmod +x script.expect
+        export PASSPHRASE=${{ secrets.PASSPHRASE }}
         ./script.expect
         #echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
     - 
