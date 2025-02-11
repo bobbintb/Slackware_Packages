@@ -39,6 +39,7 @@ jobs:
       run: |
         slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2
         cd ./builds/
+        gpg --list-keys
         export REPOSOWNER="${{ github.repository_owner }}"
         export RSS_UUID=$(uuidgen -t)
         export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
