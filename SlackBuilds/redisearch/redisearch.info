@@ -1,5 +1,5 @@
 PRGNAM="redisearch"
-VERSION="2.10.11"
+VERSION="2.10.12"
 HOMEPAGE="https://github.com/RediSearch/RediSearch"
 DOWNLOAD="https://github.com/RediSearch/RediSearch/archive/refs/tags/v2.10.12.tar.gz"
 MD5SUM="md5sum(s) of the source tarball(s) defined in DOWNLOAD"
