@@ -1,7 +1,7 @@
 PRGNAM="redisearch"
 VERSION="2.10.11"
 HOMEPAGE="https://github.com/RediSearch/RediSearch"
-DOWNLOAD="https://github.com/RediSearch/RediSearch/archive/refs/tags/v2.10.11.tar.gz"
+DOWNLOAD="https://github.com/RediSearch/RediSearch/archive/refs/tags/v2.10.12.tar.gz"
 MD5SUM="md5sum(s) of the source tarball(s) defined in DOWNLOAD"
 DOWNLOAD_x86_64="direct download link(s) of application source tarball(s), x86_64 only"
 MD5SUM_x86_64="md5sum(s) of the source tarball(s) defined in DOWNLOAD_x86_64"
