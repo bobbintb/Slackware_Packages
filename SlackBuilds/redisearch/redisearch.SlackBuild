@@ -99,7 +99,7 @@ cd $TMP
 rm -rf $PRGNAM-$VERSION
 #tar xvf $CWD/$PRGNAM-$VERSION.tar.gz || tar xvf $CWD/v$VERSION.tar.gz
 cd $PRGNAM
-./.install/install_boost.sh 1.8.7
+./.install/install_boost.sh 1.87.0
 export BOOST_DIR=/tmp/SBo/${PRGNAM}/boost
 chown -R root:root .
 find -L . \
