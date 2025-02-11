@@ -38,14 +38,7 @@ jobs:
       name: Upload
       run: |
         slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2
-        # pwd
-        # echo ${GITHUB_REPOSITORY##*/}
-        # ls -ls /__w/Slackware_Packages/Slackware_Packages
-        cd ./builds/${{ inputs.NAME }}
-        #rm *
-        # echo $package_path
-        mv $package_path ./
-        # ls -ls
+        cd ./builds/
         export REPOSOWNER="${{ github.repository_owner }}"
         export RSS_UUID=$(uuidgen -t)
         export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
