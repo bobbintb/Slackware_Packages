@@ -11,4 +11,4 @@ jobs:
       VERSION: "2.10.12"
       NAME: "redisearch"
       PACKAGES: "make guile gc gcc binutils"
-      SOURCE: "https://github.com/RediSearch/RediSearch/archive/refs/tags/v2.10.12.tar.gz"
+      SOURCE: "https://github.com/RediSearch/RediSearch.git"
