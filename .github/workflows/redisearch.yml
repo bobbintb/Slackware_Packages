@@ -8,8 +8,6 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      bobbintb: true
-      VERSION: "2.10.11"
+      VERSION: "2.10.12"
       NAME: "redisearch"
       PACKAGES: "make guile gc gcc binutils"
-      SOURCE: https://github.com/RediSearch/RediSearch.git
