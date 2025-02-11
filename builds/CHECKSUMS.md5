@@ -10,14 +10,14 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-e78fad13ae525a01f775bd22ec1326e4  ./ChangeLog.rss
-54075bfa5b92778044c0660e99167ba6  ./ChangeLog.txt
-62c5c67f5f12f2a97fc4ccd106a5c5ce  ./ChangeLog.txt.gz
-7c6ee9cca6ab07636bb63105b1287f77  ./FILELIST.TXT
+116fc563d19bfb0baa94f0d67d0aa8a3  ./ChangeLog.rss
+87ba467c93ee179281569bd2e5b69b6a  ./ChangeLog.txt
+b60b1659167225e6e6678d18a4948f93  ./ChangeLog.txt.gz
+2ed1e011c9ef1b7ec755ab38f5d936e6  ./FILELIST.TXT
 3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
 06188ffd93c5868014f3e0dfad22723a  ./MANIFEST.bz2
-9a1f4ac693d53cc83925d165a44b9cee  ./PACKAGES.TXT
-c0187d53905d97bc04b994e43e674a82  ./PACKAGES.TXT.gz
+5388ba4c272dcdcc2aa7baf74241b80a  ./PACKAGES.TXT
+1f6ffea865be22702cd6ebb5ed0ce99c  ./PACKAGES.TXT.gz
 a95711291c2097566d3ec07b4cb4c87f  ./bcc/bcc-0.33.0-x86_64-1_SBo.lst
 9bdc3c5b980fa493a485619afde5882c  ./bcc/bcc-0.33.0-x86_64-1_SBo.meta
 8d85c1ff7869c980b75c34aae332a61f  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz
@@ -54,7 +54,7 @@ d4ad625a2cdfa64c7bb57289ee8424f1  ./redisearch/2.10.7/redisearch.so
 729830b318a4a382d87331e2114016c3  ./redisearch/2.6.22/redisearch.so
 25184cd1b1002d3f0059a0195500c8ca  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.lst
 4db26ff2287871926425c33e14236bda  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.meta
-a3835b79fd4b155a4b1a83dfb75428a3  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz
+494888086743fa7d61b8418b9c2d3b03  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz
 af7b5d77ec031b5ee4c2e733629e946c  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz.md5
 3277ae8a7da1d45b87fffa5a697db875  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.txt
 eff92eb6f69e6d17e4d5004f1e5fa003  ./redisjson/2.8.4/librejson.so
