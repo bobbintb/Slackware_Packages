@@ -1,0 +1,60 @@
+name: GPG sign
+on:
+  workflow_dispatch:
+jobs:
+  slackbuild_and_upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: bobbintb/unraid-cicd
+      options: --privileged
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+    -
+      name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+    # - name: Cache packages
+    #   id: cache-packages
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: "/var/cache/"
+    #     key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
+    #     restore-keys: |
+    #       slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
+    - 
+      name: Update slackpkg
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
+        echo "##########################cache##########################"
+        ls -ls /var/cache/packages
+        slackpkg update gpg <<< y > /dev/null
+        slackpkg update <<< y > /dev/null
+    - 
+      name: Upload
+      run: |
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2
+        # pwd
+        # echo ${GITHUB_REPOSITORY##*/}
+        # ls -ls /__w/Slackware_Packages/Slackware_Packages
+        cd ./builds/${{ inputs.NAME }}
+        #rm *
+        # echo $package_path
+        mv $package_path ./
+        # ls -ls
+        export REPOSOWNER="${{ github.repository_owner }}"
+        export RSS_UUID=$(uuidgen -t)
+        export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
+        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
+        echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
+    - 
+      name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated ${{ env.NAME }}'
+        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT'
