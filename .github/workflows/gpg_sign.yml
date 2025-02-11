@@ -46,7 +46,7 @@ jobs:
         cat <<EOF > script.expect
         #!/usr/bin/expect
         
-        set key \$env(PASSPHRASE)
+        set key [lindex $argv 0]
         spawn /usr/libexec/slackrepo/gen_repos_files.sh
         expect "Enter ChangeLog.txt description:"
         send "\r"
@@ -57,8 +57,8 @@ jobs:
         # wget -P /usr/libexec/slackrepo/ -O /usr/libexec/slackrepo/gen_repos_files.sh "http://www.slackware.com/~alien/tools/gen_repos_files.sh"
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         chmod +x script.expect
-        export PASSPHRASE=${{ secrets.PASSPHRASE }}
-        ./script.expect
+        #export PASSPHRASE=${{ secrets.PASSPHRASE }}
+        ./script.expect ${{ secrets.PASSPHRASE }}
         #echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
     - 
       name: Commit changes
