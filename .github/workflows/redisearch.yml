@@ -10,5 +10,5 @@ jobs:
     with:
       VERSION: "2.10.12"
       NAME: "redisearch"
-      PACKAGES: "make cmake guile gc gcc binutils boost kernel-headers && export BOOST_DIR=/usr/include/boost"
+      PACKAGES: "make cmake guile gc gcc binutils kernel-headers"
       SOURCE: "https://github.com/RediSearch/RediSearch.git"
