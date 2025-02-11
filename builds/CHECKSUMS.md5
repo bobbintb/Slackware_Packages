@@ -10,14 +10,14 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-961af4713d27b05100fd914d18d6ec59  ./ChangeLog.rss
-d0a143d547c5f6066651e2864b775535  ./ChangeLog.txt
-7c138348d05e7e00b87d243639f5691b  ./ChangeLog.txt.gz
-acfbd1cbafbe561e54f32f000a46916b  ./FILELIST.TXT
+e78fad13ae525a01f775bd22ec1326e4  ./ChangeLog.rss
+54075bfa5b92778044c0660e99167ba6  ./ChangeLog.txt
+62c5c67f5f12f2a97fc4ccd106a5c5ce  ./ChangeLog.txt.gz
+7c6ee9cca6ab07636bb63105b1287f77  ./FILELIST.TXT
 3ec3be9422166d60855c666bb7f721d4  ./GPG-KEY
-e5563c7e7118e4f9e0de48e58b81560f  ./MANIFEST.bz2
-1b80fb2635d0d77f60d55515232b8841  ./PACKAGES.TXT
-69f6ddb391132e3ba346c8e900ff51f9  ./PACKAGES.TXT.gz
+06188ffd93c5868014f3e0dfad22723a  ./MANIFEST.bz2
+9a1f4ac693d53cc83925d165a44b9cee  ./PACKAGES.TXT
+c0187d53905d97bc04b994e43e674a82  ./PACKAGES.TXT.gz
 a95711291c2097566d3ec07b4cb4c87f  ./bcc/bcc-0.33.0-x86_64-1_SBo.lst
 9bdc3c5b980fa493a485619afde5882c  ./bcc/bcc-0.33.0-x86_64-1_SBo.meta
 8d85c1ff7869c980b75c34aae332a61f  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz
@@ -52,6 +52,11 @@ b8b1ac7d30ca54042f0ed66fb80f9204  ./ply/ply-2.3.0-x86_64-1_SBo.txt
 d4ad625a2cdfa64c7bb57289ee8424f1  ./redisearch/2.10.7/redisearch.so
 6fe3eaddd66a63789132e63c2298a365  ./redisearch/2.6.22-1/redisearch.so
 729830b318a4a382d87331e2114016c3  ./redisearch/2.6.22/redisearch.so
+25184cd1b1002d3f0059a0195500c8ca  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.lst
+4db26ff2287871926425c33e14236bda  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.meta
+a3835b79fd4b155a4b1a83dfb75428a3  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz
+af7b5d77ec031b5ee4c2e733629e946c  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz.md5
+3277ae8a7da1d45b87fffa5a697db875  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.txt
 eff92eb6f69e6d17e4d5004f1e5fa003  ./redisjson/2.8.4/librejson.so
 9f050febbc0bbcdb39c5309f5a4b29d9  ./slackrepo/slackrepo-20241108-noarch-1_SBo.lst
 4a04f6cf787e9d9d90f15b69e48e1c9e  ./slackrepo/slackrepo-20241108-noarch-1_SBo.meta

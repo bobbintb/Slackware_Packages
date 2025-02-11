@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Tue Feb  4 18:02:20 UTC 2025
+PACKAGES.TXT;  Tue Feb 11 21:07:44 UTC 2025
 
 PACKAGE NAME:  bcc-0.33.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
@@ -101,6 +101,23 @@ redis: Records are organized in hash table, B+ tree, or a fixed-length array.
 redis: Redis supports different kinds of sorting abilities.
 redis:
 redis:
+
+PACKAGE NAME:  redisearch-2.10.12-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./redisearch
+PACKAGE SIZE (compressed):  8 K
+PACKAGE SIZE (uncompressed):  20 K
+PACKAGE DESCRIPTION:
+redisearch: redisearch (Querying, secondary indexing, and full-text search for Redis)
+redisearch:
+redisearch: RediSearch is a Redis module that provides querying, secondary
+redisearch: indexing, and full-text search for Redis. To use RediSearch, you
+redisearch: first declare indexes on your Redis data. You can then use the
+redisearch: RediSearch query language to query that data.
+redisearch:
+redisearch:
+redisearch:
+redisearch:
+redisearch: Home: https://github.com/RediSearch/RediSearch
 
 PACKAGE NAME:  slackrepo-20241108-noarch-1_SBo.tgz
 PACKAGE LOCATION:  ./slackrepo
