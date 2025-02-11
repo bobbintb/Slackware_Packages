@@ -43,6 +43,7 @@ jobs:
         export REPOSOWNER="${{ github.repository_owner }}"
         export RSS_UUID=$(uuidgen -t)
         export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
+        wget -P /usr/libexec/slackrepo/ -O /usr/libexec/slackrepo/gen_repos_files.sh "http://www.slackware.com/~alien/tools/gen_repos_files.sh"
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
     - 
