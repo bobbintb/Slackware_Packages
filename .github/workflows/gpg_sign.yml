@@ -37,15 +37,28 @@ jobs:
     - 
       name: Upload
       run: |
-        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
         cd ./builds/
         gpg --list-keys
         export REPOSOWNER="${{ github.repository_owner }}"
         export RSS_UUID=$(uuidgen -t)
         export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
-        wget -P /usr/libexec/slackrepo/ -O /usr/libexec/slackrepo/gen_repos_files.sh "http://www.slackware.com/~alien/tools/gen_repos_files.sh"
+        cat <<EOF > script.expect
+        #!/usr/bin/expect
+        
+        set key \$env(PASSPHRASE)
+        spawn /usr/libexec/slackrepo/gen_repos_files.sh
+        expect "Enter ChangeLog.txt description:"
+        send "\r"
+        expect "Enter your GPG passphrase:"
+        send "\$key\r"
+        expect eof
+        EOF
+        # wget -P /usr/libexec/slackrepo/ -O /usr/libexec/slackrepo/gen_repos_files.sh "http://www.slackware.com/~alien/tools/gen_repos_files.sh"
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
-        echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
+        chmod +x script.expect
+        ./script.expect
+        #echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
     - 
       name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
