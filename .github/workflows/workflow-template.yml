@@ -269,7 +269,7 @@ jobs:
       name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
-        slackpkg -checkgpg=off install ${{ inputs.PACKAGES }} > /dev/null
+        slackpkg install ${{ inputs.PACKAGES }} > /dev/null
         # echo "==================== installed packages ===================="
         # ls -1 /var/log/packages/
     - 
@@ -347,23 +347,29 @@ jobs:
     - 
       name: Upload
       run: |
-        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2
-        # pwd
-        # echo ${GITHUB_REPOSITORY##*/}
-        # ls -ls /__w/Slackware_Packages/Slackware_Packages
-        cd ./builds/${{ inputs.NAME }}
-        #rm *
-        # echo $package_path
-        mv $package_path ./
-        # ls -ls
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
+        cd ./builds/
+        gpg --list-keys
         export REPOSOWNER="${{ github.repository_owner }}"
         export RSS_UUID=$(uuidgen -t)
         export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
+        cat <<EOF > script.expect
+        #!/usr/bin/expect
+        
+        set key [lindex $argv 0]
+        spawn /usr/libexec/slackrepo/gen_repos_files.sh
+        expect "Enter ChangeLog.txt description:"
+        send "\r"
+        expect "Enter your GPG passphrase:"
+        send "\$key\r"
+        expect eof
+        EOF
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
-        echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
+        chmod +x script.expect
+        ./script.expect ${{ secrets.PASSPHRASE }}
     - 
       name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: 'updated ${{ env.NAME }}'
-        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT'
+        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc'
