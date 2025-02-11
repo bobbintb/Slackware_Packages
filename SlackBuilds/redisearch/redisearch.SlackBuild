@@ -99,6 +99,8 @@ cd $TMP
 rm -rf $PRGNAM-$VERSION
 #tar xvf $CWD/$PRGNAM-$VERSION.tar.gz || tar xvf $CWD/v$VERSION.tar.gz
 cd $PRGNAM
+./install/install_boost.sh 1.8.7
+export BOOST_DIR=/tmp/SBo/${PRGNAM}/boost
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -112,14 +114,6 @@ find -L . \
 # static.
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-# ./configure \
-#  --prefix=/usr \
-#  --libdir=/usr/lib${LIBDIRSUFFIX} \
-#  --sysconfdir=/etc \
-#  --localstatedir=/var \
-#  --mandir=/usr/man \
-#  --docdir=/usr/doc/$PRGNAM-$VERSION \
-#  --build=$ARCH-slackware-linux
 
 # Compile the application and install it into the $PKG directory
 make
