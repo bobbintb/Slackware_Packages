@@ -1,0 +1,14 @@
+name: Build bpftool
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "7.5.0"
+      NAME: "bpftool"
+      SBOPKG: true
+      PACKAGES: "make guile gc gcc binutils kernel-headers"
