@@ -340,6 +340,7 @@ jobs:
           #cd /var/cache/sbopkg
         pwd
         ls -ls
+        ls -ls ./bpftool
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo "package_path=${package_path}" >> $GITHUB_ENV
