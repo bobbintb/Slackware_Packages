@@ -11,4 +11,5 @@ jobs:
       VERSION: "7.5.0"
       NAME: "bpftool"
       SBOPKG: true
-      PACKAGES: "make guile gc gcc binutils kernel-headers"
+      PACKAGES: "make guile gc gcc"
+      SOURCE: https://github.com/libbpf/bpftool.git
