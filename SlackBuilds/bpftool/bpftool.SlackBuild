@@ -53,10 +53,10 @@
 #
 # |-----------------------------------------------------------------| #
 
-PRGNAM=bpftool	# replace with name of program
-VERSION=${VERSION:-7.5}
+PRGNAM=bpftool  # replace with name of program
+VERSION=${VERSION:-7.5.0}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_SBo}	# "_SBo" is required for submission to slackbuilds.org
+TAG=${TAG:-_SBo}        # "_SBo" is required for submission to slackbuilds.org
 
 # Automatically determine the architecture we're building on:
 if [ -z "$ARCH" ]; then
@@ -69,9 +69,9 @@ if [ -z "$ARCH" ]; then
 fi
 
 CWD=$(pwd)
-TMP=${TMP:-/tmp/SBo}	# For consistency's sake, use this
+TMP=${TMP:-/tmp/SBo}    # For consistency's sake, use this
 PKG=$TMP/package-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}	# Drop the package in /tmp
+OUTPUT=${OUTPUT:-/tmp}  # Drop the package in /tmp
 
 if [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -96,8 +96,8 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$PRGNAM-$VERSION.tar.gz
-cd $PRGNAM-$VERSION
+#tar xvf $CWD/v$VERSION.tar.gz
+cd $PRGNAM/src
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -111,14 +111,14 @@ find -L . \
 # static.
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-./configure \
-  --prefix=/usr \
-  --libdir=/usr/lib${LIBDIRSUFFIX} \
-  --sysconfdir=/etc \
-  --localstatedir=/var \
-  --mandir=/usr/man \
-  --docdir=/usr/doc/$PRGNAM-$VERSION \
-  --build=$ARCH-slackware-linux
+#./configure \
+#  --prefix=/usr \
+#  --libdir=/usr/lib${LIBDIRSUFFIX} \
+#  --sysconfdir=/etc \
+#  --localstatedir=/var \
+#  --mandir=/usr/man \
+#  --docdir=/usr/doc/$PRGNAM-$VERSION \
+#  --build=$ARCH-slackware-linux
 
 # Compile the application and install it into the $PKG directory
 make
@@ -134,15 +134,15 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
 # If man pages are installed to /usr/share/man instead, you'll need to either
 # add the --mandir=/usr/man flag to configure or move them manually after the
 # make install process is run.
-find $PKG/usr/man -type f -exec gzip -9 {} \;
-for i in $( find $PKG/usr/man -type l ) ; do
-  ln -s $( readlink $i ).gz $i.gz ; rm $i
-done
+#find $PKG/usr/man -type f -exec gzip -9 {} \;
+#for i in $( find $PKG/usr/man -type l ) ; do
+#  ln -s $( readlink $i ).gz $i.gz ; rm $i
+#done
 
 # Compress info pages and remove the package's dir file
 # If no info pages are installed by the software, don't leave this in the script
-rm -f $PKG/usr/info/dir
-gzip -9 $PKG/usr/info/*.info*
+#rm -f $PKG/usr/info/dir
+#gzip -9 $PKG/usr/info/*.info*
 
 # Remove perllocal.pod and other special files that don't need to be installed,
 # as they will overwrite what's already on the system.  If this is not needed,
@@ -159,7 +159,7 @@ find $PKG -name "perllocal.pod" \
 # Also, include the SlackBuild script in the documentation directory
 mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 cp -a \
-  <documentation> \
+  ../docs \
   $PKG/usr/doc/$PRGNAM-$VERSION
 cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 
