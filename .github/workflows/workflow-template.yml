@@ -334,8 +334,10 @@ jobs:
           fi  
           else
             cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
+            echo "spot 1"
+            pwd ls -ls
             git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || wget ${{ inputs.SOURCE }}
-            cd ./${{ inputs.NAME }}
+            ls -ls
         fi
           # cd ./SlackBuilds/${{ inputs.NAME }}
           #cd /var/cache/sbopkg
