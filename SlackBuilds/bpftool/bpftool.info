@@ -1,4 +1,4 @@
 PRGNAM="bpftool"
 VERSION="7.5"
 HOMEPAGE="https://bpftool.dev/"
-DOWNLOAD="https://github.com/libbpf/bpftool/archive/refs/tags/v7.5.0.tar.gz"
+DOWNLOAD="https://github.com/libbpf/bpftool.git"
