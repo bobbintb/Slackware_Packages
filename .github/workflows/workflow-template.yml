@@ -335,12 +335,10 @@ jobs:
           else
             cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
             git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || wget ${{ inputs.SOURCE }}
+            cd ./${{ inputs.NAME }}
         fi
           # cd ./SlackBuilds/${{ inputs.NAME }}
           #cd /var/cache/sbopkg
-        pwd
-        ls -ls
-        ls -ls ./bpftool
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo "package_path=${package_path}" >> $GITHUB_ENV
