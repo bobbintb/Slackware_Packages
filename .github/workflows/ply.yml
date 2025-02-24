@@ -8,6 +8,6 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      VERSION: "1.5.0"
+      VERSION: "2.4.0"
       NAME: "ply"
       PACKAGES: autoconf automake m4 flex bison glibc
