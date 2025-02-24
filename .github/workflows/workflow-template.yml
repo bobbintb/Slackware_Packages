@@ -330,8 +330,8 @@ jobs:
               #cd /var/cache/sbopkg
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
-        echo "output: $(output)"
-        echo "package_path: $(package_path)"
+        echo "output: ${output}"
+        echo "package_path: ${package_path}"
         echo "package_path=${package_path}" >> $GITHUB_ENV
         git config --global --add safe.directory $REPO_DIR
     - 
