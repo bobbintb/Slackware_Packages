@@ -1,0 +1,14 @@
+name: Build pigz
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "2.8"
+      NAME: "pigz"
+      SBOPKG: true
+      PACKAGES: "make guile gc gcc binutils kernel-headers"
