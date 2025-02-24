@@ -295,6 +295,8 @@ jobs:
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/builds/${{ inputs.NAME }}
+        echo "Current working directory: $(pwd)"
+        ls -ls
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
         	# We are getting everything from slackbuilds.org
         	INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
@@ -311,26 +313,22 @@ jobs:
                 export VERSION=${{ inputs.VERSION }}
             fi
             if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
-        		git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
-                echo $DIR/${{ inputs.NAME }}.SlackBuild
-                echo "Current working directory: $(pwd)"
-                ls -ls
-                TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
-                echo $TARNAM
-                tar -czvf $TARNAM.tar.gz ${{ inputs.NAME }}
+        		  git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
+              echo $DIR/${{ inputs.NAME }}.SlackBuild
+              TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
+              echo $TARNAM
+              tar -czvf $TARNAM.tar.gz ${{ inputs.NAME }}
             else
         		wget $DOWNLOAD || wget $DOWNLOAD_x86_64
         	fi 
         else
         	cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
-            if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
+          if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
         		git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
         	fi
-            if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
+          if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
         		wget ${{ inputs.SOURCE }}
-            fi
-        	echo "Current working directory: $(pwd)"
-            ls -ls
+          fi
         fi
         
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
