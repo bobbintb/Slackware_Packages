@@ -322,7 +322,7 @@ jobs:
             mkdir -p /tmp/SBo
             pushd "$(pwd)"
             cd /tmp/SBo
-            git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || wget ${{ inputs.SOURCE }}
+            git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.SOURCE }} --depth 1 -b main --recurse-submodules ||wget ${{ inputs.SOURCE }}
             echo "Current working directory: $(pwd)"
             ls -ls
             popd
