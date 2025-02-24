@@ -97,7 +97,7 @@ mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
 tar xvf $CWD/$PRGNAM-$VERSION.tar.gz
-cd $PRGNAM-$VERSION
+cd $PRGNAM
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -111,18 +111,22 @@ find -L . \
 # static.
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-./configure \
-  --prefix=/usr \
-  --libdir=/usr/lib${LIBDIRSUFFIX} \
-  --sysconfdir=/etc \
-  --localstatedir=/var \
-  --mandir=/usr/man \
-  --docdir=/usr/doc/$PRGNAM-$VERSION \
-  --build=$ARCH-slackware-linux
+#./configure \
+#  --prefix=/usr \
+#  --libdir=/usr/lib${LIBDIRSUFFIX} \
+#  --sysconfdir=/etc \
+#  --localstatedir=/var \
+#  --mandir=/usr/man \
+#  --docdir=/usr/doc/$PRGNAM-$VERSION \
+#  --build=$ARCH-slackware-linux
 
 # Compile the application and install it into the $PKG directory
+mkdir build
+cd build
+cmake ..
 make
-make install DESTDIR=$PKG
+
+#make install DESTDIR=$PKG
 
 # Strip binaries and libraries - this can be done with 'make install-strip'
 # in many source trees, and that's usually acceptable if so, but if not,
