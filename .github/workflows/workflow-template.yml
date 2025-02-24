@@ -26,6 +26,10 @@ on:
         description: 'URL of program source archive'
         required: false
         type: string
+      GIT:
+        description: 'git URL of program for those that must be cloned'
+        required: false
+        type: string
       UPGRADE-ALL:
         description: 'Upgrade all slackpkg files'
         required: false
@@ -322,7 +326,12 @@ jobs:
             mkdir -p /tmp/SBo
             pushd "$(pwd)"
             cd /tmp/SBo
-            git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.SOURCE }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.SOURCE }} --depth 1 -b main --recurse-submodules ||wget ${{ inputs.SOURCE }}
+            if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
+              git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
+            fi
+            if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
+              wget ${{ inputs.SOURCE }}
+            fi
             echo "Current working directory: $(pwd)"
             ls -ls
             popd
