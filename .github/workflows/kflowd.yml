@@ -8,7 +8,7 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      VERSION: "0.9"
+      VERSION: "main"
       NAME: "kflowd"
       PACKAGES: "make guile gc gcc kernel-headers binutils"
       SOURCE: https://github.com/tarsal-oss/kflowd.git
