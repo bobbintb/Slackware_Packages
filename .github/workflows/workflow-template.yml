@@ -323,9 +323,9 @@ jobs:
           fi  
           else
             cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
-            mkdir -p /tmp/SBo
-            pushd "$(pwd)"
-            cd /tmp/SBo
+            # mkdir -p /tmp/SBo
+            # pushd "$(pwd)"
+            # cd /tmp/SBo
             if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
               git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
             fi
@@ -334,7 +334,7 @@ jobs:
             fi
             echo "Current working directory: $(pwd)"
             ls -ls
-            popd
+            # popd
         fi
               # cd ./SlackBuilds/${{ inputs.NAME }}
               #cd /var/cache/sbopkg
