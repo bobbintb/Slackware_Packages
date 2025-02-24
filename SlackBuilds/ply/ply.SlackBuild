@@ -96,7 +96,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-git clone --single-branch --branch $VERSION https://github.com/wkz/ply.git
+# git clone --single-branch --branch $VERSION https://github.com/wkz/ply.git
 # tar xvf $CWD/$VERSION.tar.gz
 cd ./$PRGNAM
 chown -R root:root .
