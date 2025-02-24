@@ -297,28 +297,28 @@ jobs:
         mkdir -p ${REPO_DIR}/builds/${{ inputs.NAME }}
         echo "Current working directory: $(pwd)"
         ls -ls
+        INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
+        DIR=$(dirname "$INFO")
+        cd $DIR
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
-        	# We are getting everything from slackbuilds.org
-        	INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
-            DIR=$(dirname "$INFO")
-            cd $DIR
-            sbopkg -r
+          # We are getting everything from slackbuilds.org
+          sbopkg -r
         	# We aren't using sbopkg to install, just download the files, because we may need to change the source or version number.
-            sbopkg -d ${{ inputs.NAME }} <<< q
-            . $INFO
-            if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
-        		# changing the version number because the one in slackbuild.org is outdated.
+          sbopkg -d ${{ inputs.NAME }} <<< q
+          . $INFO
+          if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
+        	  # changing the version number because the one in slackbuild.org is outdated.
         		DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
-                DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
-                export VERSION=${{ inputs.VERSION }}
-            fi
-            if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
-        		  git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
-              echo $DIR/${{ inputs.NAME }}.SlackBuild
-              TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
-              echo $TARNAM
-              tar -czvf $TARNAM.tar.gz ${{ inputs.NAME }}
-            else
+            DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
+            export VERSION=${{ inputs.VERSION }}
+          fi
+          if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
+        	  git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
+            echo $DIR/${{ inputs.NAME }}.SlackBuild
+            TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
+            echo $TARNAM
+            tar -czvf $TARNAM.tar.gz ${{ inputs.NAME }}
+          else
         		wget $DOWNLOAD || wget $DOWNLOAD_x86_64
         	fi 
         else
