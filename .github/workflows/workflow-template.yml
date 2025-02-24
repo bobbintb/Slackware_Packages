@@ -327,7 +327,9 @@ jobs:
             echo $TARNAM
             tar -czvf $TARNAM.tar.gz ${{ inputs.NAME }}
           else
+            pushd /tmp/SBo
         		wget $DOWNLOAD || wget $DOWNLOAD_x86_64
+            popd
             ls -ls
         	fi 
         else
@@ -336,7 +338,9 @@ jobs:
         		git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
         	fi
           if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
+            pushd /tmp/SBo
         		wget ${{ inputs.SOURCE }}
+            popd
             ls -ls
           fi
         fi
