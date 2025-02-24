@@ -296,55 +296,52 @@ jobs:
         REPO_DIR="/__w/${REPO}/${REPO}"
         mkdir -p ${REPO_DIR}/builds/${{ inputs.NAME }}
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
-          INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
-          DIR=$(dirname "$INFO")
-          cd $DIR
-          sbopkg -r
-          sbopkg -d ${{ inputs.NAME }} <<< q
-          . $INFO
-          if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
-            DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
-            DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
-                  # sed -i "/^DOWNLOAD=/s/$VERSION/${{ inputs.VERSION }}/g" $INFO
-                  # . $INFO
-            export VERSION=${{ inputs.VERSION }}
-          fi
-          if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
-            git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
-                  #. ./${{ inputs.NAME }}.SlackBuild
-            echo $DIR/${{ inputs.NAME }}.SlackBuild
-            echo "Current working directory: $(pwd)"
-            ls -ls
-            TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
-            echo $TARNAM
-            tar -czvf $TARNAM.tar.gz ${{ inputs.NAME }}
-          else
-            wget $DOWNLOAD || wget $DOWNLOAD_x86_64
-          fi  
-          else
-            cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
-            # mkdir -p /tmp/SBo
-            # pushd "$(pwd)"
-            # cd /tmp/SBo
+        	# We are getting everything from slackbuilds.org
+        	INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
+            DIR=$(dirname "$INFO")
+            cd $DIR
+            sbopkg -r
+        	# We aren't using sbopkg to install, just download the files, because we may need to change the source or version number.
+            sbopkg -d ${{ inputs.NAME }} <<< q
+            . $INFO
+            if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
+        		# changing the version number because the one in slackbuild.org is outdated.
+        		DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
+                DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
+                export VERSION=${{ inputs.VERSION }}
+            fi
             if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
-              git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
-            fi
+        		git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
+                echo $DIR/${{ inputs.NAME }}.SlackBuild
+                echo "Current working directory: $(pwd)"
+                ls -ls
+                TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
+                echo $TARNAM
+                tar -czvf $TARNAM.tar.gz ${{ inputs.NAME }}
+            else
+        		wget $DOWNLOAD || wget $DOWNLOAD_x86_64
+        	fi 
+        else
+        	cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
+            if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
+        		git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
+        	fi
             if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
-              wget ${{ inputs.SOURCE }}
+        		wget ${{ inputs.SOURCE }}
             fi
-            echo "Current working directory: $(pwd)"
+        	echo "Current working directory: $(pwd)"
             ls -ls
-            # popd
         fi
-              # cd ./SlackBuilds/${{ inputs.NAME }}
-              #cd /var/cache/sbopkg
+        
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo "package_path: ${package_path}"
         echo "package_path=${package_path}" >> $GITHUB_ENV
+        
         if [ -f "${package_path}" ]; then
-            cp ${package_path} ${REPO_DIR}/builds/${{ inputs.NAME }}
+        	cp ${package_path} ${REPO_DIR}/builds/${{ inputs.NAME }}
         fi
+        
         git config --global --add safe.directory $REPO_DIR
     - 
       name: Upload
