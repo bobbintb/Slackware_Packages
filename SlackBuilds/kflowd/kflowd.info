@@ -1,0 +1,4 @@
+PRGNAM="kflowd"
+VERSION="0.9"
+HOMEPAGE="https://tarsal.co/kflow/"
+DOWNLOAD="https://github.com/tarsal-oss/kflowd.git"
