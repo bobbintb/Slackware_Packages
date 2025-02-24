@@ -99,7 +99,7 @@ rm -rf $PRGNAM-$VERSION
 echo "why you no working?"
 pwd
 ls -ls
-tar xvf $PRGNAM-$VERSION.tar.gz || tar xvf $VERSION.tar.gz
+tar xvf *.tar.gz
 cd $PRGNAM
 chown -R root:root .
 find -L . \
