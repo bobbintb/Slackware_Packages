@@ -322,6 +322,8 @@ jobs:
             pushd "$(pwd)"
             cd /tmp/SBo
             git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || wget ${{ inputs.SOURCE }}
+            echo "Current working directory: $(pwd)"
+            ls -ls
             popd
         fi
               # cd ./SlackBuilds/${{ inputs.NAME }}
