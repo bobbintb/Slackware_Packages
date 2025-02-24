@@ -1,4 +1,4 @@
-name: -Build ply
+name: Build ply
 on:
   workflow_dispatch:
 permissions:
