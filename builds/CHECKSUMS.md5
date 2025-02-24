@@ -10,20 +10,26 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-61040d682b695c46a1a5385ccc003875  ./ChangeLog.rss
+2a79bd21872cfaf7717ae94dc44a4a15  ./ChangeLog.rss
 87ba467c93ee179281569bd2e5b69b6a  ./ChangeLog.txt
-33185ad1972467149c0860c52f77822e  ./ChangeLog.txt.gz
-a6f13b1b5724dd26cd14b93fc05cde7a  ./FILELIST.TXT
+519b66b4d08c1e6a4ad63fcd596355e4  ./ChangeLog.txt.gz
+731fa5eb12012cae643a13724fe6c693  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-06188ffd93c5868014f3e0dfad22723a  ./MANIFEST.bz2
-b1a636c6336da2064591b2cf8de8c4f1  ./PACKAGES.TXT
-aa41af1ee195e55f12ae152ed46b43c4  ./PACKAGES.TXT.gz
+833d624257e72bc7f1fb7a1b12a1655a  ./MANIFEST.bz2
+015498b9d86de2748a3815201b36719e  ./PACKAGES.TXT
+445abf4de07275c6a55cd7c9411f8877  ./PACKAGES.TXT.gz
 a95711291c2097566d3ec07b4cb4c87f  ./bcc/bcc-0.33.0-x86_64-1_SBo.lst
 9bdc3c5b980fa493a485619afde5882c  ./bcc/bcc-0.33.0-x86_64-1_SBo.meta
 8d85c1ff7869c980b75c34aae332a61f  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz
 b2d7f440a41160b65ff59e77d0682538  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz.asc
 d91694c3194f2bd0670c77d9f4f3d353  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz.md5
 4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.33.0-x86_64-1_SBo.txt
+a5f7c08ab1d89145b1630055fb182414  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.lst
+1f9d126a887f2fef220d54eec91f4712  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.meta
+87d6f945bd38019ca13e348e730257ea  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz
+589cf1b4607276f34285626195ce60fd  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.asc
+a6433fc6f60768320edcd5d82d26cfbb  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.md5
+09de44c662d21489016f2866e2fbdeb8  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.txt
 f0bdc838f00865c4caaa6af94ddc9126  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.lst
 1f9ff693983c60a160df8474fb2aa856  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.meta
 ff93fca05a9874e541286d4506bbfa63  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz

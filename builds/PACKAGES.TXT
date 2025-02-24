@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Mon Feb 24 01:57:41 UTC 2025
+PACKAGES.TXT;  Mon Feb 24 02:07:53 UTC 2025
 
 PACKAGE NAME:  bcc-0.33.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
@@ -16,6 +16,23 @@ bcc:
 bcc:
 bcc:
 bcc:
+
+PACKAGE NAME:  bpftool-7.5.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./bpftool
+PACKAGE SIZE (compressed):  320 K
+PACKAGE SIZE (uncompressed):  790 K
+PACKAGE DESCRIPTION:
+bpftool: bpftool (A command-line tool to inspect and manage BPF objects.)
+bpftool:
+bpftool: List, dump, load BPF programs, and more! Powered by libbpf, bpftool
+bpftool: is the reference utility to quickly inspect and manage BPF objects on
+bpftool: your system, to manipulate BPF object files, or to perform various
+bpftool: other BPF-related tasks.
+bpftool:
+bpftool:
+bpftool:
+bpftool:
+bpftool: Home: https://bpftool.dev/
 
 PACKAGE NAME:  bpftrace-0.22.1-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bpftrace
