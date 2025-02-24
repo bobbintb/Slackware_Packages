@@ -10,14 +10,14 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-f776a2c8c5c610113f89d128f88c3151  ./ChangeLog.rss
+bb195d0414f00e1b1d2f16c6ee1ac207  ./ChangeLog.rss
 87ba467c93ee179281569bd2e5b69b6a  ./ChangeLog.txt
-db5ad8c4523923934da47ae886804005  ./ChangeLog.txt.gz
-9c9fa56e5bb214e7962cdfe921908fcf  ./FILELIST.TXT
+3ddd701e584f274dc4d705f29404ca33  ./ChangeLog.txt.gz
+56bb5a96feef50f8d5815fad6dfa9d0a  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-bf870c3e69507b6b6274ec3313ae87ee  ./MANIFEST.bz2
-cba6e928a6ec61b920a1bfe7f5fb7e62  ./PACKAGES.TXT
-42fe5f28734597f1cbe838ab14396373  ./PACKAGES.TXT.gz
+eb695daefc16aeca15a708136fd0d1be  ./MANIFEST.bz2
+7fce672aff75f7e3545404e680e2ec93  ./PACKAGES.TXT
+d3d6b1c3aa4f69e3fcbb8bbb65c8352b  ./PACKAGES.TXT.gz
 a95711291c2097566d3ec07b4cb4c87f  ./bcc/bcc-0.33.0-x86_64-1_SBo.lst
 9bdc3c5b980fa493a485619afde5882c  ./bcc/bcc-0.33.0-x86_64-1_SBo.meta
 8d85c1ff7869c980b75c34aae332a61f  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz
@@ -36,12 +36,6 @@ ff93fca05a9874e541286d4506bbfa63  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz
 525ea20badaa6c1828d4d37d317cbb44  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz.asc
 fb7b6bb6cd0ce362ce5fe9cee859bd16  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz.md5
 011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.txt
-4820dba7d42506f1ae96209a65e72f6e  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.lst
-a3f6573a97ab5024e4e8ca6a2ba3e1b9  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.meta
-7d488d3eb54b696db4e3930d8c10a876  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.tgz
-6f9e0d9a3e2a36023b10376aa4bde735  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.tgz.asc
-a3fd468d4093b062fb5627fd92d7ecf7  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.tgz.md5
-804f4532e94d6c04401ab91141f1f7de  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.txt
 cfad62cadc19b8f17468a9bde2f20319  ./laurel/laurel-v0.6.3.txz
 953f70429ae51a3926293f2938947a44  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.lst
 e9b28a53a08b4c66a03a03946cabfeab  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.meta
@@ -55,6 +49,12 @@ cfd034bd527b6f6d6a9eddf8ff9adab5  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.txt
 bd9e010880ea57fc67309a2a116bd843  ./nodejs/nodejs-22.13.1-x86_64-1_SBo.tgz.asc
 93b6e951e236dd3effd8a853551184bb  ./nodejs/nodejs-22.13.1-x86_64-1_SBo.tgz.md5
 6af2a36e86ec60994dddbae09f731c9a  ./nodejs/nodejs-22.13.1-x86_64-1_SBo.txt
+b0cd656cdaca93d2c59b9fb8a1a855cc  ./pigz/pigz-2.8-x86_64-1_SBo.lst
+fc1832b3fa667062b4db6ee39ff53a00  ./pigz/pigz-2.8-x86_64-1_SBo.meta
+302510262fa604bca429c19030a5e617  ./pigz/pigz-2.8-x86_64-1_SBo.tgz
+8b8a6029a4a3abf69ce61fe3ac550bbc  ./pigz/pigz-2.8-x86_64-1_SBo.tgz.asc
+2843a74af473d52ae5adea38b22c5952  ./pigz/pigz-2.8-x86_64-1_SBo.tgz.md5
+dcbb0c99a4fca1bd6c0524c35e599c4c  ./pigz/pigz-2.8-x86_64-1_SBo.txt
 657a6eab7f18d0e65cf16703934c069d  ./ply/ply-2.3.0-x86_64-1_SBo.lst
 9407f0450f62a977b9396a5bd13258e5  ./ply/ply-2.3.0-x86_64-1_SBo.meta
 a796f31ed041d88cbb4f41b2f70ef7fc  ./ply/ply-2.3.0-x86_64-1_SBo.tgz

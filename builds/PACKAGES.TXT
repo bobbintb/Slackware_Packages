@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Mon Feb 24 03:49:45 UTC 2025
+PACKAGES.TXT;  Mon Feb 24 17:59:00 UTC 2025
 
 PACKAGE NAME:  bcc-0.33.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
@@ -51,23 +51,6 @@ bpftrace: The bpftrace language is inspired by awk and C, and predecessor
 bpftrace: tracers such as DTrace and SystemTap.
 bpftrace:
 
-PACKAGE NAME:  kflowd-0.9.0-x86_64-1_SBo.tgz
-PACKAGE LOCATION:  ./kflowd
-PACKAGE SIZE (compressed):  4 K
-PACKAGE SIZE (uncompressed):  10 K
-PACKAGE DESCRIPTION:
-kflowd: kflowd (Kernel-based Process Monitoring on Linux Endpoints via eBPF)
-kflowd:
-kflowd: kflowd runs as agent on Linux endpoints to monitor processes via eBPF
-kflowd: kernel subsystem for filesystem and TCP and UDP networking events,
-kflowd: enabling immediate threat and anomaly detection on suspicious
-kflowd: activities.
-kflowd:
-kflowd:
-kflowd:
-kflowd:
-kflowd: Home: https://tarsal.co/kflow/
-
 PACKAGE NAME:  libbpf-1.5.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./libbpf
 PACKAGE SIZE (compressed):  512 K
@@ -101,6 +84,23 @@ nodejs:
 nodejs:
 nodejs:
 nodejs:
+
+PACKAGE NAME:  pigz-2.8-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./pigz
+PACKAGE SIZE (compressed):  92 K
+PACKAGE SIZE (uncompressed):  170 K
+PACKAGE DESCRIPTION:
+pigz: pigz (Parallel Implementation of GZip)
+pigz:
+pigz: pigz is a fully functional replacement for gzip that utilizes
+pigz: multiple processors and CPU cores when compressing data. pigz
+pigz: was written by Mark Adler, and uses zlib and pthread libraries.
+pigz:
+pigz: Homepage: https://www.zlib.net/pigz/
+pigz:
+pigz:
+pigz:
+pigz:
 
 PACKAGE NAME:  ply-2.3.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./ply
