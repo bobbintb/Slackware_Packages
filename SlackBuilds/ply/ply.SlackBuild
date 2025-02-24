@@ -53,10 +53,10 @@
 #
 # |-----------------------------------------------------------------| #
 
-PRGNAM=ply	# replace with name of program
-VERSION=${VERSION:-2.3.0}
+PRGNAM=ply      # replace with name of program
+VERSION=${VERSION:-2.4.0}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_SBo}	# "_SBo" is required for submission to slackbuilds.org
+TAG=${TAG:-_SBo}        # "_SBo" is required for submission to slackbuilds.org
 
 # Automatically determine the architecture we're building on:
 if [ -z "$ARCH" ]; then
@@ -69,9 +69,9 @@ if [ -z "$ARCH" ]; then
 fi
 
 CWD=$(pwd)
-TMP=${TMP:-/tmp/SBo}	# For consistency's sake, use this
+TMP=${TMP:-/tmp/SBo}    # For consistency's sake, use this
 PKG=$TMP/$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}	# Drop the package in /tmp
+OUTPUT=${OUTPUT:-/tmp}  # Drop the package in /tmp
 
 if [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -92,10 +92,10 @@ set -e # Exit on most errors
 #   command || exit 1
 # then that's also acceptable.
 
-rm -rf $PKG
+#rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM-$VERSION
+#rm -rf $PRGNAM-$VERSION
 # git clone --single-branch --branch $VERSION https://github.com/wkz/ply.git
 # tar xvf $CWD/$VERSION.tar.gz
 cd ./$PRGNAM
