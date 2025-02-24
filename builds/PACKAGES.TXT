@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Mon Feb 24 02:07:53 UTC 2025
+PACKAGES.TXT;  Mon Feb 24 03:49:45 UTC 2025
 
 PACKAGE NAME:  bcc-0.33.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
@@ -50,6 +50,23 @@ bpftrace: (kprobes), user-level dynamic tracing (uprobes), and tracepoints.
 bpftrace: The bpftrace language is inspired by awk and C, and predecessor
 bpftrace: tracers such as DTrace and SystemTap.
 bpftrace:
+
+PACKAGE NAME:  kflowd-0.9.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./kflowd
+PACKAGE SIZE (compressed):  4 K
+PACKAGE SIZE (uncompressed):  10 K
+PACKAGE DESCRIPTION:
+kflowd: kflowd (Kernel-based Process Monitoring on Linux Endpoints via eBPF)
+kflowd:
+kflowd: kflowd runs as agent on Linux endpoints to monitor processes via eBPF
+kflowd: kernel subsystem for filesystem and TCP and UDP networking events,
+kflowd: enabling immediate threat and anomaly detection on suspicious
+kflowd: activities.
+kflowd:
+kflowd:
+kflowd:
+kflowd:
+kflowd: Home: https://tarsal.co/kflow/
 
 PACKAGE NAME:  libbpf-1.5.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./libbpf

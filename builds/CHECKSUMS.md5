@@ -10,14 +10,14 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 /pub/gnu, or at any GNU mirror site.
 
 MD5 message digest                Filename
-2a79bd21872cfaf7717ae94dc44a4a15  ./ChangeLog.rss
+f776a2c8c5c610113f89d128f88c3151  ./ChangeLog.rss
 87ba467c93ee179281569bd2e5b69b6a  ./ChangeLog.txt
-519b66b4d08c1e6a4ad63fcd596355e4  ./ChangeLog.txt.gz
-731fa5eb12012cae643a13724fe6c693  ./FILELIST.TXT
+db5ad8c4523923934da47ae886804005  ./ChangeLog.txt.gz
+9c9fa56e5bb214e7962cdfe921908fcf  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-833d624257e72bc7f1fb7a1b12a1655a  ./MANIFEST.bz2
-015498b9d86de2748a3815201b36719e  ./PACKAGES.TXT
-445abf4de07275c6a55cd7c9411f8877  ./PACKAGES.TXT.gz
+bf870c3e69507b6b6274ec3313ae87ee  ./MANIFEST.bz2
+cba6e928a6ec61b920a1bfe7f5fb7e62  ./PACKAGES.TXT
+42fe5f28734597f1cbe838ab14396373  ./PACKAGES.TXT.gz
 a95711291c2097566d3ec07b4cb4c87f  ./bcc/bcc-0.33.0-x86_64-1_SBo.lst
 9bdc3c5b980fa493a485619afde5882c  ./bcc/bcc-0.33.0-x86_64-1_SBo.meta
 8d85c1ff7869c980b75c34aae332a61f  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz
@@ -36,6 +36,12 @@ ff93fca05a9874e541286d4506bbfa63  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz
 525ea20badaa6c1828d4d37d317cbb44  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz.asc
 fb7b6bb6cd0ce362ce5fe9cee859bd16  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz.md5
 011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.txt
+4820dba7d42506f1ae96209a65e72f6e  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.lst
+a3f6573a97ab5024e4e8ca6a2ba3e1b9  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.meta
+7d488d3eb54b696db4e3930d8c10a876  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.tgz
+6f9e0d9a3e2a36023b10376aa4bde735  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.tgz.asc
+a3fd468d4093b062fb5627fd92d7ecf7  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.tgz.md5
+804f4532e94d6c04401ab91141f1f7de  ./kflowd/kflowd-0.9.0-x86_64-1_SBo.txt
 cfad62cadc19b8f17468a9bde2f20319  ./laurel/laurel-v0.6.3.txz
 953f70429ae51a3926293f2938947a44  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.lst
 e9b28a53a08b4c66a03a03946cabfeab  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.meta

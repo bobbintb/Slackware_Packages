@@ -1,0 +1,11 @@
+kflowd: kflowd (Kernel-based Process Monitoring on Linux Endpoints via eBPF)
+kflowd:
+kflowd: kflowd runs as agent on Linux endpoints to monitor processes via eBPF
+kflowd: kernel subsystem for filesystem and TCP and UDP networking events,
+kflowd: enabling immediate threat and anomaly detection on suspicious
+kflowd: activities.
+kflowd:
+kflowd:
+kflowd:
+kflowd:
+kflowd: Home: https://tarsal.co/kflow/
