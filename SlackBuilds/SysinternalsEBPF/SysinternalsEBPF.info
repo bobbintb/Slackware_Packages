@@ -1,0 +1,4 @@
+PRGNAM="SysinternalsEBPF"
+VERSION="1.4.0.0"
+HOMEPAGE="https://github.com/Microsoft/SysinternalsEBPF"
+DOWNLOAD="https://github.com/microsoft/SysinternalsEBPF/archive/refs/tags/1.4.0.0.tar.gz"
