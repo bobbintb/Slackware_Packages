@@ -148,14 +148,20 @@ jobs:
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
-    # - name: Cache packages
-    #   id: cache-packages
-    #   uses: actions/cache@v4
-    #   with:
-    #     path: "/var/cache/"
-    #     key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
-    #     restore-keys: |
-    #       slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
+    - name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/packages
+        key: slackware-packages-${{ github.sha }}
+        restore-keys: |
+          slackware-packages-
+        # key: ${{ runner.os }}-slackpkg-${{ hashFiles('**/package-list.txt') }}
+        # restore-keys: |
+        #   ${{ runner.os }}-slackpkg-
+        #key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
+        #restore-keys: |
+        #  slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
     - 
       name: Enable additional repos
       run: | 
