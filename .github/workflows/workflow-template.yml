@@ -308,7 +308,7 @@ jobs:
             git clone ${{ inputs.SOURCE }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
                   #. ./${{ inputs.NAME }}.SlackBuild
             echo $DIR/${{ inputs.NAME }}.SlackBuild
-            pwd
+            echo "Current working directory: $(pwd)"
             ls -ls
             TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
             echo $TARNAM
