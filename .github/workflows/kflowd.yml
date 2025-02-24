@@ -1,0 +1,14 @@
+name: Build kflowd
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "7.5.0"
+      NAME: "kflowd"
+      PACKAGES: ""
+      SOURCE: https://github.com/tarsal-oss/kflowd.git
