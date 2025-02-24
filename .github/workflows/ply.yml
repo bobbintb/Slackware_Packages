@@ -10,5 +10,5 @@ jobs:
     with:
       VERSION: "2.4.0"
       NAME: "ply"
-      PACKAGES: autoconf automake m4 flex bison glibc gettext
+      PACKAGES: autoconf automake m4 flex bison glibc gettext libtool
       SOURCE: https://github.com/iovisor/ply.git
