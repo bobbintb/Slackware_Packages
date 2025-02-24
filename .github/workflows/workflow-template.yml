@@ -301,6 +301,7 @@ jobs:
         DIR=$(dirname "$INFO")
         echo "Changing directory to: ${DIR}"
         cd $DIR
+        ls -ls
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           # We are getting everything from slackbuilds.org
           sbopkg -r
