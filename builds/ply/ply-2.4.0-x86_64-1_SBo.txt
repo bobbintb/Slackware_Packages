@@ -1,0 +1,11 @@
+ply: ply (A light-weight dynamic tracer for Linux that leverages eBPF.)
+ply:
+ply: A light-weight dynamic tracer for Linux that leverages the
+ply: kernel's BPF VM in concert with kprobes and tracepoints to
+ply: attach probes to arbitrary points in the kernel. Most tracers that
+ply: generate BPF bytecode are based on the LLVM based BCC toolchain. ply
+ply: on the other hand has no required external dependencies except
+ply: for libc.
+ply:
+ply:
+ply: Home: https://wkz.github.io/ply/

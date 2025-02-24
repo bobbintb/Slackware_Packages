@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Mon Feb 24 17:59:00 UTC 2025
+PACKAGES.TXT;  Mon Feb 24 18:19:46 UTC 2025
 
 PACKAGE NAME:  bcc-0.33.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
@@ -106,6 +106,23 @@ PACKAGE NAME:  ply-2.3.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./ply
 PACKAGE SIZE (compressed):  3564 K
 PACKAGE SIZE (uncompressed):  10770 K
+PACKAGE DESCRIPTION:
+ply: ply (A light-weight dynamic tracer for Linux that leverages eBPF.)
+ply:
+ply: A light-weight dynamic tracer for Linux that leverages the
+ply: kernel's BPF VM in concert with kprobes and tracepoints to
+ply: attach probes to arbitrary points in the kernel. Most tracers that
+ply: generate BPF bytecode are based on the LLVM based BCC toolchain. ply
+ply: on the other hand has no required external dependencies except
+ply: for libc.
+ply:
+ply:
+ply: Home: https://wkz.github.io/ply/
+
+PACKAGE NAME:  ply-2.4.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./ply
+PACKAGE SIZE (compressed):  3280 K
+PACKAGE SIZE (uncompressed):  11540 K
 PACKAGE DESCRIPTION:
 ply: ply (A light-weight dynamic tracer for Linux that leverages eBPF.)
 ply:
