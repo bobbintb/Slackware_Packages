@@ -322,6 +322,7 @@ jobs:
             tar -czvf $TARNAM.tar.gz ${{ inputs.NAME }}
           else
         		wget $DOWNLOAD || wget $DOWNLOAD_x86_64
+            ls -ls
         	fi 
         else
         	cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
@@ -330,6 +331,7 @@ jobs:
         	fi
           if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
         		wget ${{ inputs.SOURCE }}
+            ls -ls
           fi
         fi
         
