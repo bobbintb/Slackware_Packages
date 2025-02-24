@@ -1,0 +1,15 @@
+
+name: Build SysinternalsEBPF
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "1.4.0.0"
+      NAME: "SysinternalsEBPF"
+      PACKAGES: "cmake make gcc guile gc kernel-headers binutils llvm"
+      SOURCE: https://github.com/microsoft/SysinternalsEBPF/archive/refs/tags/1.4.0.0.tar.gz
