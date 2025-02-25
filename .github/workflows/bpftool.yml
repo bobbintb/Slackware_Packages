@@ -11,4 +11,4 @@ jobs:
       VERSION: "7.5.0"
       NAME: "bpftool"
       PACKAGES: "make guile gc gcc kernel-headers binutils libcap llvm"
-      SOURCE: https://github.com/libbpf/bpftool.git
+      GIT: https://github.com/libbpf/bpftool.git
