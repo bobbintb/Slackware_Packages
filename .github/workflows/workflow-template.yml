@@ -339,9 +339,9 @@ jobs:
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo -e "\e[32mPackage path: ${package_path}\e[0m"
         echo "package_path=${package_path}" >> $GITHUB_ENV
-        
         if [ -f "${package_path}" ]; then
-        	cp ${package_path} ${REPO_DIR}/builds/${{ inputs.NAME }}
+          echo -e "\e[32mMoving package to: ${REPO_DIR}/builds/${{ inputs.NAME }}\e[0m"
+        	mv ${package_path} ${REPO_DIR}/builds/${{ inputs.NAME }}
         fi
         
         git config --global --add safe.directory $REPO_DIR
