@@ -300,7 +300,7 @@ jobs:
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
         DEST_DIR=${REPO_DIR}/builds/${{ inputs.NAME }}
-        export DEST_DIR=$DEST_DIR
+        echo "DEST_DIR=${DEST_DIR}" >> $GITHUB_ENV
         mkdir -p $DEST_DIR
         mkdir -p /tmp/SBo
         export VERSION=${{ inputs.VERSION }}
@@ -376,5 +376,5 @@ jobs:
       name: Commit changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        commit_message: 'updated ${{ env.NAME }}'
+        commit_message: 'updated ${{ inputs.NAME }}'
         file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc'
