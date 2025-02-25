@@ -13,5 +13,5 @@ jobs:
       bobbintb: true
       salix-extra-15: true
       NAME: "SysmonForLinux"
-      PACKAGES: "make guile gc cmake gcc binutils kernel-headers alien-15:gtest bobbintb:SysinternalsEBPF salix-extra-15:dotnet-sdk-6 && slackpkg upgrade libxml2"
+      PACKAGES: "make guile gc cmake gcc binutils kernel-headers alien-15:gtest bobbintb:SysinternalsEBPF salix-extra-15:dotnet-sdk-6 && dotnet tool install --global dotnet-t4 && slackpkg upgrade openssl libxml2"
       GIT: https://github.com/microsoft/SysmonForLinux.git
