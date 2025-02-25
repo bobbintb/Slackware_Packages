@@ -11,5 +11,5 @@ jobs:
       VERSION: "1.3.4.0"
       alien-current: true
       NAME: "SysmonForLinux"
-      PACKAGES: "make guile gc cmake gcc binutils kernel-headers libxml gtest"
+      PACKAGES: "make guile gc cmake gcc binutils kernel-headers libxml alien-current:gtest"
       GIT: https://github.com/microsoft/SysmonForLinux.git
