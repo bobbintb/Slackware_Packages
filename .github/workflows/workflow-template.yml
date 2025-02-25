@@ -332,7 +332,7 @@ jobs:
           git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
         else
           echo -e "\e[32mDownloading source files specified in slackbuilds file\e[0m"
-          . ${{ inputs.NAME }}.info
+          . ./${{ inputs.NAME }}.info
           wget $DOWNLOAD || wget $DOWNLOAD_x86_64
         fi
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
