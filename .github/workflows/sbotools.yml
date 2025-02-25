@@ -1,0 +1,13 @@
+name: Build sbotools
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "3.4.2"
+      NAME: "sbotools"
+      SBOPKG: true
