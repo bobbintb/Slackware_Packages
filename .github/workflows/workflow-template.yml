@@ -297,13 +297,13 @@ jobs:
     - 
       name: Build
       run: |
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
         DEST_DIR=${REPO_DIR}/builds/${{ inputs.NAME }}
         export DEST_DIR=$DEST_DIR
         mkdir -p $DEST_DIR
         mkdir -p /tmp/SBo
         export VERSION=${{ inputs.VERSION }}
-        REPO=${GITHUB_REPOSITORY##*/}
-        REPO_DIR="/__w/${REPO}/${REPO}"
         cd /tmp/SBo
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           sbopkg -r
@@ -350,7 +350,7 @@ jobs:
     - 
       name: Upload
       run: |
-        echo -e "\e[Contents of $DEST_DIR:\e[0m"
+        echo -e "\e[32mContents of $DEST_DIR:\e[0m"
         ls -ls $DEST_DIR
         slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
         cd ./builds/
