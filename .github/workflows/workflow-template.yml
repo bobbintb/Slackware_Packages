@@ -345,13 +345,14 @@ jobs:
           echo -e "\e[32mMoving package to: $DEST_DIR\e[0m"
         	mv ${package_path} $DEST_DIR
         fi
-        
         git config --global --add safe.directory $REPO_DIR
     - 
       name: Upload
       run: |
         echo -e "\e[32mContents of $DEST_DIR:\e[0m"
         ls -ls $DEST_DIR
+        slackpkg update gpg
+        slackpkg update
         slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
         cd ./builds/
         gpg --list-keys
