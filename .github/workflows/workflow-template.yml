@@ -335,7 +335,7 @@ jobs:
         else
           echo -e "\e[32mDownloading source files specified in slackbuilds file\e[0m"
           . ./${{ inputs.NAME }}.info
-          wget $DOWNLOAD || wget $DOWNLOAD_x86_64
+          wget $DOWNLOAD_x86_64 || wget $DOWNLOAD
         fi
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
