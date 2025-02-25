@@ -11,4 +11,4 @@ jobs:
       VERSION: "3.4.2"
       NAME: "sbotools"
       SBOPKG: true
-      PACKAGES: make
+      PACKAGES: make guile
