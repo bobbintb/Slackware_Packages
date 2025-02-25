@@ -9,7 +9,7 @@ jobs:
     secrets: inherit
     with:
       VERSION: "1.3.4.0"
-      alien-current: true
+      alien-15: true
       NAME: "SysmonForLinux"
-      PACKAGES: "make guile gc cmake gcc binutils kernel-headers libxml alien-current:gtest"
+      PACKAGES: "make guile gc cmake gcc binutils kernel-headers libxml alien-15:gtest"
       GIT: https://github.com/microsoft/SysmonForLinux.git
