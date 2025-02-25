@@ -354,12 +354,16 @@ jobs:
         slackpkg update gpg
         slackpkg update
         slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
-        find "$DEST_DIR" -type f -size +100M | while read -r FILE; do
+        FILES=$(find "$DEST_DIR" -type f -size +100M)
+        if [ -n "$FILES" ]; then
           slackpkg install bobbintb:git-lfs
-          git lfs track "$FILE"
-          echo "Tracked $FILE with Git LFS"
-        done
-        git add .gitattributes
+          git lfs install
+          echo "$FILES" | while read -r FILE; do
+            git lfs track "$FILE"
+            echo "Tracked $FILE with Git LFS"
+          done
+          git add .gitattributes
+        fi
         cd ./builds/
         gpg --list-keys
         export REPOSOWNER="${{ github.repository_owner }}"
