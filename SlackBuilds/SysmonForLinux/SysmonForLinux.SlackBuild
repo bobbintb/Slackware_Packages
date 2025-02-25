@@ -53,10 +53,10 @@
 #
 # |-----------------------------------------------------------------| #
 
-PRGNAM=SysmonForLinux	# replace with name of program
+PRGNAM=SysmonForLinux   # replace with name of program
 VERSION=${VERSION:-1.3.4.0}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_SBo}	# "_SBo" is required for submission to slackbuilds.org
+TAG=${TAG:-_SBo}        # "_SBo" is required for submission to slackbuilds.org
 
 # Automatically determine the architecture we're building on:
 if [ -z "$ARCH" ]; then
@@ -69,9 +69,9 @@ if [ -z "$ARCH" ]; then
 fi
 
 CWD=$(pwd)
-TMP=${TMP:-/tmp/SBo}	# For consistency's sake, use this
+TMP=${TMP:-/tmp/SBo}    # For consistency's sake, use this
 PKG=$TMP/package-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}	# Drop the package in /tmp
+OUTPUT=${OUTPUT:-/tmp}  # Drop the package in /tmp
 
 if [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -96,8 +96,8 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-tar xvf $CWD/$PRGNAM-$VERSION.tar.gz
-cd $PRGNAM-$VERSION
+# tar xvf $CWD/$PRGNAM-$VERSION.tar.gz || tar xvf $CWD/$VERSION.tar.gz
+cd $PRGNAM
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
@@ -111,16 +111,19 @@ find -L . \
 # static.
 CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
-./configure \
-  --prefix=/usr \
-  --libdir=/usr/lib${LIBDIRSUFFIX} \
-  --sysconfdir=/etc \
-  --localstatedir=/var \
-  --mandir=/usr/man \
-  --docdir=/usr/doc/$PRGNAM-$VERSION \
-  --build=$ARCH-slackware-linux
+# ./configure \
+#   --prefix=/usr \
+#   --libdir=/usr/lib${LIBDIRSUFFIX} \
+#   --sysconfdir=/etc \
+#   --localstatedir=/var \
+#   --mandir=/usr/man \
+#   --docdir=/usr/doc/$PRGNAM-$VERSION \
+#   --build=$ARCH-slackware-linux
 
 # Compile the application and install it into the $PKG directory
+mkdir -p build
+cd build
+cmake ..
 make
 make install DESTDIR=$PKG
 
