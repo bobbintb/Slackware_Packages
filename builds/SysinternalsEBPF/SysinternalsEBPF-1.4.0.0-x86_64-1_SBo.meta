@@ -1,0 +1,17 @@
+PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./SysinternalsEBPF
+PACKAGE SIZE (compressed):  4 K
+PACKAGE SIZE (uncompressed):  10 K
+PACKAGE DESCRIPTION:
+SysinternalsEBPF: SysinternalsEBPF (The Linux port of the Sysinternals Sysmon tool.)
+SysinternalsEBPF:
+SysinternalsEBPF: SysinternalsEBPF attempts to automatically discover the offsets of
+SysinternalsEBPF: some members of some kernel structs.
+SysinternalsEBPF:
+SysinternalsEBPF:
+SysinternalsEBPF:
+SysinternalsEBPF:
+SysinternalsEBPF:
+SysinternalsEBPF:
+SysinternalsEBPF: Home: https://github.com/Microsoft/SysinternalsEBPF
+
