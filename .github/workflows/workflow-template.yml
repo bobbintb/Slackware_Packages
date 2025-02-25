@@ -307,25 +307,31 @@ jobs:
         cd /tmp/SBo
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           sbopkg -r
-          echo "Copying files from slackbuilds.org"
+          echo -e "\e[32mCopying files from slackbuilds.org\e[0m"
+          # echo "Copying files from slackbuilds.org"
           sbopkg -d ${{ inputs.NAME }} <<< q
         else
-          echo "Copying files from ${BUILDFILES_DIR}"
+          echo -e "\e[32mCopying files from ${BUILDFILES_DIR}\e[0m"
+          # echo "Copying files from ${BUILDFILES_DIR}"
           cp ${BUILDFILES_DIR}/* /tmp/SBo
         fi
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
+          echo -e "\e[32mChanging verson number\e[0m"
           . ${{ inputs.NAME }}.info
           DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
           DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
           export VERSION=${{ inputs.VERSION }}
         fi
         if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
+          echo -e "\e[32mDownloading source files\e[0m"
           wget ${{ inputs.SOURCE }}
         elif [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
+          echo -e "\e[32mCloning from git\e[0m"
           git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
         else
+          echo -e "\e[32mDownloading source files specified in slackbuilds file\e[0m"
           wget $DOWNLOAD || wget $DOWNLOAD_x86_64
         fi
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
