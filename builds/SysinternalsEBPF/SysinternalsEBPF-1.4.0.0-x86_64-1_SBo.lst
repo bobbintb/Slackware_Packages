@@ -1,0 +1,40 @@
+++========================================
+||
+||   Package:  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
+||
+++========================================
+drwxr-xr-x root/root         0 2025-02-25 04:59 ./
+drwxr-xr-x root/root         0 2025-02-25 04:59 install/
+-rw-r--r-- root/root       888 2025-02-25 04:59 install/slack-desc
+drwxr-xr-x root/root         0 2025-02-25 04:59 opt/
+drwxr-xr-x root/root         0 2025-02-25 04:59 opt/sysinternalsEBPF/
+drwxr-xr-x root/root         0 2025-02-25 04:59 opt/sysinternalsEBPF/ebpfKern/
+-rw-r--r-- root/root     18093 2024-07-19 14:45 opt/sysinternalsEBPF/ebpfKern/LICENSE
+-rw-r--r-- root/root      4894 2024-07-19 14:45 opt/sysinternalsEBPF/ebpfKern/sysinternalsEBPF_common.h
+-rw-r--r-- root/root     23345 2024-07-19 14:45 opt/sysinternalsEBPF/ebpfKern/sysinternalsEBPF_helpers.c
+-rw-r--r-- root/root      3140 2025-02-25 04:59 opt/sysinternalsEBPF/ebpfKern/sysinternalsEBPFoffsets.h
+-rw-r--r-- root/root      1959 2024-07-19 14:45 opt/sysinternalsEBPF/ebpfKern/sysinternalsEBPFshared.h
+drwxr-xr-x root/root         0 2025-02-25 04:59 opt/sysinternalsEBPF/getOffsets/
+-rw-r--r-- root/root     18093 2024-07-19 14:45 opt/sysinternalsEBPF/getOffsets/LICENSE
+-rw-r--r-- root/root      1375 2024-07-19 14:45 opt/sysinternalsEBPF/getOffsets/Makefile
+-rw-r--r-- root/root      1664 2024-07-19 14:45 opt/sysinternalsEBPF/getOffsets/README.md
+-rw-r--r-- root/root      4862 2024-07-19 14:45 opt/sysinternalsEBPF/getOffsets/extractOffsets.c
+-rw-r--r-- root/root      7444 2024-07-19 14:45 opt/sysinternalsEBPF/getOffsets/getOffsets.c
+-rw-r--r-- root/root      3943 2024-07-19 14:45 opt/sysinternalsEBPF/getOffsets/mount.h
+drwxr-xr-x root/root         0 2025-02-25 04:59 opt/sysinternalsEBPF/libbpf/
+-rw-r--r-- root/root     27413 2025-02-25 04:59 opt/sysinternalsEBPF/libbpf/LICENSE.LGPL-2.1
+-rw-r--r-- root/root     19546 2025-02-25 04:59 opt/sysinternalsEBPF/libbpf/bpf_core_read.h
+-rw-r--r-- root/root    171790 2025-02-25 04:59 opt/sysinternalsEBPF/libbpf/bpf_helper_defs.h
+-rw-r--r-- root/root      9882 2025-02-25 04:59 opt/sysinternalsEBPF/libbpf/bpf_helpers.h
+-rwxr-xr-x root/root   7690336 2025-02-25 04:59 opt/sysinternalsEBPF/libsysinternalsEBPFinstaller
+-rw-r--r-- root/root   5936966 2024-07-19 14:45 opt/sysinternalsEBPF/offsets.json
+-rw-r--r-- root/root     20088 2025-02-25 04:59 opt/sysinternalsEBPF/sysinternalsEBPFmemDump.o
+-rw-r--r-- root/root     10816 2025-02-25 04:59 opt/sysinternalsEBPF/sysinternalsEBPFrawSock.o
+drwxr-xr-x root/root         0 2025-02-25 04:59 usr/
+drwxr-xr-x root/root         0 2025-02-25 04:59 usr/local/
+drwxr-xr-x root/root         0 2025-02-25 04:59 usr/local/include/
+-rw-r--r-- root/root      8999 2024-07-19 14:45 usr/local/include/libsysinternalsEBPF.h
+drwxr-xr-x root/root         0 2025-02-25 04:59 usr/local/lib/
+-rwxr-xr-x root/root    383152 2025-02-25 04:59 usr/local/lib/libsysinternalsEBPF.so
+
+
