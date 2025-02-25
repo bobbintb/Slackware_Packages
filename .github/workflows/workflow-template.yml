@@ -312,6 +312,9 @@ jobs:
         BUILDFILES_DIR=$(dirname "$INFO")
         echo -e "\e[32mCopying build files from ${BUILDFILES_DIR}\e[0m"
         cp ${BUILDFILES_DIR}/* /tmp/SBo
+        echo -e "\e[32mCurrent folder contents:\e[0m"
+        pwd
+        ls -ls
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
           echo -e "\e[32mChanging verson number\e[0m"
           . ${{ inputs.NAME }}.info
