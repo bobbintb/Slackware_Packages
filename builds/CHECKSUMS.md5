@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-30d3f12945f5bf23eef5294b237207a6  ./FILELIST.TXT
+bd50146bba81745b69de92949fcc9227  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-7f5ddde5a2dac6d88b4fa02658b34919  ./MANIFEST.bz2
-eebf133204dca0ca4129cd15c263c32e  ./PACKAGES.TXT
-851e6eefad3ce8f0bb1316870f2cf272  ./PACKAGES.TXT.gz
+a703c8f891076d76796c1668a03ea3be  ./MANIFEST.bz2
+1d20abd30f58134fdfcff5db1efa91bd  ./PACKAGES.TXT
+2b971974fbdc896126bd9a6eb026d383  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -81,6 +81,12 @@ d4ad625a2cdfa64c7bb57289ee8424f1  ./redisearch/2.10.7/redisearch.so
 af7b5d77ec031b5ee4c2e733629e946c  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz.md5
 3277ae8a7da1d45b87fffa5a697db875  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.txt
 eff92eb6f69e6d17e4d5004f1e5fa003  ./redisjson/2.8.4/librejson.so
+acee0329c510f338d55ace5a6eb2deda  ./sbotools/sbotools-3.4.2-noarch-1_SBo.lst
+ec6d3c28ab5fa320aa6492af14fa099c  ./sbotools/sbotools-3.4.2-noarch-1_SBo.meta
+ef762e627f689e651e1eeee22b14440d  ./sbotools/sbotools-3.4.2-noarch-1_SBo.tgz
+ece657ba32d7a44c8ae9d67f7a980ccf  ./sbotools/sbotools-3.4.2-noarch-1_SBo.tgz.asc
+2884393d8aba9de3b1b99183b1476495  ./sbotools/sbotools-3.4.2-noarch-1_SBo.tgz.md5
+4abefedd0aac98e32e4e4fea87baaef2  ./sbotools/sbotools-3.4.2-noarch-1_SBo.txt
 4b032826e45ae5727d9365237e6cb79c  ./script.expect
 9f050febbc0bbcdb39c5309f5a4b29d9  ./slackrepo/slackrepo-20241108-noarch-1_SBo.lst
 4a04f6cf787e9d9d90f15b69e48e1c9e  ./slackrepo/slackrepo-20241108-noarch-1_SBo.meta

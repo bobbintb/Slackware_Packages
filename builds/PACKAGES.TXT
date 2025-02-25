@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Tue Feb 25 22:59:32 UTC 2025
+PACKAGES.TXT;  Tue Feb 25 23:03:14 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -169,6 +169,23 @@ redisearch:
 redisearch:
 redisearch:
 redisearch: Home: https://github.com/RediSearch/RediSearch
+
+PACKAGE NAME:  sbotools-3.4.2-noarch-1_SBo.tgz
+PACKAGE LOCATION:  ./sbotools
+PACKAGE SIZE (compressed):  112 K
+PACKAGE SIZE (uncompressed):  360 K
+PACKAGE DESCRIPTION:
+sbotools: sbotools (ports-like interface to SlackBuilds.org)
+sbotools:
+sbotools: sbotools is a set of Perl scripts providing a ports-like automation
+sbotools: interface to SlackBuilds.org. Features include dependency handling,
+sbotools: using a custom git branch, generating 32-bit and compat32 builds on
+sbotools: multilib systems, gpg verification and more.
+sbotools:
+sbotools: Homepage: https://pghvlaans.github.io/sbotools/
+sbotools: Original Author: Jacob Pipkin
+sbotools: Contributors: Luke Williams, Andreas Guldstrand
+sbotools: Maintainer: K. Eugene Carlson
 
 PACKAGE NAME:  slackrepo-20241108-noarch-1_SBo.tgz
 PACKAGE LOCATION:  ./slackrepo
