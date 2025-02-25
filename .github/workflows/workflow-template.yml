@@ -302,19 +302,17 @@ jobs:
         export VERSION=${{ inputs.VERSION }}
         REPO=${GITHUB_REPOSITORY##*/}
         REPO_DIR="/__w/${REPO}/${REPO}"
-        INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
-        BUILDFILES_DIR=$(dirname "$INFO")
         cd /tmp/SBo
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           sbopkg -r
           echo -e "\e[32mCopying files from slackbuilds.org\e[0m"
-          # echo "Copying files from slackbuilds.org"
           sbopkg -d ${{ inputs.NAME }} <<< q
         else
           echo -e "\e[32mCopying files from ${BUILDFILES_DIR}\e[0m"
-          # echo "Copying files from ${BUILDFILES_DIR}"
-          cp ${BUILDFILES_DIR}/* /tmp/SBo
         fi
+        INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
+        BUILDFILES_DIR=$(dirname "$INFO")
+        cp ${BUILDFILES_DIR}/* /tmp/SBo
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
           echo -e "\e[32mChanging verson number\e[0m"
           . ${{ inputs.NAME }}.info
