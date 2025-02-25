@@ -14,4 +14,4 @@ jobs:
       SBOPKG: true
       PACKAGES: "llvm ccache libssh2 libedit fmt cmake make guile gc binutils gcc kernel-headers bobbintb:libbpf"
       PIP: setuptools
-      SOURCE: https://github.com/iovisor/bcc.git
+      GIT: https://github.com/iovisor/bcc.git
