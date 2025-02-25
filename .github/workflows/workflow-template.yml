@@ -321,7 +321,9 @@ jobs:
             export VERSION=${{ inputs.VERSION }}
           fi
           if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
-        	  git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
+            pushd /tmp/SBo
+            git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules
+            popd
             echo $DIR/${{ inputs.NAME }}.SlackBuild
             TARNAM=$(sed -n 's/^\s*TARNAM=\(.*\)/\1/p' $DIR/${{ inputs.NAME }}.SlackBuild)
             echo $TARNAM
@@ -335,8 +337,10 @@ jobs:
         else
         	cd ${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/
           if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
+            pushd /tmp/SBo
         		git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
-        	fi
+        	  popd
+         fi
           if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
             pushd /tmp/SBo
         		wget ${{ inputs.SOURCE }}
