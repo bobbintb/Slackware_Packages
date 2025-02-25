@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+              |-----handy-ruler------------------------------------------------------|
+SysmonForLinux: SysmonForLinux (Sysmon for Linux)
+SysmonForLinux:
+SysmonForLinux: Sysmon for Linux is a tool that monitors and logs system activity
+SysmonForLinux: including process lifetime, network connections, file system writes,
+SysmonForLinux: and more. Sysmon works across reboots and uses advanced filtering to
+SysmonForLinux: help identify malicious activity as well as how intruders and malware
+SysmonForLinux: operate on your network. Sysmon for Linux is part of Sysinternals.
+SysmonForLinux:
+SysmonForLinux:
+SysmonForLinux:
+SysmonForLinux: Home: https://github.com/microsoft/SysmonForLinux
