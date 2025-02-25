@@ -11,5 +11,5 @@ jobs:
     with:
       VERSION: "1.4.0.0"
       NAME: "SysinternalsEBPF"
-      PACKAGES: "cmake make gcc guile gc kernel-headers binutils llvm"
+      PACKAGES: "cmake make gcc guile gc kernel-headers binutils llvm && slackpkg upgrade pcre2 glib2 libffi"
       SOURCE: https://github.com/microsoft/SysinternalsEBPF/archive/refs/tags/1.4.0.0.tar.gz
