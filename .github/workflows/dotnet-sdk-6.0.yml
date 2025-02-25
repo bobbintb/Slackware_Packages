@@ -1,0 +1,13 @@
+name: Build dotnet-sdk-6.0
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "6.0.428"
+      NAME: "dotnet-sdk-6.0"
+      SBOPKG: true
