@@ -337,7 +337,7 @@ jobs:
         fi
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
-        echo "package_path: ${package_path}"
+        echo -e "\e[32mPackage path: ${package_path}\e[0m"
         echo "package_path=${package_path}" >> $GITHUB_ENV
         
         if [ -f "${package_path}" ]; then
