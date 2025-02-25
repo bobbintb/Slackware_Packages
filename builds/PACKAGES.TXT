@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Tue Feb 25 23:12:22 UTC 2025
+PACKAGES.TXT;  Tue Feb 25 23:38:32 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -67,6 +67,23 @@ bpftrace: (kprobes), user-level dynamic tracing (uprobes), and tracepoints.
 bpftrace: The bpftrace language is inspired by awk and C, and predecessor
 bpftrace: tracers such as DTrace and SystemTap.
 bpftrace:
+
+PACKAGE NAME:  git-lfs-3.6.1-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./git-lfs
+PACKAGE SIZE (compressed):  4860 K
+PACKAGE SIZE (uncompressed):  12170 K
+PACKAGE DESCRIPTION:
+git-lfs: git-lfs (Git extension)
+git-lfs:
+git-lfs: Git LFS is a command line extension and specification for managing
+git-lfs: large files with Git. The client is written in Go, with pre-compiled
+git-lfs: binaries available for Mac, Windows, Linux, and FreeBSD.
+git-lfs:
+git-lfs:
+git-lfs: Project URL: https://git-lfs.github.com/
+git-lfs:
+git-lfs:
+git-lfs:
 
 PACKAGE NAME:  libbpf-1.5.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./libbpf

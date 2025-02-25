@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-4e5099724cbd8ae5e0a3879c83ac3109  ./FILELIST.TXT
+4898f11246d7ece7352e407e7f2ea79b  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-a703c8f891076d76796c1668a03ea3be  ./MANIFEST.bz2
-eea1b26290c009311782936241d35055  ./PACKAGES.TXT
-89c25108d8c94ec7a516d66055b01dbe  ./PACKAGES.TXT.gz
+efc2d0642ec059bbc5e77194d4a9d72c  ./MANIFEST.bz2
+59fc2e568448c17ad727b3784c0b404d  ./PACKAGES.TXT
+ba5611c969db1d0325fcd535fd91a758  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -40,6 +40,12 @@ ff93fca05a9874e541286d4506bbfa63  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz
 525ea20badaa6c1828d4d37d317cbb44  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz.asc
 fb7b6bb6cd0ce362ce5fe9cee859bd16  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz.md5
 011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.txt
+f61bf1e3058726c78f41226f8cac839d  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.lst
+8004176189029af01f79384b0e1679af  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.meta
+11746deb881c356ece5cf0c64b311c39  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.tgz
+272af3af2ba3e4da96efd7217f5085f3  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.tgz.asc
+ceb48b094b95dd8ea6b9c4d7707d32d2  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.tgz.md5
+de46f331a20e1d9bbd515901911254bf  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.txt
 cfad62cadc19b8f17468a9bde2f20319  ./laurel/laurel-v0.6.3.txz
 953f70429ae51a3926293f2938947a44  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.lst
 e9b28a53a08b4c66a03a03946cabfeab  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.meta
