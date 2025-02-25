@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-4781dae6bbcba45071ec7affb577735c  ./FILELIST.TXT
+822145c5c4d9f0879617880570ac82aa  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
 7f5ddde5a2dac6d88b4fa02658b34919  ./MANIFEST.bz2
-055756d13da478c639e063edeb3c142b  ./PACKAGES.TXT
-97e7afe3da447c1a4facb243735c498c  ./PACKAGES.TXT.gz
+f6bc4b4623545450c7ccbe9f0a838103  ./PACKAGES.TXT
+be5efe411737072f059e5942e4ab6eaf  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -81,7 +81,7 @@ d4ad625a2cdfa64c7bb57289ee8424f1  ./redisearch/2.10.7/redisearch.so
 af7b5d77ec031b5ee4c2e733629e946c  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz.md5
 3277ae8a7da1d45b87fffa5a697db875  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.txt
 eff92eb6f69e6d17e4d5004f1e5fa003  ./redisjson/2.8.4/librejson.so
-210e68084d1939344b43387daa5695cc  ./sbotools
+7f9da6d287763476967ce163c0643b3f  ./sbotools
 4b032826e45ae5727d9365237e6cb79c  ./script.expect
 9f050febbc0bbcdb39c5309f5a4b29d9  ./slackrepo/slackrepo-20241108-noarch-1_SBo.lst
 4a04f6cf787e9d9d90f15b69e48e1c9e  ./slackrepo/slackrepo-20241108-noarch-1_SBo.meta
