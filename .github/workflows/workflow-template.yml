@@ -305,13 +305,12 @@ jobs:
         cd /tmp/SBo
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           sbopkg -r
-          echo -e "\e[32mCopying files from slackbuilds.org\e[0m"
+          echo -e "\e[32mDownloading files from slackbuilds.org\e[0m"
           sbopkg -d ${{ inputs.NAME }} <<< q
-        else
-          echo -e "\e[32mCopying files from ${BUILDFILES_DIR}\e[0m"
         fi
         INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
         BUILDFILES_DIR=$(dirname "$INFO")
+        echo -e "\e[32mCopying build files from ${BUILDFILES_DIR}\e[0m"
         cp ${BUILDFILES_DIR}/* /tmp/SBo
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
           echo -e "\e[32mChanging verson number\e[0m"
