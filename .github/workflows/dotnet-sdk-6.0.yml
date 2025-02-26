@@ -10,4 +10,5 @@ jobs:
     with:
       VERSION: "6.0.428"
       NAME: "dotnet-sdk-6.0"
+      bobbintb: true
       SBOPKG: true
