@@ -1,1 +1,1 @@
-/__w/Slackware_Packages/Slackware_Packages/builds/dotnet-sdk-6.0/dotnet-sdk-6.0-6.0.428-x86_64-1_SBo.tgz filter=lfs diff=lfs merge=lfs -text
+/__w/Slackware_Packages/Slackware_Packages/builds/dotnet-sdk-6.0/*.tgz filter=lfs diff=lfs merge=lfs -text
