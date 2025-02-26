@@ -360,10 +360,10 @@ jobs:
           git lfs install
           echo "$FILES" | while read -r FILE; do
             git lfs track "$FILE"
-            git add "$FILE"
             echo -e "\e[32mTracked $FILE with Git LFS\e[0m"
           done
           git add .gitattributes
+          cat .gitattributes
         fi
         cd ./builds/
         gpg --list-keys
