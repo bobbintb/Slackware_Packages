@@ -13,5 +13,5 @@ jobs:
       bobbintb: true
       salix-extra-15: true
       NAME: "SysmonForLinux"
-      PACKAGES: "slackware64:make slackware64:guile slackware64:gc slackware64:cmake slackware64:gcc slackware64:binutils slackware64:kernel-headers alien-15:gtest bobbintb:SysinternalsEBPF && slackpkg upgrade openssl libxml2 && sbopkg -b dotnet-sdk-6.0 && dotnet tool install --global dotnet-t4"
+      PACKAGES: "slackware64:make slackware64:guile slackware64:gc slackware64:cmake slackware64:gcc slackware64:binutils slackware64:kernel-headers alien-15:gtest bobbintb:SysinternalsEBPF && slackpkg upgrade openssl libxml2 && sbopkg -b dotnet-sdk-6.0 <<< p && dotnet tool install --global dotnet-t4"
       GIT: https://github.com/microsoft/SysmonForLinux.git
