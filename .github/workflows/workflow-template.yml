@@ -388,4 +388,4 @@ jobs:
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
         commit_message: 'updated ${{ inputs.NAME }}'
-        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc'
+        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc .gitattributes'
