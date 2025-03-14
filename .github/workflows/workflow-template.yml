@@ -267,6 +267,7 @@ jobs:
         echo "##########################cache##########################"
         ls -ls /var/cache/packages
         slackpkg update gpg <<< y > /dev/null
+        slackpkg update gpg <<< y > /dev/null
         slackpkg update <<< y > /dev/null
     - 
       name: Upgrade all packages
