@@ -321,10 +321,10 @@ jobs:
         . ./${{ inputs.NAME }}.info
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
           echo -e "\e[32mChanging verson number from ${VERSION} to ${{ inputs.VERSION }}\e[0m"
-          # . ./${{ inputs.NAME }}.info
           DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
           DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
           export VERSION=${{ inputs.VERSION }}
+          # . ./${{ inputs.NAME }}.info
         elif [ "${{ inputs.VERSION }}" == "$VERSION" ]; then
           echo -e "\e[32mThe default version ${VERSION} and the specified version ${{ inputs.VERSION }} are the same. Not making any changes.\e[0m"
         fi
@@ -338,7 +338,7 @@ jobs:
           git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
         else
           echo -e "\e[32mDownloading source files specified in slackbuilds file\e[0m"
-          . ./${{ inputs.NAME }}.info
+          # . ./${{ inputs.NAME }}.info
           wget $DOWNLOAD_x86_64 || wget $DOWNLOAD
         fi
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
