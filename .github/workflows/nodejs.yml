@@ -11,4 +11,4 @@ jobs:
       VERSION: "22.14.0"
       NAME: "nodejs"
       SBOPKG: true
-      PACKAGES: "gcc gc make guile ninja kernel-headers binutils && slackpkg reinstall openssl && slackpkg upgrade glibc"
+      PACKAGES: "gcc gc make guile ninja kernel-headers binutils && slackpkg reinstall openssl ; slackpkg upgrade glibc"
