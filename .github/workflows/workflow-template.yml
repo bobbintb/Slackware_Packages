@@ -304,7 +304,7 @@ jobs:
         echo "DEST_DIR=${DEST_DIR}" >> $GITHUB_ENV
         mkdir -p $DEST_DIR
         mkdir -p /tmp/SBo
-        export VERSION=${{ inputs.VERSION }}
+        # export VERSION=${{ inputs.VERSION }}
         cd /tmp/SBo
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           sbopkg -r
@@ -318,9 +318,10 @@ jobs:
         echo -e "\e[32mCurrent folder contents:\e[0m"
         pwd
         ls -ls
+        . ./${{ inputs.NAME }}.info
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
           echo -e "\e[32mChanging verson number from ${VERSION} to ${{ inputs.VERSION }}\e[0m"
-          . ./${{ inputs.NAME }}.info
+          # . ./${{ inputs.NAME }}.info
           DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
           DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
           export VERSION=${{ inputs.VERSION }}
