@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Tue Feb 25 23:38:32 UTC 2025
+PACKAGES.TXT;  Fri Mar 21 01:26:17 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -106,6 +106,23 @@ PACKAGE NAME:  nodejs-22.13.1-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./nodejs
 PACKAGE SIZE (compressed):  38508 K
 PACKAGE SIZE (uncompressed):  111930 K
+PACKAGE DESCRIPTION:
+nodejs: nodejs (JavaScript runtime)
+nodejs:
+nodejs: Node.js is a JavaScript runtime built on Chrome's V8 JavaScript
+nodejs: engine.
+nodejs:
+nodejs: https://nodejs.org/
+nodejs:
+nodejs:
+nodejs:
+nodejs:
+nodejs:
+
+PACKAGE NAME:  nodejs-22.14.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./nodejs
+PACKAGE SIZE (compressed):  38568 K
+PACKAGE SIZE (uncompressed):  112030 K
 PACKAGE DESCRIPTION:
 nodejs: nodejs (JavaScript runtime)
 nodejs:
