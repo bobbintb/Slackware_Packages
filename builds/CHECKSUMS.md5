@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-96d740f0b3b6deb1ea158653afcb67b0  ./FILELIST.TXT
+a182c94c4fcf4b05de0ab33dc1fff746  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-76ed2b61601dddaeb8db85d6d880a45e  ./MANIFEST.bz2
-91d42e2afa60304bb1ec14fe844d9683  ./PACKAGES.TXT
-18e6ef816bd6a4f2180019a378b78768  ./PACKAGES.TXT.gz
+596ea531996141265ac577ce30fb36b3  ./MANIFEST.bz2
+50b4e02d682ec62dfd0bcf4c437c01a0  ./PACKAGES.TXT
+e944035f129f2803aa2b62f8bde9c1e4  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -53,7 +53,12 @@ e9b28a53a08b4c66a03a03946cabfeab  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.meta
 72e4fb859b1cad2ae2a18476aed0bf50  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.tgz.asc
 1bd7bc369592aedc15bbbeab2e64ddee  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.tgz.md5
 cfd034bd527b6f6d6a9eddf8ff9adab5  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.txt
-1cfcfe6d988488bab6f0daa4fcf842e6  ./nodejs
+cdd9b9796d601031ae1134d647ae3035  ./nodejs/nodejs-22.14.0-x86_64-1_SBo.lst
+cf52618a67464ffbeb29aedbe7a03320  ./nodejs/nodejs-22.14.0-x86_64-1_SBo.meta
+86c6743f957c9f3803fee348e73cace1  ./nodejs/nodejs-22.14.0-x86_64-1_SBo.tgz
+50b865e04b7678124a771bdc86312a00  ./nodejs/nodejs-22.14.0-x86_64-1_SBo.tgz.asc
+5a417a8d90e0404d1bf9d1d9c985c0be  ./nodejs/nodejs-22.14.0-x86_64-1_SBo.tgz.md5
+6af2a36e86ec60994dddbae09f731c9a  ./nodejs/nodejs-22.14.0-x86_64-1_SBo.txt
 b0cd656cdaca93d2c59b9fb8a1a855cc  ./pigz/pigz-2.8-x86_64-1_SBo.lst
 fc1832b3fa667062b4db6ee39ff53a00  ./pigz/pigz-2.8-x86_64-1_SBo.meta
 302510262fa604bca429c19030a5e617  ./pigz/pigz-2.8-x86_64-1_SBo.tgz
