@@ -347,7 +347,7 @@ jobs:
         echo "package_path=${package_path}" >> $GITHUB_ENV
         if [ -f "${package_path}" ]; then
           echo -e "\e[32mRemoving previous package from: $DEST_DIR\e[0m"
-          rm -rf $DEST_DIR
+          rm -rf "$DEST_DIR"/*
           echo -e "\e[32mMoving package to: $DEST_DIR\e[0m"
         	mv ${package_path} $DEST_DIR
         fi
