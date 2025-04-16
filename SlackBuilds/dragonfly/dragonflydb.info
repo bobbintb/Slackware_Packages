@@ -1,7 +1,7 @@
 PRGNAM="dragonflydb"
 VERSION="1.28.1"
 HOMEPAGE="https://www.dragonflydb.io/"
-DOWNLOAD="https://github.com/dragonflydb/dragonfly/archive/refs/tags/v1.28.1.tar.gz"
+DOWNLOAD="https://github.com/dragonflydb/dragonfly.git"
 MD5SUM="md5sum(s) of the source tarball(s) defined in DOWNLOAD"
 DOWNLOAD_x86_64="direct download link(s) of application source tarball(s), x86_64 only"
 MD5SUM_x86_64="md5sum(s) of the source tarball(s) defined in DOWNLOAD_x86_64"
