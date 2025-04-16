@@ -52,7 +52,7 @@
 # DELETE THIS BLOCK OF TEXT WITHOUT BOTHERING TO READ WHAT'S IN IT.
 #
 # |-----------------------------------------------------------------| #
-
+export CMAKE_POLICY_VERSION_MINIMUM=3.5
 PRGNAM=dragonfly	# replace with name of program
 VERSION=${VERSION:-1.28.1}
 BUILD=${BUILD:-1}
