@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+           |-----handy-ruler------------------------------------------------------|
+dragonflydb: dragonflydb (A modern replacement for Redis and Memcached)
+dragonflydb:
+dragonflydb: Dragonfly is an in-memory data store built for modern application
+dragonflydb: workloads.  Fully compatible with Redis and Memcached APIs, Dragonfly
+dragonflydb: requires no code changes to adopt. Compared to legacy in-memory
+dragonflydb: datastores, Dragonfly delivers 25X more throughput, higher cache
+dragonflydb: hit rates with lower tail latency, and can run on up to 80% less
+dragonflydb: resources for the same sized workload.
+dragonflydb:
+dragonflydb:
+dragonflydb: Home: https://www.dragonflydb.io/
