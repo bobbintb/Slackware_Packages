@@ -10,5 +10,4 @@ jobs:
     with:
       VERSION: "1.28.1"
       NAME: "dragonfly"
-      SBOPKG: true
       PACKAGES: "cmake make ninja gc gcc binutils boost kernel-headers m4 automake autoconf guile libtool bison gettext && slackpkg upgrade glibc openssl"
