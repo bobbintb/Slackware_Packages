@@ -11,4 +11,4 @@ jobs:
       VERSION: "1.28.1"
       NAME: "dragonfly"
       GIT: https://github.com/dragonflydb/dragonfly.git
-      PACKAGES: "cmake && wget https://psychz.dl.sourceforge.net/project/slackpkgplus/slackpkg%2B+-1.8.0-noarch-7mt.txz && slackpkg remove slackpkg+-1.8.2-noarch-2alien && installpkg slackpkg+-1.8.0-noarch-7mt.txz && slackpkg install make ninja gc gcc binutils boost kernel-headers m4 automake autoconf guile libtool bison gettext && slackpkg upgrade glibc openssl"
+      PACKAGES: "cmake && wget https://psychz.dl.sourceforge.net/project/slackpkgplus/slackpkg%2B-1.8.0-noarch-7mt.txz && slackpkg remove slackpkg+-1.8.2-noarch-2alien && installpkg slackpkg+-1.8.0-noarch-7mt.txz && slackpkg install make ninja gc gcc binutils boost kernel-headers m4 automake autoconf guile libtool bison gettext && slackpkg upgrade glibc openssl"
