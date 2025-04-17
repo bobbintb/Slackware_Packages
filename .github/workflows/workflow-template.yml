@@ -136,7 +136,7 @@ jobs:
     permissions:
       contents: write
     container:
-      image: bobbintb/unraid-cicd
+      image: bobbintb/unraid-cicd-everything
       options: --privileged
     steps:
     - 
