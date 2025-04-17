@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-a182c94c4fcf4b05de0ab33dc1fff746  ./FILELIST.TXT
+8a020ead732c40c80e4e071b15ebc078  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-596ea531996141265ac577ce30fb36b3  ./MANIFEST.bz2
-50b4e02d682ec62dfd0bcf4c437c01a0  ./PACKAGES.TXT
-e944035f129f2803aa2b62f8bde9c1e4  ./PACKAGES.TXT.gz
+f9d8aee1250291e99931c0dbbc91c032  ./MANIFEST.bz2
+5ddbf794fd0fef498c8e465297779cf9  ./PACKAGES.TXT
+c151f4737d3a0c16bfcaf6b690999c5f  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -34,12 +34,12 @@ a5f7c08ab1d89145b1630055fb182414  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.lst
 589cf1b4607276f34285626195ce60fd  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.asc
 a6433fc6f60768320edcd5d82d26cfbb  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.md5
 09de44c662d21489016f2866e2fbdeb8  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.txt
-f0bdc838f00865c4caaa6af94ddc9126  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.lst
-1f9ff693983c60a160df8474fb2aa856  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.meta
-ff93fca05a9874e541286d4506bbfa63  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz
-525ea20badaa6c1828d4d37d317cbb44  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz.asc
-fb7b6bb6cd0ce362ce5fe9cee859bd16  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.tgz.md5
-011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.22.1-x86_64-1_SBo.txt
+4b69ea2df943de8fb7b54c7fccbdb99b  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.lst
+938d08d7eea278aee4bce9e7b776b2b8  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.meta
+61fd668567f60e8950e9d720adb7578c  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.tgz
+9d87e34755410b3cd03b31fee0bbdf53  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.tgz.asc
+7735c02796bd0faee1b0e9a53f142550  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.tgz.md5
+011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.txt
 f61bf1e3058726c78f41226f8cac839d  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.lst
 8004176189029af01f79384b0e1679af  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.meta
 11746deb881c356ece5cf0c64b311c39  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.tgz

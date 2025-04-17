@@ -1,7 +1,7 @@
-PACKAGE NAME:  bpftrace-0.22.1-x86_64-1_SBo.tgz
+PACKAGE NAME:  bpftrace-0.23.2-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bpftrace
-PACKAGE SIZE (compressed):  3524 K
-PACKAGE SIZE (uncompressed):  9120 K
+PACKAGE SIZE (compressed):  3632 K
+PACKAGE SIZE (uncompressed):  9240 K
 PACKAGE DESCRIPTION:
 bpftrace: bpftrace (bpftrace is a high-level tracing language for Linux BPF)
 bpftrace:
