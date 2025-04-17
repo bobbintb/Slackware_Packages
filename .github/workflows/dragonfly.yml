@@ -11,4 +11,4 @@ jobs:
       VERSION: "1.28.1"
       NAME: "dragonfly"
       GIT: https://github.com/dragonflydb/dragonfly.git
-      PACKAGES: "cmake && slackpkg install make && slackpkg install ninja && slackpkg install gc && slackpkg install gcc && slackpkg install binutils && slackpkg install boost && slackpkg install kernel-headers && slackpkg install m4 && slackpkg install automake && slackpkg install autoconf && slackpkg install guile && slackpkg install libtool && slackpkg install bison && slackpkg install gettext && slackpkg upgrade glibc openssl"
+      PACKAGES: "cmake make ninja gc gcc binutils boost kernel-headers m4 automake autoconf guile libtool bison && slackpkg upgrade glibc openssl"
