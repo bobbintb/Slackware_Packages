@@ -1,5 +1,5 @@
 PRGNAM="dragonfly"
-VERSION="1.28.1"
+VERSION="1.28.2"
 HOMEPAGE="https://www.dragonflydb.io/"
 DOWNLOAD="https://github.com/dragonflydb/dragonfly.git"
 REQUIRES="cmake make ninja gc gcc binutils boost kernel-headers m4 gettext automake autoconf guile libtool bison libunwind glibc zstd"
