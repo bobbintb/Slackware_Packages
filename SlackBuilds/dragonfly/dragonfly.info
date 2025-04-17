@@ -1,4 +1,4 @@
-PRGNAM="dragonflydb"
+PRGNAM="dragonfly"
 VERSION="1.28.1"
 HOMEPAGE="https://www.dragonflydb.io/"
 DOWNLOAD="https://github.com/dragonflydb/dragonfly.git"
