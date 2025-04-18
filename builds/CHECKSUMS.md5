@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-8a020ead732c40c80e4e071b15ebc078  ./FILELIST.TXT
+b5cb1ed9c901dd1704ebcea4d6719c14  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-f9d8aee1250291e99931c0dbbc91c032  ./MANIFEST.bz2
-5ddbf794fd0fef498c8e465297779cf9  ./PACKAGES.TXT
-c151f4737d3a0c16bfcaf6b690999c5f  ./PACKAGES.TXT.gz
+11a1524b360a5371fb43d55ff778662e  ./MANIFEST.bz2
+94a6946dc24f21a989adc84c4ad49229  ./PACKAGES.TXT
+cd2364fa7bf05835167a2365be6682d1  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -40,6 +40,12 @@ a6433fc6f60768320edcd5d82d26cfbb  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.md5
 9d87e34755410b3cd03b31fee0bbdf53  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.tgz.asc
 7735c02796bd0faee1b0e9a53f142550  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.tgz.md5
 011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.txt
+4bc652f40325dda08d8db5a64ded216a  ./dragonfly/dragonfly-1.28.2-x86_64-1_SBo.lst
+1a66d53a17d1f5efd7ef8c6b71668d21  ./dragonfly/dragonfly-1.28.2-x86_64-1_SBo.meta
+e0269880c889ee27c6f0faf34460a1ba  ./dragonfly/dragonfly-1.28.2-x86_64-1_SBo.tgz
+5dee5ce46121b097a6bfedfe7a1ff04c  ./dragonfly/dragonfly-1.28.2-x86_64-1_SBo.tgz.asc
+f78840c0ccd2b87b258a6c6d042aa1a6  ./dragonfly/dragonfly-1.28.2-x86_64-1_SBo.tgz.md5
+ae09e42e3cf39da233ab1d032bb39132  ./dragonfly/dragonfly-1.28.2-x86_64-1_SBo.txt
 f61bf1e3058726c78f41226f8cac839d  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.lst
 8004176189029af01f79384b0e1679af  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.meta
 11746deb881c356ece5cf0c64b311c39  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.tgz
