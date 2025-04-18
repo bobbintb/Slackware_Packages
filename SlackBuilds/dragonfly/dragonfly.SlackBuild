@@ -159,7 +159,7 @@ find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
 # The included documentation varies from one application to another, so be sure
 # to adjust your script as needed
 # Also, include the SlackBuild script in the documentation directory
-# mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
 # cp -a \
 #   <documentation> \
 #   $PKG/usr/doc/$PRGNAM-$VERSION
