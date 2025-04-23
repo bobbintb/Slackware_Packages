@@ -1,0 +1,11 @@
+bitwarden-cli: bitwarden-cli
+bitwarden-cli:
+bitwarden-cli: The Bitwarden command-line interface (CLI) is a powerful, 
+bitwarden-cli: fully-featured tool for accessing and managing your vault. Most 
+bitwarden-cli: features that you find in other Bitwarden client applications 
+bitwarden-cli: (desktop, browser extension, etc.) are available from the CLI.
+bitwarden-cli:
+bitwarden-cli:
+bitwarden-cli:
+bitwarden-cli:
+bitwarden-cli: Home: https://bitwarden.com/

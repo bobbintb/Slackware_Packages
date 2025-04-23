@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-b5cb1ed9c901dd1704ebcea4d6719c14  ./FILELIST.TXT
+727e726f5aa125cddc3598e0990216a2  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-11a1524b360a5371fb43d55ff778662e  ./MANIFEST.bz2
-94a6946dc24f21a989adc84c4ad49229  ./PACKAGES.TXT
-cd2364fa7bf05835167a2365be6682d1  ./PACKAGES.TXT.gz
+1634a521951d1c612fb7420a00646f0e  ./MANIFEST.bz2
+c7504d7e97998347f51f0a0e46b01c33  ./PACKAGES.TXT
+4b476e5cf5e11e5bb6ce88350b55fec2  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -28,6 +28,12 @@ a95711291c2097566d3ec07b4cb4c87f  ./bcc/bcc-0.33.0-x86_64-1_SBo.lst
 b2d7f440a41160b65ff59e77d0682538  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz.asc
 d91694c3194f2bd0670c77d9f4f3d353  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz.md5
 4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.33.0-x86_64-1_SBo.txt
+4f4b37ca757532ccc30789eda35b779f  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.lst
+0c7c885f16884c75fa55f48bad4a141f  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.meta
+6690f17ad1e29735f36260d69ed247cf  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz
+ab4ce36809137f323714debbe7184a5c  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz.asc
+dd449331e5ecad3adc764ebda9cbb4e9  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz.md5
+a51a149187c089c9a4c0a0d3b063dcd4  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.txt
 a5f7c08ab1d89145b1630055fb182414  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.lst
 1f9d126a887f2fef220d54eec91f4712  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.meta
 87d6f945bd38019ca13e348e730257ea  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz

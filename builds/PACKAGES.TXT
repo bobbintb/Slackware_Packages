@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Fri Apr 18 00:57:35 UTC 2025
+PACKAGES.TXT;  Wed Apr 23 16:14:56 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -34,6 +34,22 @@ bcc:
 bcc:
 bcc:
 
+PACKAGE NAME:  bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./bitwarden-cli
+PACKAGE SIZE (compressed):  8 K
+PACKAGE SIZE (uncompressed):  20 K
+PACKAGE DESCRIPTION:
+bitwarden-cli: bitwarden-cli
+bitwarden-cli:
+bitwarden-cli: The Bitwarden command-line interface (CLI) is a powerful, 
+bitwarden-cli: fully-featured tool for accessing and managing your vault. Most 
+bitwarden-cli: features that you find in other Bitwarden client applications 
+bitwarden-cli: (desktop, browser extension, etc.) are available from the CLI.
+bitwarden-cli:
+bitwarden-cli:
+bitwarden-cli:
+bitwarden-cli:
+bitwarden-cli: Home: https://bitwarden.com/
 PACKAGE NAME:  bpftool-7.5.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bpftool
 PACKAGE SIZE (compressed):  320 K
