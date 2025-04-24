@@ -1,7 +1,7 @@
-PACKAGE NAME:  redisearch-2.10.12-x86_64-1_SBo.tgz
+PACKAGE NAME:  redisearch-2.10.17-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./redisearch
-PACKAGE SIZE (compressed):  8 K
-PACKAGE SIZE (uncompressed):  20 K
+PACKAGE SIZE (compressed):  3048 K
+PACKAGE SIZE (uncompressed):  8480 K
 PACKAGE DESCRIPTION:
 redisearch: redisearch (Querying, secondary indexing, and full-text search for Redis)
 redisearch:

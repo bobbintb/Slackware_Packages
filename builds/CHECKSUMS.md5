@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-727e726f5aa125cddc3598e0990216a2  ./FILELIST.TXT
+0457139cadb45efb3d115e904bc1fd06  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-1634a521951d1c612fb7420a00646f0e  ./MANIFEST.bz2
-c7504d7e97998347f51f0a0e46b01c33  ./PACKAGES.TXT
-4b476e5cf5e11e5bb6ce88350b55fec2  ./PACKAGES.TXT.gz
+eb05b27bf690f0042264de570b73b2c2  ./MANIFEST.bz2
+2fa469ca9833eea6ae973c2609ce0081  ./PACKAGES.TXT
+0443d3f02938d5ab01ce086a7831a6e8  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -89,15 +89,12 @@ b8b1ac7d30ca54042f0ed66fb80f9204  ./ply/ply-2.4.0-x86_64-1_SBo.txt
 12cd56b3dc1d7a773675dc466f5e7e39  ./redis/redis-7.4.0-x86_64-1loom.txz
 e1c44e5bb3eb62cdf35912b63b494ca9  ./redis/redis-7.4.0-x86_64-1loom.txz.asc
 267610b7cb5a375296946df97da8bc0c  ./redis/redis-7.4.0-x86_64-1loom.txz.md5
-d4ad625a2cdfa64c7bb57289ee8424f1  ./redisearch/2.10.7/redisearch.so
-6fe3eaddd66a63789132e63c2298a365  ./redisearch/2.6.22-1/redisearch.so
-729830b318a4a382d87331e2114016c3  ./redisearch/2.6.22/redisearch.so
-25184cd1b1002d3f0059a0195500c8ca  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.lst
-4db26ff2287871926425c33e14236bda  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.meta
-494888086743fa7d61b8418b9c2d3b03  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz
-01e6d89c9d5afe03988f4bc284a38f5e  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz.asc
-af7b5d77ec031b5ee4c2e733629e946c  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.tgz.md5
-3277ae8a7da1d45b87fffa5a697db875  ./redisearch/redisearch-2.10.12-x86_64-1_SBo.txt
+9f3d5db9084f7cbe5ba7b3e713247ae1  ./redisearch/redisearch-2.10.17-x86_64-1_SBo.lst
+368d7562bc9537b08520b92b00e3b03b  ./redisearch/redisearch-2.10.17-x86_64-1_SBo.meta
+7ee0bc4298ed8206de5fff97451ce402  ./redisearch/redisearch-2.10.17-x86_64-1_SBo.tgz
+322b5c4636c60556e954bd832057a859  ./redisearch/redisearch-2.10.17-x86_64-1_SBo.tgz.asc
+4e8d87c4300ec6669acf21e16354927b  ./redisearch/redisearch-2.10.17-x86_64-1_SBo.tgz.md5
+3277ae8a7da1d45b87fffa5a697db875  ./redisearch/redisearch-2.10.17-x86_64-1_SBo.txt
 eff92eb6f69e6d17e4d5004f1e5fa003  ./redisjson/2.8.4/librejson.so
 acee0329c510f338d55ace5a6eb2deda  ./sbotools/sbotools-3.4.2-noarch-1_SBo.lst
 ec6d3c28ab5fa320aa6492af14fa099c  ./sbotools/sbotools-3.4.2-noarch-1_SBo.meta
