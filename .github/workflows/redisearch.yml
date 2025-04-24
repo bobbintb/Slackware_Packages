@@ -11,4 +11,4 @@ jobs:
       VERSION: "2.10.17"
       NAME: "redisearch"
       PACKAGES: "make cmake guile gc gcc binutils kernel-headers"
-      SOURCE: "https://github.com/RediSearch/RediSearch.git"
+      GIT: "https://github.com/RediSearch/RediSearch.git"
