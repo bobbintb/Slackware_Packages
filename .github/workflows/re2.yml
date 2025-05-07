@@ -11,4 +11,4 @@ jobs:
       VERSION: "2024-07-02"
       NAME: "re2"
       SBOPKG: true
-      PACKAGES: "make guile gc g++ glibc gcc binutils abseil googletest icu4c"
+      PACKAGES: "make guile gc g++ glibc gcc binutils kernel-headers abseil googletest icu4c"
