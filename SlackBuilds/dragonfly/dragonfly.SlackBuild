@@ -170,6 +170,9 @@ mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 [ -f $CWD/doinst.sh ] && cat $CWD/doinst.sh > $PKG/install/doinst.sh
 
+mkdir -p $PKG/usr/bin
+mv $TMP/$PRGNAM/build-opt/$PRGNAM $PKG/usr/bin
+
 # Make the package; be sure to leave it in $OUTPUT
 # If package symlinks need to be created during install *before*
 # your custom contents of doinst.sh runs, then add the -p switch to
