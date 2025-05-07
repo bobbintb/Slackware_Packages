@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Thu Apr 24 21:51:06 UTC 2025
+PACKAGES.TXT;  Wed May  7 02:57:18 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -84,10 +84,10 @@ bpftrace: The bpftrace language is inspired by awk and C, and predecessor
 bpftrace: tracers such as DTrace and SystemTap.
 bpftrace:
 
-PACKAGE NAME:  dragonfly-1.28.2-x86_64-1_SBo.tgz
+PACKAGE NAME:  dragonfly-1.29.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./dragonfly
-PACKAGE SIZE (compressed):  8 K
-PACKAGE SIZE (uncompressed):  20 K
+PACKAGE SIZE (compressed):  97960 K
+PACKAGE SIZE (uncompressed):  282350 K
 PACKAGE DESCRIPTION:
 dragonflydb: dragonflydb (A modern replacement for Redis and Memcached)
 dragonflydb:
