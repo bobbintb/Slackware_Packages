@@ -1,0 +1,14 @@
+name: Build re2
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "2024-07-02"
+      NAME: "re2"
+      SBOPKG: true
+      PACKAGES: "make guile gc g++ glibc gcc binutils abseil googletest icu4c"
