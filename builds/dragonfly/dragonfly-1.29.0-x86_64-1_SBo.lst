@@ -3,14 +3,14 @@
 ||   Package:  ./dragonfly/dragonfly-1.29.0-x86_64-1_SBo.tgz
 ||
 ++========================================
-drwxr-xr-x root/root         0 2025-05-07 02:56 ./
-drwxr-xr-x root/root         0 2025-05-07 02:56 install/
--rw-r--r-- root/root      1066 2025-05-07 02:56 install/slack-desc
-drwxr-xr-x root/root         0 2025-05-07 02:56 usr/
-drwxr-xr-x root/root         0 2025-05-07 02:56 usr/bin/
--rwxr-xr-x root/root 289108216 2025-05-07 02:56 usr/bin/dragonfly
-drwxr-xr-x root/root         0 2025-05-07 02:56 usr/doc/
-drwxr-xr-x root/root         0 2025-05-07 02:56 usr/doc/dragonfly-1.29.0/
--rw-r--r-- root/root      9408 2025-05-07 02:56 usr/doc/dragonfly-1.29.0/dragonfly.SlackBuild
+drwxr-xr-x root/root         0 2025-05-07 15:21 ./
+drwxr-xr-x root/root         0 2025-05-07 15:21 install/
+-rw-r--r-- root/root      1074 2025-05-07 15:21 install/slack-desc
+drwxr-xr-x root/root         0 2025-05-07 15:21 usr/
+drwxr-xr-x root/root         0 2025-05-07 15:21 usr/bin/
+-rwxr-xr-x root/root 289108216 2025-05-07 15:21 usr/bin/dragonfly
+drwxr-xr-x root/root         0 2025-05-07 15:21 usr/doc/
+drwxr-xr-x root/root         0 2025-05-07 15:21 usr/doc/dragonfly-1.29.0/
+-rw-r--r-- root/root      9408 2025-05-07 15:21 usr/doc/dragonfly-1.29.0/dragonfly.SlackBuild
 
 

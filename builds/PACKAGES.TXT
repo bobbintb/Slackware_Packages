@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Wed May  7 02:57:18 UTC 2025
+PACKAGES.TXT;  Wed May  7 15:22:50 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -92,14 +92,15 @@ PACKAGE DESCRIPTION:
 dragonflydb: dragonflydb (A modern replacement for Redis and Memcached)
 dragonflydb:
 dragonflydb: Dragonfly is an in-memory data store built for modern application
-dragonflydb: workloads.  Fully compatible with Redis and Memcached APIs, Dragonfly
+dragonflydb: workloads. Fully compatible with Redis and Memcached APIs, Dragonfly
 dragonflydb: requires no code changes to adopt. Compared to legacy in-memory
-dragonflydb: datastores, Dragonfly delivers 25X more throughput, higher cache
-dragonflydb: hit rates with lower tail latency, and can run on up to 80% less
-dragonflydb: resources for the same sized workload.
+dragonflydb: datastores, Dragonfly delivers 25x more throughput, higher cache
+dragonflydb: hit rates with lower tail latency, and can run on up to 80 percent
+dragonflydb: fewer resources for the same sized workload.
 dragonflydb:
 dragonflydb:
 dragonflydb: Home: https://www.dragonflydb.io/
+
 PACKAGE NAME:  git-lfs-3.6.1-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./git-lfs
 PACKAGE SIZE (compressed):  4860 K
