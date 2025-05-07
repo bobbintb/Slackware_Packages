@@ -10,5 +10,6 @@ jobs:
     with:
       VERSION: "1.29.0"
       NAME: "dragonfly"
+      bobbintb: true
       GIT: https://github.com/dragonflydb/dragonfly.git
-      PACKAGES: "glibc cmake make ninja gc gcc binutils boost kernel-headers m4 gettext automake autoconf guile libtool bison libunwind openssl"
+      PACKAGES: "glibc cmake make ninja gc gcc binutils boost kernel-headers m4 gettext automake autoconf guile libtool bison libunwind openssl autoconf bobbintb:re2"
