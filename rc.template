@@ -1,6 +1,10 @@
 #!/bin/sh
 #
 # Template startup script for Slackware Linux
+# This is a general purpose template designed to work out of the box for a basic daemon.
+# Just rename the file, replacing `template` with the name of the binary, e.g. `rc.myprogram`.
+# The commands `start`, `stop`, `restart`, and `status` will work with `/usr/bin/myprogram`
+$ by default. Additional functionality can be added to whichever function as needed.
 
 PROGRAM_NAME="${0##*.}"
 PROGRAM=/usr/bin/$PROGRAM_NAME
