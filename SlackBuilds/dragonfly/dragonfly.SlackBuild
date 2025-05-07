@@ -129,6 +129,8 @@ cd build-opt && ninja dragonfly
 # Strip binaries and libraries - this can be done with 'make install-strip'
 # in many source trees, and that's usually acceptable if so, but if not,
 # use this:
+mkdir -p $PKG/usr/bin
+mv $TMP/$PRGNAM/build-opt/$PRGNAM $PKG/usr/bin
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
   | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
@@ -169,9 +171,6 @@ cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
 [ -f $CWD/doinst.sh ] && cat $CWD/doinst.sh > $PKG/install/doinst.sh
-
-mkdir -p $PKG/usr/bin
-mv $TMP/$PRGNAM/build-opt/$PRGNAM $PKG/usr/bin
 
 # Make the package; be sure to leave it in $OUTPUT
 # If package symlinks need to be created during install *before*
