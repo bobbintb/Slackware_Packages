@@ -1,0 +1,29 @@
+++========================================
+||
+||   Package:  ./re2/re2-2024-07-02-x86_64-1_SBo.tgz
+||
+++========================================
+drwxr-xr-x root/root         0 2025-05-07 20:26 ./
+drwxr-xr-x root/root         0 2025-05-07 20:26 install/
+-rw-r--r-- root/root       184 2025-05-07 20:26 install/doinst.sh
+-rw-r--r-- root/root       666 2025-05-07 20:26 install/slack-desc
+drwxr-xr-x root/root         0 2025-05-07 20:26 usr/
+drwxr-xr-x root/root         0 2025-05-07 20:26 usr/doc/
+drwxr-xr-x root/root         0 2025-05-07 20:26 usr/doc/re2-2024-07-02/
+-rw-r--r-- root/root       128 2024-07-01 08:31 usr/doc/re2-2024-07-02/CONTRIBUTING.md
+-rw-r--r-- root/root      1558 2024-07-01 08:31 usr/doc/re2-2024-07-02/LICENSE
+-rw-r--r-- root/root      1852 2024-07-01 08:31 usr/doc/re2-2024-07-02/README
+-rw-r--r-- root/root       293 2024-07-01 08:31 usr/doc/re2-2024-07-02/SECURITY.md
+-rw-r--r-- root/root      3467 2025-05-07 20:26 usr/doc/re2-2024-07-02/re2.SlackBuild
+drwxr-xr-x root/root         0 2025-05-07 20:26 usr/include/
+drwxr-xr-x root/root         0 2025-05-07 20:26 usr/include/re2/
+-rw-r--r-- root/root      4281 2025-05-07 20:26 usr/include/re2/filtered_re2.h
+-rw-r--r-- root/root     42174 2025-05-07 20:26 usr/include/re2/re2.h
+-rw-r--r-- root/root      2518 2025-05-07 20:26 usr/include/re2/set.h
+-rw-r--r-- root/root       504 2025-05-07 20:26 usr/include/re2/stringpiece.h
+drwxr-xr-x root/root         0 2025-05-07 20:26 usr/lib64/
+-rwxr-xr-x root/root    388152 2025-05-07 20:26 usr/lib64/libre2.so.11.0.0
+drwxr-xr-x root/root         0 2025-05-07 20:26 usr/lib64/pkgconfig/
+-rw-r--r-- root/root       451 2025-05-07 20:26 usr/lib64/pkgconfig/re2.pc
+
+
