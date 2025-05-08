@@ -282,10 +282,9 @@ jobs:
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
         slackpkg install ${{ inputs.PACKAGES }} <<< y
-        slackpkg upgrade ${{ inputs.PACKAGES }} <<< y
+        slackpkg upgrade ${{ inputs.PACKAGES }} <<< y || true
         # > /dev/null
         # echo "==================== installed packages ===================="
-        # ls -1 /var/log/packages/
     - 
       name: Re-install dependencies
       if: ${{ inputs.REINSTALL != '' && inputs.REINSTALL != null }}
