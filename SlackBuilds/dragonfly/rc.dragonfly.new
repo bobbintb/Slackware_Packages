@@ -1,0 +1,58 @@
+#!/bin/sh
+#
+# Template startup script for Slackware Linux
+# This is a general purpose template designed to work out of the box for a basic daemon.
+# Just rename the file, replacing `template` with the name of the binary, e.g. `rc.myprogram`.
+# The commands `start`, `stop`, `restart`, and `status` will work with `/usr/bin/myprogram`
+$ by default. Additional functionality can be added to whichever function as needed.
+
+PROGRAM_NAME="${0##*.}"
+PROGRAM=/usr/bin/$PROGRAM_NAME
+OPTIONS=""
+
+start() {
+  echo "Starting ${PROGRAM_NAME}..."
+  $PROGRAM $OPTIONS &
+}
+
+stop() {
+  echo "Shutting down ${PROGRAM}..."
+      if kill -TERM $(pgrep -f ${PROGRAM}); then
+          echo "Process terminated successfully."
+      else
+          echo "Failed to terminate the process."
+      fi
+}
+
+status() {
+  PIDS=$(pgrep -f ${PROGRAM})
+  if [ "$PIDS" == "" ]; then
+    echo "${PROGRAM_NAME} is not running!"
+  else
+    echo "${PROGRAM_NAME} is running at pid(s) ${PIDS}."
+  fi
+}
+
+restart() {
+  stop
+  sleep 3
+  start
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    restart
+    ;;
+  status)
+    status
+    ;;
+  *)
+    echo "Usage: $0 {start|stop|restart}"
+    exit 1
+esac
