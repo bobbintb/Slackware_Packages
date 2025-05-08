@@ -54,7 +54,7 @@
 # |-----------------------------------------------------------------| #
 export CMAKE_POLICY_VERSION_MINIMUM=3.5
 PRGNAM=dragonfly        # replace with name of program
-VERSION=${VERSION:-1.28.1}
+VERSION=${VERSION:-1.29.0}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}        # "_SBo" is required for submission to slackbuilds.org
 
