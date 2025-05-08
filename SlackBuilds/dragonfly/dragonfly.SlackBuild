@@ -53,10 +53,10 @@
 #
 # |-----------------------------------------------------------------| #
 export CMAKE_POLICY_VERSION_MINIMUM=3.5
-PRGNAM=dragonfly	# replace with name of program
+PRGNAM=dragonfly        # replace with name of program
 VERSION=${VERSION:-1.28.1}
 BUILD=${BUILD:-1}
-TAG=${TAG:-_SBo}	# "_SBo" is required for submission to slackbuilds.org
+TAG=${TAG:-_SBo}        # "_SBo" is required for submission to slackbuilds.org
 
 # Automatically determine the architecture we're building on:
 if [ -z "$ARCH" ]; then
@@ -69,9 +69,9 @@ if [ -z "$ARCH" ]; then
 fi
 
 CWD=$(pwd)
-TMP=${TMP:-/tmp/SBo}	# For consistency's sake, use this
+TMP=${TMP:-/tmp/SBo}    # For consistency's sake, use this
 PKG=$TMP/package-$PRGNAM
-OUTPUT=${OUTPUT:-/tmp}	# Drop the package in /tmp
+OUTPUT=${OUTPUT:-/tmp}  # Drop the package in /tmp
 
 if [ "$ARCH" = "i586" ]; then
   SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -96,7 +96,8 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-# tar xvf $CWD/$PRGNAM-$VERSION.tar.gz || tar xvf $CWD/v$VERSION.tar.gz
+mkdir -p $PRGNAM
+tar xvf $CWD/$PRGNAM-x86_64.tar.gz -C $PRGNAM
 cd $PRGNAM
 chown -R root:root .
 find -L . \
@@ -122,15 +123,15 @@ find -L . \
 
 # Compile the application and install it into the $PKG directory
 # make
-./helio/blaze.sh -release
-cd build-opt && ninja dragonfly
+# ./helio/blaze.sh -release
+# cd build-opt && ninja dragonfly
 # make install DESTDIR=$PKG
 
 # Strip binaries and libraries - this can be done with 'make install-strip'
 # in many source trees, and that's usually acceptable if so, but if not,
 # use this:
 mkdir -p $PKG/usr/bin
-mv $TMP/$PRGNAM/build-opt/$PRGNAM $PKG/usr/bin
+mv $TMP/$PRGNAM/$PRGNAM-x86_64 $PKG/usr/bin/$PRGNAM
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
   | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
