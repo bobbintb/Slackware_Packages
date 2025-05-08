@@ -132,8 +132,8 @@ find -L . \
 # use this:
 mkdir -p $PKG/usr/bin
 mv $TMP/$PRGNAM/$PRGNAM-x86_64 $PKG/usr/bin/$PRGNAM
-find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
-  | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+# find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
+#   | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
 
 # Compress man pages
 # If man pages are installed to /usr/share/man instead, you'll need to either
