@@ -11,5 +11,5 @@ jobs:
       VERSION: "1.29.0"
       NAME: "dragonfly"
       bobbintb: true
-      DOWNLOAD: "https://github.com/dragonflydb/dragonfly/releases/latest/download/dragonfly-x86_64.tar.gz"
+      SOURCE: "https://github.com/dragonflydb/dragonfly/releases/latest/download/dragonfly-x86_64.tar.gz"
       PACKAGES: "ninja boost m4 gettext automake autoconf libtool bobbintb:re2"
