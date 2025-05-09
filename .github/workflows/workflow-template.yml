@@ -266,8 +266,8 @@ jobs:
       run: |
         echo "##########################cache##########################"
         ls -ls /var/cache/packages
-        slackpkg update gpg <<< y > /dev/null
-        slackpkg update gpg <<< y > /dev/null
+        slackpkg update gpg <<< y > /dev/null || true
+        # slackpkg update gpg <<< y > /dev/null
         slackpkg update <<< y > /dev/null
     - 
       name: Upgrade all packages
@@ -358,7 +358,7 @@ jobs:
       run: |
         echo -e "\e[32mContents of $DEST_DIR:\e[0m"
         ls -ls $DEST_DIR
-        slackpkg update gpg
+        slackpkg update gpg || true
         slackpkg update
         slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
         FILES=$(find "$DEST_DIR" -type f -size +100M)
