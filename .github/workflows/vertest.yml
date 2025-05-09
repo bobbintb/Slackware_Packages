@@ -6,20 +6,11 @@ jobs:
     name: RedisTimeSeries
     runs-on: ubuntu-latest
     steps:
-      - id: keydb
+      - id: dragonfly
         uses: pozetroninc/github-action-get-latest-release@master
         with:
-          owner: JohnSully
-          repo: KeyDB
+          repository: dragonflydb/dragonfly
           excludes: prerelease, draft
-      - id: timeseries
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: RedisTimeSeries/RedisTimeSeries
       - name: Enable additional repos
         run: |
-          echo ${{ steps.keydb.outputs.release }}
-          echo ${{ steps.timeseries.outputs.release }}
-          echo ${{ steps.keydb.outputs.release }}
-          echo ${{ steps.timeseries.outputs.release }}
-
+          echo ${{ steps.dragonfly.outputs.release }}
