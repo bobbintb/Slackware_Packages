@@ -15,8 +15,7 @@ jobs:
       - uses: mogeko/latest-version@v1.1.2
         id: check_ver
         with:
-          repo: mogeko/latest-version
-
+          repo: dragonflydb/dragonfly
   print: # Just for show the output
     name: Print the result from check
     runs-on: ubuntu-latest
