@@ -16,3 +16,10 @@ jobs:
         uses: pozetroninc/github-action-get-latest-release@master
         with:
           repository: RedisTimeSeries/RedisTimeSeries
+      - name: Enable additional repos
+        run: |
+          echo ${{ steps.keydb.outputs.release }}
+          echo ${{ steps.timeseries.outputs.release }}
+          echo ${{ steps.keydb.outputs.release }}
+          echo ${{ steps.timeseries.outputs.release }}
+
