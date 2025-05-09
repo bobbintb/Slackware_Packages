@@ -2,14 +2,17 @@ name: verttest
 on:
   workflow_dispatch: # Allow manual trigger workflows
 jobs:
-  check:
+  build:
+    name: RedisTimeSeries
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout tools repo
-        uses: actions/checkout@v4
+      - id: keydb
+        uses: pozetroninc/github-action-get-latest-release@master
         with:
-          repository: my-org/my-tools
-      - name: test
-        uses: WyriHaximus/github-action-get-previous-tag@v1.4.0
+          owner: JohnSully
+          repo: KeyDB
+          excludes: prerelease, draft
+      - id: timeseries
+        uses: pozetroninc/github-action-get-latest-release@master
         with:
-          fallback: oops
+          repository: RedisTimeSeries/RedisTimeSeries
