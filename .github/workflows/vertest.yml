@@ -15,7 +15,7 @@ jobs:
       - uses: mogeko/latest-version@v1
         id: check_ver
         with:
-          repo: dragonflydb/dragonfly
+          repo: mogeko/latest-version
 
   print: # Just for show the output
     name: Print the result from check
