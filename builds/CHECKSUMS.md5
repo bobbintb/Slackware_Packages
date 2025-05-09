@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-fefe4cac9872d748ba706d960791895e  ./FILELIST.TXT
+d3e4d7a09918dc79e010cbcdc6c2e312  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-4937b8c07d7af7087e0ce909771a2831  ./MANIFEST.bz2
-fed767d6f37688061cba32d3e6dee0c6  ./PACKAGES.TXT
-740588174a524b1074ab6f6f0f8449b6  ./PACKAGES.TXT.gz
+c334922420fde7c0361f1d96ac43489c  ./MANIFEST.bz2
+fdd339a3b0c269e8f033ca429aed91e8  ./PACKAGES.TXT
+64ba3b52196e63b2e9429e3154fd7ce4  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -46,12 +46,12 @@ a6433fc6f60768320edcd5d82d26cfbb  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.md5
 9d87e34755410b3cd03b31fee0bbdf53  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.tgz.asc
 7735c02796bd0faee1b0e9a53f142550  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.tgz.md5
 011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.txt
-ff31893d0ae1dfdfd1a0af7f0d2d658c  ./dragonfly/dragonfly-1.29.0-x86_64-1_SBo.lst
-b5fda39d6e43a8fc00836e54b6e1f17a  ./dragonfly/dragonfly-1.29.0-x86_64-1_SBo.meta
-ad76be6089e180128e81dcaaa5a3d1ab  ./dragonfly/dragonfly-1.29.0-x86_64-1_SBo.tgz
-702c0da4c8038eefa9c010d10c1414c1  ./dragonfly/dragonfly-1.29.0-x86_64-1_SBo.tgz.asc
-63b4eceb11add97d3a1814899f4a21c4  ./dragonfly/dragonfly-1.29.0-x86_64-1_SBo.tgz.md5
-b373a0e316b194969aa763b3ef009a69  ./dragonfly/dragonfly-1.29.0-x86_64-1_SBo.txt
+39d275059326ec5fe3328e01f2219e8d  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.lst
+6b21170b133ba01afa48aa9b953d3c06  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.meta
+fea59d583acaefa9410afe25daa9e888  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.tgz
+de9969b5433fc0a8e6056a540ecbce58  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.tgz.asc
+5b4927656017c8aaa2afb3e2a4b59c3e  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.tgz.md5
+b373a0e316b194969aa763b3ef009a69  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.txt
 f61bf1e3058726c78f41226f8cac839d  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.lst
 8004176189029af01f79384b0e1679af  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.meta
 11746deb881c356ece5cf0c64b311c39  ./git-lfs/git-lfs-3.6.1-x86_64-1_SBo.tgz
