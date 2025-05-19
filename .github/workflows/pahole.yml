@@ -1,0 +1,14 @@
+name: Build pahole
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "v1.21"
+      NAME: "pahole"
+      SBOPKG: true
+      GIT: https://git.kernel.org/pub/scm/devel/pahole/pahole.git
