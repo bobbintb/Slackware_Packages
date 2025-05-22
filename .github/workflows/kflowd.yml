@@ -11,4 +11,4 @@ jobs:
       VERSION: "0.9"
       NAME: "kflowd"
       PACKAGES: "make guile gc gcc kernel-headers binutils llvm"
-      SOURCE: https://github.com/tarsal-oss/kflowd.git
+      GIT: https://github.com/tarsal-oss/kflowd.git
