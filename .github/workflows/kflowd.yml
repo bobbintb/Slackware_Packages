@@ -10,5 +10,6 @@ jobs:
     with:
       VERSION: "0.9"
       NAME: "kflowd"
-      PACKAGES: "make guile gc gcc kernel-headers binutils llvm"
+      bobbintb: true
+      PACKAGES: "make guile gc gcc kernel-headers binutils llvm libbpf"
       GIT: https://github.com/tarsal-oss/kflowd.git
