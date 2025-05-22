@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Thu May 22 05:44:05 UTC 2025
+PACKAGES.TXT;  Thu May 22 22:08:39 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -120,8 +120,8 @@ git-lfs:
 
 PACKAGE NAME:  kflowd-0.9.22-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./kflowd
-PACKAGE SIZE (compressed):  4 K
-PACKAGE SIZE (uncompressed):  10 K
+PACKAGE SIZE (compressed):  344 K
+PACKAGE SIZE (uncompressed):  1530 K
 PACKAGE DESCRIPTION:
 kflowd: kflowd (Kernel-based Process Monitoring on Linux Endpoints via eBPF)
 kflowd:

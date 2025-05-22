@@ -1,7 +1,7 @@
 PACKAGE NAME:  kflowd-0.9.22-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./kflowd
-PACKAGE SIZE (compressed):  4 K
-PACKAGE SIZE (uncompressed):  10 K
+PACKAGE SIZE (compressed):  344 K
+PACKAGE SIZE (uncompressed):  1530 K
 PACKAGE DESCRIPTION:
 kflowd: kflowd (Kernel-based Process Monitoring on Linux Endpoints via eBPF)
 kflowd:

@@ -3,8 +3,12 @@
 ||   Package:  ./kflowd/kflowd-0.9.22-x86_64-1_SBo.tgz
 ||
 ++========================================
-drwxr-xr-x root/root         0 2025-05-22 05:43 ./
-drwxr-xr-x root/root         0 2025-05-22 05:43 install/
--rw-r--r-- root/root       856 2025-05-22 05:43 install/slack-desc
+drwxr-xr-x root/root         0 2025-05-22 22:08 ./
+drwxr-xr-x root/root         0 2025-05-22 22:08 install/
+-rw-r--r-- root/root       856 2025-05-22 22:08 install/slack-desc
+drwxr-xr-x root/root         0 2025-05-22 22:08 usr/
+drwxr-xr-x root/root         0 2025-05-22 22:08 usr/local/
+drwxr-xr-x root/root         0 2025-05-22 22:08 usr/local/bin/
+-rwxr-xr-x root/root   1558008 2025-05-22 22:08 usr/local/bin/kflowd
 
 
