@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Fri May  9 15:07:38 UTC 2025
+PACKAGES.TXT;  Thu May 22 05:39:13 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -117,6 +117,23 @@ git-lfs: Project URL: https://git-lfs.github.com/
 git-lfs:
 git-lfs:
 git-lfs:
+
+PACKAGE NAME:  kflowd-main-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./kflowd
+PACKAGE SIZE (compressed):  4 K
+PACKAGE SIZE (uncompressed):  10 K
+PACKAGE DESCRIPTION:
+kflowd: kflowd (Kernel-based Process Monitoring on Linux Endpoints via eBPF)
+kflowd:
+kflowd: kflowd runs as agent on Linux endpoints to monitor processes via eBPF
+kflowd: kernel subsystem for filesystem and TCP and UDP networking events,
+kflowd: enabling immediate threat and anomaly detection on suspicious
+kflowd: activities.
+kflowd:
+kflowd:
+kflowd:
+kflowd:
+kflowd: Home: https://tarsal.co/kflow/
 
 PACKAGE NAME:  libbpf-1.5.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./libbpf
