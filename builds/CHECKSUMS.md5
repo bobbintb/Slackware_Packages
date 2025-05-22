@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-6aed3e32ea980e0cb6e7b3c54768da4b  ./FILELIST.TXT
+60319ab968f3ecd38baf740f54294229  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-384482c3c3be03d359a8256e58c0d45c  ./MANIFEST.bz2
-c6eb045d7c5eb8df3b2e5a49439b18d4  ./PACKAGES.TXT
-536a7cc0905a514298560f625ecda7d7  ./PACKAGES.TXT.gz
+0c79a5efee8e9822f21c219fc05d1b07  ./MANIFEST.bz2
+b895bf490a779159714f137dc342be5c  ./PACKAGES.TXT
+ec836c6b3848d3938d20663f047f0355  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -34,11 +34,11 @@ d91694c3194f2bd0670c77d9f4f3d353  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz.md5
 ab4ce36809137f323714debbe7184a5c  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz.asc
 dd449331e5ecad3adc764ebda9cbb4e9  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz.md5
 a51a149187c089c9a4c0a0d3b063dcd4  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.txt
-a5f7c08ab1d89145b1630055fb182414  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.lst
+5e231ed11ae126f9fd563b00ea9d0e11  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.lst
 1f9d126a887f2fef220d54eec91f4712  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.meta
-87d6f945bd38019ca13e348e730257ea  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz
-589cf1b4607276f34285626195ce60fd  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.asc
-a6433fc6f60768320edcd5d82d26cfbb  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.md5
+6395adb9aaf89fe50361fed1cb9bda12  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz
+c93d76a5ca5acc294f8da1d7a4682d5f  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.asc
+94e67e7077b971d12f8ff7272841ba1e  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.md5
 09de44c662d21489016f2866e2fbdeb8  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.txt
 4b69ea2df943de8fb7b54c7fccbdb99b  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.lst
 938d08d7eea278aee4bce9e7b776b2b8  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.meta
