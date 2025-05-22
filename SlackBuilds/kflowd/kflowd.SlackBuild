@@ -122,6 +122,8 @@ CXXFLAGS="$SLKCFLAGS" \
 # Compile the application and install it into the $PKG directory
 make
 # make install DESTDIR=$PKG
+mkdir -p $PKG/usr/local/bin
+cp $TMP/$PRGNAM/bin/$PRGNAM $PKG/usr/local/bin
 
 # Strip binaries and libraries - this can be done with 'make install-strip'
 # in many source trees, and that's usually acceptable if so, but if not,
