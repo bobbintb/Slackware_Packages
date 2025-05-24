@@ -10,4 +10,4 @@ jobs:
     with:
       VERSION: "8.95.8"
       NAME: "alien"
-      SOURCE: http://http.debian.net/debian/pool/main/a/alien/alien_8.95.tar.xz
+      SOURCE: http://http.debian.net/debian/pool/main/a/alien/alien_8.95.8.tar.xz
