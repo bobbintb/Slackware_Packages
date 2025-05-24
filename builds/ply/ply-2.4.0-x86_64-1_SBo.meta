@@ -1,7 +1,7 @@
 PACKAGE NAME:  ply-2.4.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./ply
-PACKAGE SIZE (compressed):  3280 K
-PACKAGE SIZE (uncompressed):  11540 K
+PACKAGE SIZE (compressed):  3328 K
+PACKAGE SIZE (uncompressed):  11820 K
 PACKAGE DESCRIPTION:
 ply: ply (A light-weight dynamic tracer for Linux that leverages eBPF.)
 ply:

@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Thu May 22 23:42:20 UTC 2025
+PACKAGES.TXT;  Sat May 24 03:52:08 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -188,8 +188,8 @@ pigz:
 
 PACKAGE NAME:  ply-2.4.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./ply
-PACKAGE SIZE (compressed):  3280 K
-PACKAGE SIZE (uncompressed):  11540 K
+PACKAGE SIZE (compressed):  3328 K
+PACKAGE SIZE (uncompressed):  11820 K
 PACKAGE DESCRIPTION:
 ply: ply (A light-weight dynamic tracer for Linux that leverages eBPF.)
 ply:

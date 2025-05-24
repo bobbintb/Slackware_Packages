@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-60319ab968f3ecd38baf740f54294229  ./FILELIST.TXT
+3168c27a73157c2c7e4872cf90453ff6  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-0c79a5efee8e9822f21c219fc05d1b07  ./MANIFEST.bz2
-b895bf490a779159714f137dc342be5c  ./PACKAGES.TXT
-ec836c6b3848d3938d20663f047f0355  ./PACKAGES.TXT.gz
+5d5afafad0259533ba40948b62ea0364  ./MANIFEST.bz2
+2dc8bf5d2a4fd59071e06f79270ac301  ./PACKAGES.TXT
+f170709fc8ae8f9c468516260efcf690  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -83,11 +83,11 @@ fc1832b3fa667062b4db6ee39ff53a00  ./pigz/pigz-2.8-x86_64-1_SBo.meta
 8b8a6029a4a3abf69ce61fe3ac550bbc  ./pigz/pigz-2.8-x86_64-1_SBo.tgz.asc
 2843a74af473d52ae5adea38b22c5952  ./pigz/pigz-2.8-x86_64-1_SBo.tgz.md5
 dcbb0c99a4fca1bd6c0524c35e599c4c  ./pigz/pigz-2.8-x86_64-1_SBo.txt
-eae5912c31dc9bd83042dcfe9013ccbe  ./ply/ply-2.4.0-x86_64-1_SBo.lst
-bd46dcc6de79add61b3cda3acf9414b8  ./ply/ply-2.4.0-x86_64-1_SBo.meta
-81d82113b1b3d1c70a63aab42282e39f  ./ply/ply-2.4.0-x86_64-1_SBo.tgz
-f6cd6a0414519b8124fa7293aa5eabc1  ./ply/ply-2.4.0-x86_64-1_SBo.tgz.asc
-2f815de236563d54694f9877b895674d  ./ply/ply-2.4.0-x86_64-1_SBo.tgz.md5
+43a63d24decb8edf2ab041d590ca4e69  ./ply/ply-2.4.0-x86_64-1_SBo.lst
+fa669c7c82fbc1206ba68e98fd068178  ./ply/ply-2.4.0-x86_64-1_SBo.meta
+3e73a51d6652417f5975776b02b66a2f  ./ply/ply-2.4.0-x86_64-1_SBo.tgz
+0a5ef6aa92fc597f99dc88939b1129cc  ./ply/ply-2.4.0-x86_64-1_SBo.tgz.asc
+2bbc6749f874a05d1468c034261ada87  ./ply/ply-2.4.0-x86_64-1_SBo.tgz.md5
 b8b1ac7d30ca54042f0ed66fb80f9204  ./ply/ply-2.4.0-x86_64-1_SBo.txt
 4b55c15381723ab8a240eb1d5ab19277  ./re2/re2-2024-07-02-x86_64-1_SBo.lst
 82740661559b4d4177e1b1590a1ab9ef  ./re2/re2-2024-07-02-x86_64-1_SBo.meta
