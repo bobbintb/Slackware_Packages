@@ -11,4 +11,4 @@ jobs:
       VERSION: "2.4.0"
       NAME: "ply"
       PACKAGES: autoconf guile automake make m4 flex bison glibc gettext libtool llvm gc gcc binutils kernel-headers
-      SOURCE: https://github.com/iovisor/ply.git
+      GIT: https://github.com/iovisor/ply.git
