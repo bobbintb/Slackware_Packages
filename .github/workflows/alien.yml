@@ -1,0 +1,13 @@
+name: Build alien
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "8.95.8"
+      NAME: "alien"
+      SOURCE: http://http.debian.net/debian/pool/main/a/alien/alien_8.95.tar.xz
