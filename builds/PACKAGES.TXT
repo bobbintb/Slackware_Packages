@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Tue May 27 06:13:43 UTC 2025
+PACKAGES.TXT;  Tue May 27 06:18:29 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -17,7 +17,7 @@ SysinternalsEBPF:
 SysinternalsEBPF:
 SysinternalsEBPF: Home: https://github.com/Microsoft/SysinternalsEBPF
 
-PACKAGE NAME:  alien-8.95.8-x86_64-2_SBo.tgz
+PACKAGE NAME:  alien-8.96-x86_64-2_SBo.tgz
 PACKAGE LOCATION:  ./alien
 PACKAGE SIZE (compressed):  64 K
 PACKAGE SIZE (uncompressed):  170 K
