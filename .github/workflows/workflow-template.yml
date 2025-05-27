@@ -351,7 +351,7 @@ jobs:
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           output=$(sh ${{ inputs.NAME }}.SlackBuild)
         else
-          output=$(sh BUILDFILES_DIR/${{ inputs.NAME }}.SlackBuild)
+          output=$(sh $BUILDFILES_DIR/${{ inputs.NAME }}.SlackBuild)
         fi
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo -e "\e[32mPackage path: ${package_path}\e[0m"
