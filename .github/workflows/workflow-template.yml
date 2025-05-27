@@ -369,7 +369,7 @@ jobs:
         echo -e "\e[32mContents of $DEST_DIR:\e[0m"
         ls -ls $DEST_DIR
         slackpkg update gpg || true
-        slackpkg update
+        slackpkg update || true
         slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
         FILES=$(find "$DEST_DIR" -type f -size +100M)
         if [ -n "$FILES" ]; then
