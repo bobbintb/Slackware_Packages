@@ -8,6 +8,6 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      VERSION: "feature/slack-desc-handling-pending-test"
+      VERSION: "8.96"
       NAME: "alien"
-      SOURCE: https://github.com/bobbintb/alien.git
+      GIT: https://github.com/bobbintb/alien.git
