@@ -142,6 +142,8 @@ jobs:
     - 
       name: Checkout
       uses: actions/checkout@v4
+      with:
+        clean: true
     -
       name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v6
