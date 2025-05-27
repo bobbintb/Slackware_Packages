@@ -150,14 +150,14 @@ jobs:
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
-    # - name: Cache packages
-    #   id: cache-packages
-    #   uses: actions/cache@v4
-    #   with:
-    #     path: /var/cache/packages
-    #     key: slackware-packages-${{ github.sha }}
-    #     restore-keys: |
-    #       slackware-packages-
+    - name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/packages
+        key: slackware-packages-${{ github.sha }}
+        restore-keys: |
+          slackware-packages-
         # key: ${{ runner.os }}-slackpkg-${{ hashFiles('**/package-list.txt') }}
         # restore-keys: |
         #   ${{ runner.os }}-slackpkg-
@@ -313,9 +313,12 @@ jobs:
           sbopkg -r
           echo -e "\e[32mDownloading files from slackbuilds.org\e[0m"
           sbopkg -d ${{ inputs.NAME }} <<< q
+          INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
+          BUILDFILES_DIR=$(dirname "$INFO")
+        else
+          INFO=$(${REPO_DIR}/SlackBuilds/${{ inputs.NAME }})
+          BUILDFILES_DIR=$(dirname "$INFO")
         fi
-        INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
-        BUILDFILES_DIR=$(dirname "$INFO")
         echo -e "\e[32mCopying build files from ${BUILDFILES_DIR}\e[0m"
         cp ${BUILDFILES_DIR}/* /tmp/SBo
         echo -e "\e[32mCurrent folder contents:\e[0m"
