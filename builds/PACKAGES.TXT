@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Sat May 24 03:52:08 UTC 2025
+PACKAGES.TXT;  Tue May 27 06:13:43 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -16,6 +16,23 @@ SysinternalsEBPF:
 SysinternalsEBPF:
 SysinternalsEBPF:
 SysinternalsEBPF: Home: https://github.com/Microsoft/SysinternalsEBPF
+
+PACKAGE NAME:  alien-8.95.8-x86_64-2_SBo.tgz
+PACKAGE LOCATION:  ./alien
+PACKAGE SIZE (compressed):  64 K
+PACKAGE SIZE (uncompressed):  170 K
+PACKAGE DESCRIPTION:
+alien: alien (converting program)
+alien:
+alien: Alien is a program that converts between the rpm, dpkg, stampede slp,
+alien: and slackware tgz file formats. If you want to use a package from
+alien: another distribution than the one you have installed on your system,
+alien: you can use alien to convert it to your preferred package format and
+alien: install it.
+alien:
+alien: Homepage: http://joeyh.name/code/alien/
+alien:
+alien:
 
 PACKAGE NAME:  bcc-0.33.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
