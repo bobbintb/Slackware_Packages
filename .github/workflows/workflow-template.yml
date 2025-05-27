@@ -343,6 +343,7 @@ jobs:
           wget $DOWNLOAD_x86_64 || wget $DOWNLOAD
         fi
         echo -e "\e[32mRunning slackbuilds file\e[0m"
+        cat ${{ inputs.NAME }}.SlackBuild | grep tar
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo -e "\e[32mPackage path: ${package_path}\e[0m"
