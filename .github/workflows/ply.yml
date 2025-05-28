@@ -10,4 +10,6 @@ jobs:
     with:
       VERSION: "2.4.0"
       NAME: "ply"
+      bobbintb: true
+      PACKAGEs: alien
       SOURCE: http://archive.ubuntu.com/ubuntu/pool/universe/p/ply-probe/ply_2.4.0-1_amd64.deb
