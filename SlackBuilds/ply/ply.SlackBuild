@@ -95,4 +95,5 @@ set -e # Exit on most errors
 #rm -rf $PKG
 # mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
+echo "Converting package..."
 alien -t ${PRGNAM}_${VERSION}-*_amd64.deb
