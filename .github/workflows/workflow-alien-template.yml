@@ -58,7 +58,6 @@ jobs:
         sed -i 's|WGETOPTS="--timeout=20 --tries=2"|WGETOPTS="-q --timeout=20 --tries=2"|' /etc/slackpkg/slackpkgplus.conf
     - 
       name: Update slackpkg
-      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
         echo "##########################cache##########################"
         ls -ls /var/cache/packages
@@ -66,16 +65,7 @@ jobs:
         # slackpkg update gpg <<< y > /dev/null
         slackpkg update <<< y > /dev/null
     - 
-      name: Upgrade all packages
-      if: ${{ inputs.UPGRADE-ALL == true }}
-      run: |
-        slackpkg upgrade-all || true
-        slackpkg upgrade-all || true
-        slackpkg upgrade-all || true
-        slackpkg upgrade-all || true
-    - 
       name: Install dependencies
-      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
         slackpkg install alien <<< y
         slackpkg upgrade alien <<< y || true
