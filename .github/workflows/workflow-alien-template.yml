@@ -1,0 +1,149 @@
+name: Workflow alien template
+on:
+  workflow_call:
+    inputs:
+      NAME:
+        description: 'Program name'
+        required: true
+        type: string
+      VERSION:
+        description: 'Program version'
+        required: true
+        type: string
+      SOURCE:
+        description: 'URL of program source archive'
+        required: false
+        type: string
+jobs:
+  slackbuild_and_upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: bobbintb/unraid-cicd-builder-upgraded
+      options: --privileged
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+      with:
+        clean: true
+    -
+      name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+    - name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/packages
+        key: slackware-packages-${{ github.sha }}
+        restore-keys: |
+          slackware-packages-
+        # key: ${{ runner.os }}-slackpkg-${{ hashFiles('**/package-list.txt') }}
+        # restore-keys: |
+        #   ${{ runner.os }}-slackpkg-
+        #key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
+        #restore-keys: |
+        #  slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
+    - 
+      name: Enable additional repos
+      run: | 
+        REPOPLUS="slackpkgplus"
+        echo "MIRRORPLUS['bobbintb']=https://raw.githubusercontent.com/bobbintb/Slackware_Packages/refs/heads/main/builds/" >> /etc/slackpkg/slackpkgplus.conf
+        REPOPLUS+=" bobbintb"
+        sed -i 's|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|' /etc/slackpkg/slackpkgplus.conf
+        sed -i 's|WGETOPTS="--timeout=20 --tries=2"|WGETOPTS="-q --timeout=20 --tries=2"|' /etc/slackpkg/slackpkgplus.conf
+    - 
+      name: Update slackpkg
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
+        echo "##########################cache##########################"
+        ls -ls /var/cache/packages
+        slackpkg update gpg <<< y > /dev/null || true
+        # slackpkg update gpg <<< y > /dev/null
+        slackpkg update <<< y > /dev/null
+    - 
+      name: Upgrade all packages
+      if: ${{ inputs.UPGRADE-ALL == true }}
+      run: |
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+    - 
+      name: Install dependencies
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
+        slackpkg install alien <<< y
+        slackpkg upgrade alien <<< y || true
+        # > /dev/null
+        # echo "==================== installed packages ===================="
+    - 
+      name: Build
+      run: |
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        DEST_DIR=${REPO_DIR}/builds/${{ inputs.NAME }}
+        echo "DEST_DIR=${DEST_DIR}" >> $GITHUB_ENV
+        mkdir -p $DEST_DIR
+        mkdir -p /tmp/SBo
+        cd /tmp/SBo
+        echo -e "\e[32mDownloading source files\e[0m"
+        debfile=$(basename ${{ inputs.SOURCE }})
+
+        wget ${{ inputs.SOURCE }}
+        alien -t $debfile
+        
+        echo -e "\e[32mRemoving previous package from: $DEST_DIR\e[0m"
+        rm -rf "$DEST_DIR"/*
+        echo -e "\e[32mMoving package to: $DEST_DIR\e[0m"
+        mv *.tgz $DEST_DIR
+        fi
+        git config --global --add safe.directory $REPO_DIR
+    - 
+      name: Upload
+      run: |
+        echo -e "\e[32mContents of $DEST_DIR:\e[0m"
+        ls -ls $DEST_DIR
+        slackpkg update gpg || true
+        slackpkg update || true
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
+        FILES=$(find "$DEST_DIR" -type f -size +100M)
+        if [ -n "$FILES" ]; then
+          slackpkg install bobbintb:git-lfs
+          git lfs install
+          echo "$FILES" | while read -r FILE; do
+            git lfs track "$FILE"
+            echo -e "\e[32mTracked $FILE with Git LFS\e[0m"
+          done
+          git add .gitattributes
+          cat .gitattributes
+        fi
+        cd ./builds/
+        gpg --list-keys
+        export REPOSOWNER="${{ github.repository_owner }}"
+        export RSS_UUID=$(uuidgen -t)
+        export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
+        cat <<EOF > script.expect
+        #!/usr/bin/expect
+        
+        set key [lindex $argv 0]
+        spawn /usr/libexec/slackrepo/gen_repos_files.sh
+        expect "Enter ChangeLog.txt description:"
+        send "\r"
+        expect "Enter your GPG passphrase:"
+        send "\$key\r"
+        expect eof
+        EOF
+        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
+        chmod +x script.expect
+        ./script.expect ${{ secrets.PASSPHRASE }}
+    - 
+      name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated ${{ inputs.NAME }}'
+        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc .gitattributes'
