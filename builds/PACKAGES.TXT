@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Wed May 28 03:57:37 UTC 2025
+PACKAGES.TXT;  Wed May 28 17:04:40 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -203,22 +203,22 @@ pigz:
 pigz:
 pigz:
 
-PACKAGE NAME:  ply-2.4.0-x86_64-1_SBo.tgz
+PACKAGE NAME:  ply-2.4.0-x86_64-1_alien.tgz
 PACKAGE LOCATION:  ./ply
-PACKAGE SIZE (compressed):  3328 K
-PACKAGE SIZE (uncompressed):  11820 K
+PACKAGE SIZE (compressed):  84 K
+PACKAGE SIZE (uncompressed):  220 K
 PACKAGE DESCRIPTION:
-ply: ply (A light-weight dynamic tracer for Linux that leverages eBPF.)
+ply: ply (Light-weight dynamic tracer for Linux)
 ply:
-ply: A light-weight dynamic tracer for Linux that leverages the
-ply: kernel's BPF VM in concert with kprobes and tracepoints to
-ply: attach probes to arbitrary points in the kernel. Most tracers that
-ply: generate BPF bytecode are based on the LLVM based BCC toolchain. ply
-ply: on the other hand has no required external dependencies except
-ply: for libc.
+ply: A light-weight dynamic tracer for Linux that leverages the kernel's
+ply: BPF VM in concert with kprobes and tracepoints to attach probes to
+ply: arbitrary points in the kernel.
+ply: ply follows the Little Language approach of yore, compiling ply
+ply: scripts into Linux BPF programs that are attached to kprobes and
+ply: tracepoints in the kernel.
 ply:
 ply:
-ply: Home: https://wkz.github.io/ply/
+ply:
 
 PACKAGE NAME:  re2-2024-07-02-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./re2
