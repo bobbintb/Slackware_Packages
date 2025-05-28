@@ -83,15 +83,12 @@ jobs:
         cd /tmp/SBo
         echo -e "\e[32mDownloading source files\e[0m"
         debfile=$(basename ${{ inputs.SOURCE }})
-
         wget ${{ inputs.SOURCE }}
         alien -t $debfile
-        
         echo -e "\e[32mRemoving previous package from: $DEST_DIR\e[0m"
         rm -rf "$DEST_DIR"/*
         echo -e "\e[32mMoving package to: $DEST_DIR\e[0m"
         mv *.tgz $DEST_DIR
-        fi
         git config --global --add safe.directory $REPO_DIR
     - 
       name: Upload
