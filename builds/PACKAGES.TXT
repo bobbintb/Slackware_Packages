@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Fri May 30 06:34:05 UTC 2025
+PACKAGES.TXT;  Fri May 30 06:47:03 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -120,8 +120,8 @@ dragonfly: Home: https://www.dragonflydb.io/
 
 PACKAGE NAME:  fsprobe-1.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./fsprobe
-PACKAGE SIZE (compressed):  4 K
-PACKAGE SIZE (uncompressed):  20 K
+PACKAGE SIZE (compressed):  2024 K
+PACKAGE SIZE (uncompressed):  6850 K
 PACKAGE DESCRIPTION:
 fsprobe: fsprobe (FSProbe is a file system events notifier based on eBPF)
 fsprobe:
