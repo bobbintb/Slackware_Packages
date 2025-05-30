@@ -341,7 +341,8 @@ jobs:
           echo -e "\e[32mCloning from git\e[0m"
           git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
-          git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules
+          git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules || \
+          git clone ${{ inputs.GIT }} --depth 1 -b master --recurse-submodules
         else
           echo -e "\e[32mDownloading source files specified in slackbuilds file\e[0m"
           # . ./${{ inputs.NAME }}.info
