@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Wed May 28 17:04:40 UTC 2025
+PACKAGES.TXT;  Fri May 30 03:18:55 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -117,6 +117,23 @@ dragonfly: resources for the same sized workload.
 dragonfly:
 dragonfly:
 dragonfly: Home: https://www.dragonflydb.io/
+
+PACKAGE NAME:  fsprobe-1.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./fsprobe
+PACKAGE SIZE (compressed):  4 K
+PACKAGE SIZE (uncompressed):  20 K
+PACKAGE DESCRIPTION:
+fsprobe: fsprobe (FSProbe is a file system events notifier based on eBPF)
+fsprobe:
+fsprobe: FSProbe is a file system events notifier based on eBPF. Instead of
+fsprobe: hooking at the syscall level (like other eBPF solutions: opensnoop,
+fsprobe: Falco, ...), FSProbe works by listening for events at the VFS
+fsprobe: level. Paths are resolved at runtime by going through the dentry tree
+fsprobe: up to the mount point of the filesystem. One of the main advantages
+fsprobe: of this solution is that the paths provided by FSProbe are absolute
+fsprobe: and resolved, while a syscall based strategy would only export
+fsprobe: syscall parameters (and thus potentially attacker controlled data).
+fsprobe: Home: https://github.com/Gui774ume/fsprobe
 
 PACKAGE NAME:  git-lfs-3.6.1-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./git-lfs
