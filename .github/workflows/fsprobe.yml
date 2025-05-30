@@ -8,8 +8,6 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      alien-15: true
       NAME: "fsprobe"
       VERSION: "1.0"
-      PACKAGES: "make guile gc gcc binutils kernel-headers alien-15:google-go-lang"
       GIT: https://github.com/Gui774ume/fsprobe.git
