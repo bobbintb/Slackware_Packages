@@ -120,9 +120,9 @@ CXXFLAGS="$SLKCFLAGS" \
 #   --build=$ARCH-slackware-linux
 
 # Compile the application and install it into the $PKG directory
-make build
-# mkdir -p bin/
-# CGO_ENABLED=1 go build -ldflags="-extldflags=-static -s -w" -o bin/ ./cmd/...
+# make build
+mkdir -p bin/
+CGO_ENABLED=1 go build -ldflags="-extldflags=-static -s -w" -o bin/ ./cmd/...
 
 # Strip binaries and libraries - this can be done with 'make install-strip'
 # in many source trees, and that's usually acceptable if so, but if not,
