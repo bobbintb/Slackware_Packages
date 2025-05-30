@@ -3,12 +3,12 @@
 ||   Package:  ./fsprobe/fsprobe-1.0-x86_64-1_SBo.tgz
 ||
 ++========================================
-drwxr-xr-x root/root         0 2025-05-30 05:33 ./
-drwxr-xr-x root/root         0 2025-05-30 05:33 install/
--rw-r--r-- root/root      1199 2025-05-30 05:33 install/slack-desc
-drwxr-xr-x root/root         0 2025-05-30 05:33 usr/
-drwxr-xr-x root/root         0 2025-05-30 05:33 usr/doc/
-drwxr-xr-x root/root         0 2025-05-30 05:33 usr/doc/fsprobe-1.0/
--rw-r--r-- root/root      6793 2025-05-30 05:33 usr/doc/fsprobe-1.0/fsprobe.SlackBuild
+drwxr-xr-x root/root         0 2025-05-30 06:27 ./
+drwxr-xr-x root/root         0 2025-05-30 06:27 install/
+-rw-r--r-- root/root      1199 2025-05-30 06:27 install/slack-desc
+drwxr-xr-x root/root         0 2025-05-30 06:27 usr/
+drwxr-xr-x root/root         0 2025-05-30 06:27 usr/doc/
+drwxr-xr-x root/root         0 2025-05-30 06:27 usr/doc/fsprobe-1.0/
+-rw-r--r-- root/root      6820 2025-05-30 06:27 usr/doc/fsprobe-1.0/fsprobe.SlackBuild
 
 
