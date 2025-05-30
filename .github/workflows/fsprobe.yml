@@ -10,6 +10,6 @@ jobs:
     with:
       alien-15: true
       NAME: "fsprobe"
-      VERSION: 97d2b70097769fb45eb36084ff3fdef8fd288eda
+      VERSION: 1.0
       PACKAGES: "make guile gc gcc binutils kernel-headers alien-15:google-go-lang"
       GIT: https://github.com/Gui774ume/fsprobe.git
