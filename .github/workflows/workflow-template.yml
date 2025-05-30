@@ -313,7 +313,7 @@ jobs:
         mkdir -p /tmp/SBo
         if [ "${{ inputs.BUILD }}" != "" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
           export BUILD=${{ inputs.BUILD }}
-        FI
+        fi
         cd /tmp/SBo
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           sbopkg -r
