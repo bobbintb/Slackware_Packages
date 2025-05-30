@@ -338,7 +338,7 @@ jobs:
           echo -e "\e[32mDownloading source files\e[0m"
           wget ${{ inputs.SOURCE }}
         elif [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
-          echo -e "\e[32mCloning from git\e[0m"
+          echo -e "\e[32mCloning from git to $(pwd)\e[0m"
           git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules || \
