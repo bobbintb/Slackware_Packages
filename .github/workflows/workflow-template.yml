@@ -10,6 +10,10 @@ on:
         description: 'Program version'
         required: true
         type: string
+      BUILD:
+        description: 'Program build number'
+        required: false
+        type: string
       PACKAGES:
         description: 'Build dependencies to install, space seperated'
         required: false
@@ -307,7 +311,9 @@ jobs:
         echo "DEST_DIR=${DEST_DIR}" >> $GITHUB_ENV
         mkdir -p $DEST_DIR
         mkdir -p /tmp/SBo
-        # export VERSION=${{ inputs.VERSION }}
+        if [ "${{ inputs.BUILD }}" != "" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
+          export BUILD=${{ inputs.BUILD }}
+        FI
         cd /tmp/SBo
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           sbopkg -r
