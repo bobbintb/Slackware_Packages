@@ -354,6 +354,8 @@ jobs:
         else
           output=$(sh $BUILDFILES_DIR/${{ inputs.NAME }}.SlackBuild)
         fi
+        echo -e "\e[32mContents of /tmp/SBo:\e[0m"
+        echo -e "\e[32m$(ls -ls /tmp/SBo)\e[0m"
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo -e "\e[32mPackage path: ${package_path}\e[0m"
         echo "package_path=${package_path}" >> $GITHUB_ENV
