@@ -96,6 +96,10 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
+cd $PRGRAM
+rm -dr libbpf
+git clone https://github.com/libbpf/libbpf.git -b v1.5.1
+cd ..
 cd $PRGNAM/src
 chown -R root:root .
 find -L . \
