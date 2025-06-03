@@ -53,7 +53,7 @@
 #
 # |-----------------------------------------------------------------| #
 
-PRGNAM=kflowd   # replace with name of program
+PRGNAM=kflowd
 VERSION=${VERSION:-0.9}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}        # "_SBo" is required for submission to slackbuilds.org
@@ -100,7 +100,7 @@ cd $PRGRAM
 echo "List stuff"
 pwd
 ls -ls
-rm -dr /tmp/SBo/kflowd/libbpf
+rm -dr ./libbpf/ || rm -dr /tmp/SBo/kflowd/libbpf
 git clone https://github.com/libbpf/libbpf.git -b v1.5.1
 cd ..
 cd $PRGNAM/src
