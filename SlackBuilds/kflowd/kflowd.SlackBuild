@@ -100,7 +100,7 @@ cd $PRGRAM
 echo "List stuff"
 pwd
 ls -ls
-rm -dr libbpf
+rm -dr libbpf*
 git clone https://github.com/libbpf/libbpf.git -b v1.5.1
 cd ..
 cd $PRGNAM/src
