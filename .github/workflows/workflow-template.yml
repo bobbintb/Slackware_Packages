@@ -354,9 +354,6 @@ jobs:
           # . ./${{ inputs.NAME }}.info
           wget $DOWNLOAD_x86_64 || wget $DOWNLOAD
         fi
-        echo -e "\e[32mCurrent directory:\e[0m"
-        pwd
-        ls -ls ./kflowd
         echo -e "\e[32mRunning slackbuilds file\e[0m"
         if [ "${{ inputs.SBOPKG }}" == "true" ]; then
           output=$(sh ${{ inputs.NAME }}.SlackBuild)
