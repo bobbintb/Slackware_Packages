@@ -54,7 +54,7 @@
 # |-----------------------------------------------------------------| #
 
 PRGNAM=kflowd
-VERSION=${VERSION:-0.9}
+VERSION=${VERSION:-0.9.23}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}        # "_SBo" is required for submission to slackbuilds.org
 
@@ -96,10 +96,7 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-cd $PRGNAM
-rm -dr libbpf || true
-git clone https://github.com/libbpf/libbpf.git -b v1.5.1
-cd src
+cd $PRGNAM/src
 chown -R root:root .
 find -L . \
  \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
