@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-fb9b1cdb805cf214143762c6d56e3e7e  ./FILELIST.TXT
+bb42d7700ec61ca64614f6214ac09940  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-2d5c628ece75c305c746d15542e2608f  ./MANIFEST.bz2
-545caeb24c9efe261bd3c09e69aa839e  ./PACKAGES.TXT
-570d6749170d4dee599411286af57326  ./PACKAGES.TXT.gz
+74bd6d63586155cf8897221427013df5  ./MANIFEST.bz2
+fd3da66171e7de013f3e3d765a357273  ./PACKAGES.TXT
+4d790b1f1456e71917d923e2f778eeef  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -77,12 +77,12 @@ d3c3f30d1ff7638c49eaad8acc44f8d3  ./kflowd/kflowd-0.9.23-x86_64-1_SBo.tgz
 2dfd70a46c34d561f648558171b41559  ./kflowd/kflowd-0.9.23-x86_64-1_SBo.tgz.md5
 804f4532e94d6c04401ab91141f1f7de  ./kflowd/kflowd-0.9.23-x86_64-1_SBo.txt
 cfad62cadc19b8f17468a9bde2f20319  ./laurel/laurel-v0.6.3.txz
-953f70429ae51a3926293f2938947a44  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.lst
-e9b28a53a08b4c66a03a03946cabfeab  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.meta
-8078cc4090dee916e1cf8f0ee7a59f5a  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.tgz
-72e4fb859b1cad2ae2a18476aed0bf50  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.tgz.asc
-1bd7bc369592aedc15bbbeab2e64ddee  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.tgz.md5
-cfd034bd527b6f6d6a9eddf8ff9adab5  ./libbpf/libbpf-1.5.0-x86_64-1_SBo.txt
+ccb44569d37edbd5f493d5f7bed5de51  ./libbpf/libbpf-1.5.1-x86_64-1_SBo.lst
+f68fd75ad8180626640acc77401f5606  ./libbpf/libbpf-1.5.1-x86_64-1_SBo.meta
+ce5cca8f0d46a5f5a919395bd5a189ff  ./libbpf/libbpf-1.5.1-x86_64-1_SBo.tgz
+9984484b57cddec3254b80859eda248c  ./libbpf/libbpf-1.5.1-x86_64-1_SBo.tgz.asc
+f58af17b7a31f36177d790dd3d7410df  ./libbpf/libbpf-1.5.1-x86_64-1_SBo.tgz.md5
+cfd034bd527b6f6d6a9eddf8ff9adab5  ./libbpf/libbpf-1.5.1-x86_64-1_SBo.txt
 cdd9b9796d601031ae1134d647ae3035  ./nodejs/nodejs-22.14.0-x86_64-1_SBo.lst
 cf52618a67464ffbeb29aedbe7a03320  ./nodejs/nodejs-22.14.0-x86_64-1_SBo.meta
 86c6743f957c9f3803fee348e73cace1  ./nodejs/nodejs-22.14.0-x86_64-1_SBo.tgz
