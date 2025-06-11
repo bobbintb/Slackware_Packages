@@ -1,11 +1,11 @@
 dirt: DiRT (De-duplication in Real Time)
 dirt:
-dirt: Alien is a program that converts between the rpm, dpkg, stampede slp,
-dirt: and slackware tgz file formats. If you want to use a package from
-dirt: another distribution than the one you have installed on your system,
-dirt: you can use alien to convert it to your preferred package format and
-dirt: install it.
+dirt: DiRT is a tool for de-duplicating files in real time. It works by monitoring
+dirt: file system events and identifying duplicate files as they are created or
+dirt: modified. When a duplicate is detected, DiRT can take action to remove
+dirt: the duplicate file or link it to the original file, saving disk space
+dirt: and reducing clutter.
 dirt:
-dirt: Homepage: http://joeyh.name/code/alien/
+dirt: 
 dirt:
 dirt:
