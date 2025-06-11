@@ -10,4 +10,6 @@ jobs:
     with:
       VERSION: "v1.0"
       NAME: "dirt"
+      bobbintb: true
+      PACKAGES: "bobbintb:libbpf"
       GIT: https://github.com/bobbintb/dirt.git

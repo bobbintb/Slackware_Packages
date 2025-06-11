@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Sun Jun  8 21:27:47 UTC 2025
+PACKAGES.TXT;  Wed Jun 11 18:57:30 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -100,6 +100,23 @@ bpftrace: (kprobes), user-level dynamic tracing (uprobes), and tracepoints.
 bpftrace: The bpftrace language is inspired by awk and C, and predecessor
 bpftrace: tracers such as DTrace and SystemTap.
 bpftrace:
+
+PACKAGE NAME:  dirt-v1.0-x86_64-1_SBo.tgz
+PACKAGE LOCATION:  ./dirt
+PACKAGE SIZE (compressed):  44 K
+PACKAGE SIZE (uncompressed):  160 K
+PACKAGE DESCRIPTION:
+dirt: DiRT (De-duplication in Real Time)
+dirt:
+dirt: Alien is a program that converts between the rpm, dpkg, stampede slp,
+dirt: and slackware tgz file formats. If you want to use a package from
+dirt: another distribution than the one you have installed on your system,
+dirt: you can use alien to convert it to your preferred package format and
+dirt: install it.
+dirt:
+dirt: Homepage: http://joeyh.name/code/alien/
+dirt:
+dirt:
 
 PACKAGE NAME:  dragonfly-1.30.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./dragonfly
