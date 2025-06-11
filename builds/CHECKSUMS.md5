@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-bb42d7700ec61ca64614f6214ac09940  ./FILELIST.TXT
+f859a9b60948f6c89a3d437f4f2be51e  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-74bd6d63586155cf8897221427013df5  ./MANIFEST.bz2
-fd3da66171e7de013f3e3d765a357273  ./PACKAGES.TXT
-4d790b1f1456e71917d923e2f778eeef  ./PACKAGES.TXT.gz
+6a3f58f033c4d470bc401de43bd86909  ./MANIFEST.bz2
+c9e10072386ea19f88a70418d4e5de62  ./PACKAGES.TXT
+86a403f96559eaa842dfbff6d6f18ba8  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -52,6 +52,12 @@ c93d76a5ca5acc294f8da1d7a4682d5f  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.asc
 9d87e34755410b3cd03b31fee0bbdf53  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.tgz.asc
 7735c02796bd0faee1b0e9a53f142550  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.tgz.md5
 011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.23.2-x86_64-1_SBo.txt
+cc0025e76c7a6007b76480093ba26cf1  ./dirt/dirt-v1.0-x86_64-1_SBo.lst
+ae6b1aa67050184bfc53997e742b5f33  ./dirt/dirt-v1.0-x86_64-1_SBo.meta
+3fae322120d9c654937f4ffc35d5feed  ./dirt/dirt-v1.0-x86_64-1_SBo.tgz
+c2c771195011e65bcedf3374522e8f7d  ./dirt/dirt-v1.0-x86_64-1_SBo.tgz.asc
+f04c57282dbf9ad4f04a8d6da2b28608  ./dirt/dirt-v1.0-x86_64-1_SBo.tgz.md5
+b24ce606a0cf8f70ec85bc796388bb76  ./dirt/dirt-v1.0-x86_64-1_SBo.txt
 39d275059326ec5fe3328e01f2219e8d  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.lst
 6b21170b133ba01afa48aa9b953d3c06  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.meta
 fea59d583acaefa9410afe25daa9e888  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.tgz
