@@ -1,0 +1,13 @@
+name: Build dirt
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "v1.0"
+      NAME: "dirt"
+      GIT: https://github.com/bobbintb/dirt.git
