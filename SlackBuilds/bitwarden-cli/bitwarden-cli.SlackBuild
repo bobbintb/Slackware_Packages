@@ -123,6 +123,8 @@ find -L . \
 # Compile the application and install it into the $PKG directory
 # make
 # make install DESTDIR=$PKG
+mkdir -p $PKG/usr/bin/
+mv $TMP/bw $PKG/usr/bin/
 
 # Strip binaries and libraries - this can be done with 'make install-strip'
 # in many source trees, and that's usually acceptable if so, but if not,
