@@ -3,14 +3,14 @@
 ||   Package:  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz
 ||
 ++========================================
-drwxr-xr-x root/root         0 2025-06-12 18:02 ./
-drwxr-xr-x root/root         0 2025-06-12 18:02 install/
--rw-r--r-- root/root       921 2025-06-12 18:02 install/slack-desc
-drwxr-xr-x root/root         0 2025-06-12 18:02 usr/
-drwxr-xr-x root/root         0 2025-06-12 18:02 usr/bin/
--rwxr-xr-x root/root  54990264 2025-06-12 18:02 usr/bin/bw
-drwxr-xr-x root/root         0 2025-06-12 18:02 usr/doc/
-drwxr-xr-x root/root         0 2025-06-12 18:02 usr/doc/bitwarden-cli-2025.3.0/
--rw-r--r-- root/root      6916 2025-06-12 18:02 usr/doc/bitwarden-cli-2025.3.0/bitwarden-cli.SlackBuild
+drwxr-xr-x root/root         0 2025-06-12 19:30 ./
+drwxr-xr-x root/root         0 2025-06-12 19:30 install/
+-rw-r--r-- root/root       921 2025-06-12 19:30 install/slack-desc
+drwxr-xr-x root/root         0 2025-06-12 19:30 usr/
+drwxr-xr-x root/root         0 2025-06-12 19:30 usr/bin/
+-rwxr-xr-x root/root 119441313 2025-04-03 17:04 usr/bin/bw
+drwxr-xr-x root/root         0 2025-06-12 19:30 usr/doc/
+drwxr-xr-x root/root         0 2025-06-12 19:30 usr/doc/bitwarden-cli-2025.3.0/
+-rw-r--r-- root/root      6919 2025-06-12 19:30 usr/doc/bitwarden-cli-2025.3.0/bitwarden-cli.SlackBuild
 
 

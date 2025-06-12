@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Thu Jun 12 18:03:18 UTC 2025
+PACKAGES.TXT;  Thu Jun 12 19:31:33 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -53,8 +53,8 @@ bcc:
 
 PACKAGE NAME:  bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bitwarden-cli
-PACKAGE SIZE (compressed):  19920 K
-PACKAGE SIZE (uncompressed):  53720 K
+PACKAGE SIZE (compressed):  36080 K
+PACKAGE SIZE (uncompressed):  116660 K
 PACKAGE DESCRIPTION:
 bitwarden-cli: bitwarden-cli
 bitwarden-cli:
