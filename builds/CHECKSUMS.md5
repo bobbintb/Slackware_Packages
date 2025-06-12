@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-d5cfcd844779e62eb86e6a005dad6395  ./FILELIST.TXT
+008edee6d32a32681700814a4041e234  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-42cb028d7c19cfd0df8e887b913da452  ./MANIFEST.bz2
-d915c717a048ed246ecf08234ed392c0  ./PACKAGES.TXT
-d190d2953db75e99fe608b42efc662e6  ./PACKAGES.TXT.gz
+447f01cee505a9cc9ea48fc9815ea1fe  ./MANIFEST.bz2
+361e753d025627232bb8d16889442a24  ./PACKAGES.TXT
+91fd3f3eeee27793be995974faf7b760  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -34,11 +34,11 @@ a95711291c2097566d3ec07b4cb4c87f  ./bcc/bcc-0.33.0-x86_64-1_SBo.lst
 b2d7f440a41160b65ff59e77d0682538  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz.asc
 d91694c3194f2bd0670c77d9f4f3d353  ./bcc/bcc-0.33.0-x86_64-1_SBo.tgz.md5
 4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.33.0-x86_64-1_SBo.txt
-1c5f79b1930092cd7c579bf3ee073b20  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.lst
-daa73301afa1bc263470596ef6658a1f  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.meta
-f8a1b742010ccc5573d3e334d5325dbf  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz
-74b1969859b790de28a6cb6a6aedda50  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz.asc
-948e731a011451fc8f547ab049e96275  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz.md5
+dacd87f9c0631a8c38fdc0c04aa0ce5f  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.lst
+99409e2a41cdbd8d9ff52ca95b6e2e14  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.meta
+ef93544b779c4ecdc5f7a744966abb9b  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz
+9a408829ecb0bce7b2e14ea3b570feb4  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz.asc
+526924d8d40205d5a5371b77a764b38d  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz.md5
 a51a149187c089c9a4c0a0d3b063dcd4  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.txt
 5e231ed11ae126f9fd563b00ea9d0e11  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.lst
 1f9d126a887f2fef220d54eec91f4712  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.meta
