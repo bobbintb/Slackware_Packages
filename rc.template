@@ -7,7 +7,7 @@
 # by default. Additional functionality can be added to whichever function as needed.
 
 PROGRAM_NAME="${0##*.}"
-PROGRAM=/usr/bin/$PROGRAM_NAME
+PROGRAM=/usr/bin/$PROGRAM_NAME; [ -x "$PROGRAM" ] || PROGRAM=/usr/local/bin/$PROGRAM_NAME
 OPTIONS=""
 
 start() {
