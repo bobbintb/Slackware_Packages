@@ -9,7 +9,7 @@ jobs:
     secrets: inherit
     with:
       bobbintb: true
-      VERSION: "0.33.0"
+      VERSION: "0.35.0"
       NAME: "bcc"
       SBOPKG: true
       PACKAGES: "llvm ccache libssh2 libedit fmt cmake make guile gc binutils gcc kernel-headers bobbintb:libbpf"
