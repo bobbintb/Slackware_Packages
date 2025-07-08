@@ -321,6 +321,8 @@ jobs:
           sbopkg -d ${{ inputs.NAME }} <<< q
           INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
           BUILDFILES_DIR=$(dirname "$INFO")
+          echo "build files"
+          echo $BUILDFILES_DIR
         else
           INFO=${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.info
           BUILDFILES_DIR=$(dirname "$INFO")
