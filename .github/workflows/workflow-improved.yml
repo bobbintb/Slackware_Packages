@@ -260,7 +260,9 @@ jobs:
     -
       name: Downloading source code
       run: |
-        cd /tmp/SBo/
+        cd /tmp/SBo/${{ inputs.NAME }}
+        echo -e "\e[32mls\e[0m"
+        ls -ls
         . ${{ inputs.NAME }}.info
         [[ "${DOWNLOAD##*.}" == "git" || "${DOWNLOAD_x86_64##*.}" == "git" ]] && GIT=true
         export GIT=${{ inputs.GIT }}
