@@ -260,11 +260,14 @@ jobs:
       name: Downloading source code
         cd /tmp/SBo/
         . ${{ inputs.NAME }}.info
+        [[ "${DOWNLOAD##*.}" == "git" || "${DOWNLOAD_x86_64##*.}" == "git" ]] && GIT=true
+        export GIT=${{ inputs.GIT }}
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
           echo -e "\e[32mChanging verson number from ${VERSION} to ${{ inputs.VERSION }}\e[0m"
           DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
           DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
           export VERSION=${{ inputs.VERSION }}
+        fi
         if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
           echo -e "\e[32mCloning from git to $(pwd)\e[0m"
           git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
@@ -273,10 +276,31 @@ jobs:
           git clone ${{ inputs.GIT }} --depth 1 -b master --recurse-submodules
         else
           echo -e "\e[32mDownloading source code to $(pwd)\e[0m"
-          wget $DOWNLOAD_x86_64 | wget $DOWNLOAD
+          wget ${{ inputs.SOURCE }} | $DOWNLOAD_x86_64 | wget $DOWNLOAD
+        fi
     - 
       name: Build
       run: |
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        DEST_DIR=${REPO_DIR}/builds/${{ inputs.NAME }}
+        echo "DEST_DIR=${DEST_DIR}" >> $GITHUB_ENV
+        mkdir -p $DEST_DIR
+        if [ "${{ inputs.BUILD }}" != "" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
+          export BUILD=${{ inputs.BUILD }}
+        fi
+        cd /tmp/SBo
+        output=$(sh ${{ inputs.NAME }}.SlackBuild)
+        package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
+        echo -e "\e[32mPackage path: ${package_path}\e[0m"
+        echo "package_path=${package_path}" >> $GITHUB_ENV
+        if [ -f "${package_path}" ]; then
+          echo -e "\e[32mRemoving previous package from: $DEST_DIR\e[0m"
+          rm -rf "$DEST_DIR"/*
+          echo -e "\e[32mMoving package to: $DEST_DIR\e[0m"
+        	mv ${package_path} $DEST_DIR
+        fi
+        git config --global --add safe.directory $REPO_DIR
     - 
       name: Upload
       run: |
