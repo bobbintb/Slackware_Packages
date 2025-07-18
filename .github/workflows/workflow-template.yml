@@ -31,11 +31,7 @@ on:
         required: false
         type: string
       SOURCE:
-        description: 'URL of program source archive'
-        required: false
-        type: string
-      GIT:
-        description: 'git URL of program for those that must be cloned'
+        description: 'URL of source archive or Git repo to clone (ending with ".git")'
         required: false
         type: string
       UPGRADE-ALL:
