@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Thu Jun 12 19:31:33 UTC 2025
+PACKAGES.TXT;  Fri Jul 18 05:14:30 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -34,10 +34,10 @@ alien: Homepage: http://joeyh.name/code/alien/
 alien:
 alien:
 
-PACKAGE NAME:  bcc-0.33.0-x86_64-1_SBo.tgz
+PACKAGE NAME:  bcc-0.28.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./bcc
-PACKAGE SIZE (compressed):  39024 K
-PACKAGE SIZE (uncompressed):  114260 K
+PACKAGE SIZE (compressed):  39904 K
+PACKAGE SIZE (uncompressed):  115550 K
 PACKAGE DESCRIPTION:
 bcc: bcc (BPF Compiler Collection)
 bcc:
