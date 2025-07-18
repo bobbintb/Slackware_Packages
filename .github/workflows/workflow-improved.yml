@@ -258,6 +258,7 @@ jobs:
        cp -r $BUILDFILES_DIR /tmp/SBo/
     -
       name: Downloading source code
+      run: |
         cd /tmp/SBo/
         . ${{ inputs.NAME }}.info
         [[ "${DOWNLOAD##*.}" == "git" || "${DOWNLOAD_x86_64##*.}" == "git" ]] && GIT=true
