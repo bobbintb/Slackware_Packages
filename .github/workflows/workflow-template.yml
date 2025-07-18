@@ -262,7 +262,7 @@ jobs:
     -
       name: Downloading source code
       run: |
-        cd $BUILDFILES_DIR
+        cd /tmp/SBo
         echo -e "\e[32mls\e[0m"
         ls -ls
         . $INFO
