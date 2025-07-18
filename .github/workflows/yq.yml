@@ -10,6 +10,5 @@ jobs:
     with:
       LATEST_VERSION: true
       NAME: "yq"
-      alien-15: true
-      PACKAGES: "alien-15:google-go-lang"
+      PACKAGES: "google-go-lang"
       SBOPKG: true
