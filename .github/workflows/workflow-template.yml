@@ -6,9 +6,13 @@ on:
         description: 'Program name'
         required: true
         type: string
+      LATEST_VERSION:
+        description: 'Use the latest program version (ignores VERSION)'
+        required: false
+        type: string
       VERSION:
         description: 'Program version'
-        required: true
+        required: false
         type: string
       BUILD:
         description: 'Program build number'
