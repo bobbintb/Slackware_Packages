@@ -5,7 +5,7 @@ permissions:
   contents: write
 jobs:
   make_slackware_package:
-    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-improved.yml@main
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
       bobbintb: true
