@@ -303,7 +303,7 @@ jobs:
         if [ "${{ inputs.BUILD }}" != "" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
           export BUILD=${{ inputs.BUILD }}
         fi
-        cd $BUILDFILES_DIR
+        cd /tmp/SBo
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo -e "\e[32mPackage path: ${package_path}\e[0m"
