@@ -241,79 +241,42 @@ jobs:
       name: Install PIP dependencies
       if: ${{ inputs.PIP != '' && inputs.PIP != null }}
       run: pip install ${{ inputs.PIP }}
-    - 
-      name: Build
-      run: |
-        REPO=${GITHUB_REPOSITORY##*/}
-        REPO_DIR="/__w/${REPO}/${REPO}"
-        DEST_DIR=${REPO_DIR}/builds/${{ inputs.NAME }}
-        echo "DEST_DIR=${DEST_DIR}" >> $GITHUB_ENV
-        mkdir -p $DEST_DIR
-        mkdir -p /tmp/SBo
-        if [ "${{ inputs.BUILD }}" != "" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
-          export BUILD=${{ inputs.BUILD }}
-        fi
-        cd /tmp/SBo
-        if [ "${{ inputs.SBOPKG }}" == "true" ]; then
-          sbopkg -r
-          echo -e "\e[32mDownloading files from slackbuilds.org\e[0m"
-          sbopkg -d ${{ inputs.NAME }} <<< q
-          INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
-          BUILDFILES_DIR=$(dirname "$INFO")
-          find / -name bcc-src-with-submodule.tar.gz
-          echo "build files"
-          echo $BUILDFILES_DIR
-        else
-          INFO=${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.info
-          BUILDFILES_DIR=$(dirname "$INFO")
-        fi
-        echo -e "\e[32mCopying build files from ${BUILDFILES_DIR}\e[0m"
-        cp ${BUILDFILES_DIR}/* /tmp/SBo
-        echo -e "\e[32mCurrent folder contents:\e[0m"
-        pwd
-        ls -ls
-        . ./${{ inputs.NAME }}.info
+    -
+     name: Copying build files
+     run: |
+       if [ "${{ inputs.SBOPKG }}" == "true" ]; then
+         sbopkg -r
+         echo -e "\e[32mDownloading files from slackbuilds.org\e[0m"
+         sbopkg -d ${{ inputs.NAME }} <<< q
+         INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
+       else
+         REPO=${GITHUB_REPOSITORY##*/}
+         REPO_DIR="/__w/${REPO}/${REPO}"
+         INFO=${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.info
+       fi
+       BUILDFILES_DIR=$(dirname "$INFO")
+       cp -r $BUILDFILES_DIR /tmp/SBo/
+    -
+      name: Downloading source code
+        cd /tmp/SBo/
+        . ${{ inputs.NAME }}.info
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
           echo -e "\e[32mChanging verson number from ${VERSION} to ${{ inputs.VERSION }}\e[0m"
           DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
           DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
           export VERSION=${{ inputs.VERSION }}
-          # . ./${{ inputs.NAME }}.info
-        elif [ "${{ inputs.VERSION }}" == "$VERSION" ]; then
-          echo -e "\e[32mThe default version ${VERSION} and the specified version ${{ inputs.VERSION }} are the same. Not making any changes.\e[0m"
-        fi
-        if [ "${{ inputs.SOURCE }}" != "" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
-          echo -e "\e[32mDownloading source files\e[0m"
-          wget ${{ inputs.SOURCE }}
-        elif [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
+        if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ]; then
           echo -e "\e[32mCloning from git to $(pwd)\e[0m"
           git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b master --recurse-submodules
         else
-          echo -e "\e[32mDownloading source files specified in slackbuilds file\e[0m"
-          # . ./${{ inputs.NAME }}.info
-          wget $DOWNLOAD_x86_64 || wget $DOWNLOAD
-        fi
-        echo -e "\e[32mRunning slackbuilds file\e[0m"
-        if [ "${{ inputs.SBOPKG }}" == "true" ]; then
-          output=$(sh ${{ inputs.NAME }}.SlackBuild)
-        else
-          output=$(sh $BUILDFILES_DIR/${{ inputs.NAME }}.SlackBuild)
-        fi
-        echo -e "\e[32mContents of /tmp/SBo:\e[0m"
-        echo -e "\e[32m$(ls -ls /tmp/SBo)\e[0m"
-        package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
-        echo -e "\e[32mPackage path: ${package_path}\e[0m"
-        echo "package_path=${package_path}" >> $GITHUB_ENV
-        if [ -f "${package_path}" ]; then
-          echo -e "\e[32mRemoving previous package from: $DEST_DIR\e[0m"
-          rm -rf "$DEST_DIR"/*
-          echo -e "\e[32mMoving package to: $DEST_DIR\e[0m"
-        	mv ${package_path} $DEST_DIR
-        fi
-        git config --global --add safe.directory $REPO_DIR
+          echo -e "\e[32mDownloading source code to $(pwd)\e[0m"
+          wget $DOWNLOAD_x86_64 | wget $DOWNLOAD
+    - 
+      name: Build
+      run: |
     - 
       name: Upload
       run: |
