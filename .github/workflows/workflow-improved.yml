@@ -204,6 +204,7 @@ jobs:
             echo "MIRRORPLUS['${repo//_/-}']=${repos[$repo]}" >> /etc/slackpkg/slackpkgplus.conf
             REPOPLUS+=" ${repo//_/-}"
           fi
+        done
         sed -i 's|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|' /etc/slackpkg/slackpkgplus.conf
         sed -i 's|WGETOPTS="--timeout=20 --tries=2"|WGETOPTS="-q --timeout=20 --tries=2"|' /etc/slackpkg/slackpkgplus.conf
     - 
