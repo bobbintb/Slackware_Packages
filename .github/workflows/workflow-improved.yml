@@ -267,7 +267,7 @@ jobs:
         ls -ls
         . $INFO
         [[ "${DOWNLOAD##*.}" == "git" || "${DOWNLOAD_x86_64##*.}" == "git" ]] && GIT=true
-        export GIT=${{ inputs.GIT }}
+        # export GIT=${{ inputs.GIT }}
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
           echo -e "\e[32mChanging verson number from ${VERSION} to ${{ inputs.VERSION }}\e[0m"
           DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
