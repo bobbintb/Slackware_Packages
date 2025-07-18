@@ -8,7 +8,7 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      VERSION: "4.45.1"
+      LATEST_VERSION: true
       NAME: "yq"
       alien-15: true
       PACKAGES: "alien-15:google-go-lang"
