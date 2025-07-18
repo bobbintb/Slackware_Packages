@@ -9,6 +9,7 @@ jobs:
     secrets: inherit
     with:
       LATEST_VERSION: true
+      alien-15: true
       NAME: "yq"
-      PACKAGES: "google-go-lang"
+      PACKAGES: "alien-15:google-go-lang"
       SBOPKG: true
