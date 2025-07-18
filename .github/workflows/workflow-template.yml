@@ -338,7 +338,7 @@ jobs:
       name: Determine version
       run: |
         OWNER=$(echo "$URL" | cut -d/ -f4)
-        REPO=$(echo "$URL" | cut -d/ -f5
+        REPO=$(echo "$URL" | cut -d/ -f5)
         if [ "${{ inputs.LATEST_VERSION }}" == "true" ]; then
           VERSION=$(curl -s https://api.github.com/repos/$OWNER/$REPO/releases/latest | jq -r .tag_name)
         elif [ "${{ inputs.VERSION }}" != "" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
