@@ -1,0 +1,19 @@
+++========================================
+||
+||   Package:  ./dragonfly/dragonfly-1.31.2-x86_64-1_SBo.tgz
+||
+++========================================
+drwxr-xr-x root/root         0 2025-07-18 06:07 ./
+drwxr-xr-x root/root         0 2025-07-18 06:07 etc/
+drwxr-xr-x root/root         0 2025-07-18 06:07 etc/rc.d/
+-rw-r--r-- root/root      1186 2025-07-18 06:07 etc/rc.d/rc.dragonfly.new
+drwxr-xr-x root/root         0 2025-07-18 06:07 install/
+-rw-r--r-- root/root      1043 2025-07-18 06:07 install/slack-desc
+drwxr-xr-x root/root         0 2025-07-18 06:07 usr/
+drwxr-xr-x root/root         0 2025-07-18 06:07 usr/bin/
+-rwxr-xr-x root/root  32555272 2025-07-16 05:37 usr/bin/dragonfly
+drwxr-xr-x root/root         0 2025-07-18 06:07 usr/doc/
+drwxr-xr-x root/root         0 2025-07-18 06:07 usr/doc/dragonfly-1.31.2/
+-rw-r--r-- root/root      7134 2025-07-18 06:07 usr/doc/dragonfly-1.31.2/dragonfly.SlackBuild
+
+

@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-fb63e84db2466365cae4cdffa691b464  ./FILELIST.TXT
+c0d371a3ab3fa17ed825fe6a00dfec61  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-dca955abcd22dcc29c8a8f80bd19e11c  ./MANIFEST.bz2
-56d82927e3ae84b6504d08282677c184  ./PACKAGES.TXT
-3706476941c35e67c1799becae1c556f  ./PACKAGES.TXT.gz
+2145860670864b96cf6a7b5ad5cc6b6b  ./MANIFEST.bz2
+84b8bdf378e613bf8c1c0def03eb8e78  ./PACKAGES.TXT
+62045639462c28fa46cf96a206dbcaec  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -58,12 +58,12 @@ fcb2b812f3c3e0fbbb953db82dedd457  ./dirt/dirt-v1.0-x86_64-1_SBo.lst
 3ab761031a7a21c7aad7bd005bd1d623  ./dirt/dirt-v1.0-x86_64-1_SBo.tgz.asc
 d334628b3481f9d1d25499efcda86f75  ./dirt/dirt-v1.0-x86_64-1_SBo.tgz.md5
 4a01d6aa1ae17add1667f760d53baf44  ./dirt/dirt-v1.0-x86_64-1_SBo.txt
-39d275059326ec5fe3328e01f2219e8d  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.lst
-6b21170b133ba01afa48aa9b953d3c06  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.meta
-fea59d583acaefa9410afe25daa9e888  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.tgz
-de9969b5433fc0a8e6056a540ecbce58  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.tgz.asc
-5b4927656017c8aaa2afb3e2a4b59c3e  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.tgz.md5
-b373a0e316b194969aa763b3ef009a69  ./dragonfly/dragonfly-1.30.0-x86_64-1_SBo.txt
+a879d1d9e9f899d35e1203d8767ce0cb  ./dragonfly/dragonfly-1.31.2-x86_64-1_SBo.lst
+3efaba4fea3b1c58bb34473ab71200e8  ./dragonfly/dragonfly-1.31.2-x86_64-1_SBo.meta
+acaf6608157a49c7773c3a98b70e530e  ./dragonfly/dragonfly-1.31.2-x86_64-1_SBo.tgz
+c52e4871e2f68c83b46a3d4c9075f967  ./dragonfly/dragonfly-1.31.2-x86_64-1_SBo.tgz.asc
+829d7254d7d84d621288d5e1a3cd5465  ./dragonfly/dragonfly-1.31.2-x86_64-1_SBo.tgz.md5
+b373a0e316b194969aa763b3ef009a69  ./dragonfly/dragonfly-1.31.2-x86_64-1_SBo.txt
 ff28b637ed9753e38d09e9016285fccc  ./fsprobe/fsprobe-1.0-x86_64-1_SBo.lst
 32120bbc626636e9c961435a455ad32d  ./fsprobe/fsprobe-1.0-x86_64-1_SBo.meta
 0c895046f794a98afbfdf2eb18d24c9b  ./fsprobe/fsprobe-1.0-x86_64-1_SBo.tgz

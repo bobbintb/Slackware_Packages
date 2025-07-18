@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Fri Jul 18 05:52:23 UTC 2025
+PACKAGES.TXT;  Fri Jul 18 06:08:29 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -118,10 +118,10 @@ dirt:
 dirt:
 dirt:
 
-PACKAGE NAME:  dragonfly-1.30.0-x86_64-1_SBo.tgz
+PACKAGE NAME:  dragonfly-1.31.2-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./dragonfly
-PACKAGE SIZE (compressed):  14020 K
-PACKAGE SIZE (uncompressed):  31080 K
+PACKAGE SIZE (compressed):  14332 K
+PACKAGE SIZE (uncompressed):  31810 K
 PACKAGE DESCRIPTION:
 dragonfly: dragonfly (A modern replacement for Redis and Memcached)
 dragonfly:
