@@ -13,5 +13,5 @@ jobs:
       SBOPKG: true
       bobbintb: true
       alien-15: true
-      PACKAGES: "make cmake cc gcc guile gc binutils bcc libbpf cereal bison gettext lua llvm vim pahole gtest asciidoctor m4 ccache fmt kernel-headers ruby && slackpkg upgrade glibc zstd"
+      PACKAGES: "make cmake cc gcc guile gc binutils bobbintb:bcc libbpf cereal bison gettext lua llvm vim pahole gtest asciidoctor m4 ccache fmt kernel-headers ruby"
       PIP: setuptools
