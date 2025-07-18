@@ -282,7 +282,7 @@ jobs:
           git clone ${{ inputs.GIT }} --depth 1 -b master --recurse-submodules
         else
           echo -e "\e[32mDownloading source code to $(pwd)\e[0m"
-          wget ${{ inputs.SOURCE }} || $DOWNLOAD_x86_64 || wget $DOWNLOAD
+          wget ${{ inputs.SOURCE }} || wget $DOWNLOAD_x86_64 || wget $DOWNLOAD
         fi
     - 
       name: Build
