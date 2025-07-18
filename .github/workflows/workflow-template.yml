@@ -206,6 +206,7 @@ jobs:
         done
         sed -i 's|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|' /etc/slackpkg/slackpkgplus.conf
         sed -i 's|WGETOPTS="--timeout=20 --tries=2"|WGETOPTS="-q --timeout=20 --tries=2"|' /etc/slackpkg/slackpkgplus.conf
+        cat /etc/slackpkg/slackpkgplus.conf
     - 
       name: Update slackpkg
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
