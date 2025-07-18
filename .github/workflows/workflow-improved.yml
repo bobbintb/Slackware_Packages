@@ -198,11 +198,10 @@ jobs:
           [bobbintb]="https://raw.githubusercontent.com/bobbintb/Slackware_Packages/refs/heads/main/builds/"
         )
         for repo in "${!repos[@]}"; do
-          varname=$(echo "$repo" | tr '[:lower:]' '[:upper:]')
-          val="${!varname}"
-          if [ "$val" = "true" ]; then
-            echo "MIRRORPLUS['${repo//_/-}']=${repos[$repo]}" >> /etc/slackpkg/slackpkgplus.conf
-            REPOPLUS+=" ${repo//_/-}"
+          input_var_name=$(echo "$repo" | tr '[:lower:]-' '[:upper:]_')
+          if [ "${!input_var_name}" = "true" ]; then
+            echo "MIRRORPLUS['$repo']=${repos[$repo]}" >> /etc/slackpkg/slackpkgplus.conf
+            REPOPLUS+=" $repo"
           fi
         done
         sed -i 's|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|' /etc/slackpkg/slackpkgplus.conf
