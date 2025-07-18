@@ -9,8 +9,8 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      VERSION: "1.4.0.0"
+      VERSION: "1.5.0.0"
       NAME: "SysinternalsEBPF"
       PACKAGES: "cmake make gcc guile gc kernel-headers binutils llvm && slackpkg upgrade pcre2 glib2 libffi"
       REINSTALL: "json-glib && sed -i 's/^Requires.private: gmodule-no-export-2.0, zlib, mount >= 2.23/#&/' /usr/lib64/pkgconfig/gio-2.0.pc"
-      SOURCE: https://github.com/microsoft/SysinternalsEBPF/archive/refs/tags/1.4.0.0.tar.gz
+      SOURCE: https://github.com/microsoft/SysinternalsEBPF/archive/refs/tags/1.5.0.0.tar.gz
