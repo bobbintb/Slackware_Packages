@@ -304,6 +304,7 @@ jobs:
           export BUILD=${{ inputs.BUILD }}
         fi
         cd /tmp/SBo
+        chmod 777 /tmp/SBo/${{ inputs.NAME }}
         ls -ls
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
