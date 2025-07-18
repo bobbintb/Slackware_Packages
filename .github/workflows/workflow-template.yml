@@ -274,7 +274,7 @@ jobs:
           DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
           export VERSION=${{ inputs.VERSION }}
         fi
-        if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ] || [ "GIT_CLONE" == "true" ]; then
+        if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ] || [ "${GIT_CLONE}" == "true" ]; then
           echo -e "\e[32mCloning from git to $(pwd)\e[0m"
           git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
