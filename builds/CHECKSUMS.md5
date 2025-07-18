@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-7e7d325c184f8edfdac75c529a9d0bae  ./FILELIST.TXT
+fb63e84db2466365cae4cdffa691b464  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-c74103e47dc7740cd17f1efd5dea54d4  ./MANIFEST.bz2
-192af606b99e72a849b1eb3ce05d2f58  ./PACKAGES.TXT
-31f8040148f479c561a823aef6a5d8ff  ./PACKAGES.TXT.gz
+dca955abcd22dcc29c8a8f80bd19e11c  ./MANIFEST.bz2
+56d82927e3ae84b6504d08282677c184  ./PACKAGES.TXT
+3706476941c35e67c1799becae1c556f  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -28,12 +28,12 @@ ac5867ecd98d59d0f88211261c21cafb  ./alien/alien-8.96-x86_64-2_SBo.meta
 88819282031c835d3a11883df68efe5b  ./alien/alien-8.96-x86_64-2_SBo.tgz.asc
 9751ee02cc28de3dec7649f482d7cb6c  ./alien/alien-8.96-x86_64-2_SBo.tgz.md5
 bcd3750dc5f6e87606b105cccf1be77e  ./alien/alien-8.96-x86_64-2_SBo.txt
-53bc20ac3e16a337c39860c2059d75f0  ./bcc/bcc-0.28.0-x86_64-1_SBo.lst
-c7e79d2c01d8a96907071d9c6712d3be  ./bcc/bcc-0.28.0-x86_64-1_SBo.meta
-3825a5cccd81bd28bc6883f2478dd062  ./bcc/bcc-0.28.0-x86_64-1_SBo.tgz
-3a59704c2fa33d5120c49dca199a3aa3  ./bcc/bcc-0.28.0-x86_64-1_SBo.tgz.asc
-9a17ba7cb6d716d21e9294f7dbfa251b  ./bcc/bcc-0.28.0-x86_64-1_SBo.tgz.md5
-4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.28.0-x86_64-1_SBo.txt
+ed6dca0ea07d3a14e552e266e0e81ff9  ./bcc/bcc-0.35.0-x86_64-1_SBo.lst
+5a5a882b791c5ba5c8bb82746b4a2a6c  ./bcc/bcc-0.35.0-x86_64-1_SBo.meta
+2a765bba9237458f96aef982d31ee42a  ./bcc/bcc-0.35.0-x86_64-1_SBo.tgz
+32b480c920d50865d23871541a77c597  ./bcc/bcc-0.35.0-x86_64-1_SBo.tgz.asc
+84e2429bb4b94de67caa1f68a7a8ad8b  ./bcc/bcc-0.35.0-x86_64-1_SBo.tgz.md5
+4d87c1944e2ef815d43a3f1260848bd9  ./bcc/bcc-0.35.0-x86_64-1_SBo.txt
 5971ef3e09643d0b10d7705bfe210cb0  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.lst
 97d9bc27cd7e1d2efa740bf378f777f1  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.meta
 5c990e67a6370013d1e24339855dc593  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-1_SBo.tgz
