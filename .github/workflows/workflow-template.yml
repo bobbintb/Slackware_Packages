@@ -279,7 +279,15 @@ jobs:
           git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
           git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules || \
-          git clone ${{ inputs.GIT }} --depth 1 -b master --recurse-submodules
+          git clone ${{ inputs.GIT }} --depth 1 -b master --recurse-submodules || \
+          git clone ${DOWNLOAD} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
+          git clone ${DOWNLOAD} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
+          git clone ${DOWNLOAD} --depth 1 -b main --recurse-submodules || \
+          git clone ${DOWNLOAD} --depth 1 -b master --recurse-submodules || \
+          git clone ${DOWNLOAD_x86_64} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
+          git clone ${DOWNLOAD_x86_64} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
+          git clone ${DOWNLOAD_x86_64} --depth 1 -b main --recurse-submodules || \
+          git clone ${DOWNLOAD_x86_64} --depth 1 -b master --recurse-submodules
         else
           echo -e "\e[32mDownloading source code to $(pwd)\e[0m"
           wget ${{ inputs.SOURCE }} || wget $DOWNLOAD_x86_64 || wget $DOWNLOAD
