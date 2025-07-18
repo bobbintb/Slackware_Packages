@@ -11,5 +11,5 @@ jobs:
       bobbintb: true
       VERSION: "0.35.0"
       NAME: "bcc"
-      PACKAGES: "llvm ccache libssh2 libedit fmt cmake make guile gc binutils gcc kernel-headers bobbintb:libbpf"
+      PACKAGES: "llvm ccache libssh2 libedit fmt cmake make guile gc gettext binutils gcc kernel-headers bobbintb:libbpf"
       PIP: setuptools
