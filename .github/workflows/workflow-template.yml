@@ -322,37 +322,42 @@ jobs:
        echo "INFO=${INFO}" >> $GITHUB_ENV
        cp $BUILDFILES_DIR/* /tmp/SBo/
     -
-      name: Downloading source code
+      name: Determine source code URL
+      run: |
+        if echo "${{ inputs.SOURCE }}" | grep -Eq '^https?://[^/]+(/.*)?$'; then
+          URL=${{ inputs.SOURCE }}
+        elif echo "$DOWNLOAD_x86_64" | grep -Eq '^https?://[^/]+(/.*)?$'; then
+          URL=$DOWNLOAD_x86_64
+        elif echo "$DOWNLOAD" | grep -Eq '^https?://[^/]+(/.*)?$'; then
+          URL=$DOWNLOAD
+        fi
+        echo "URL=$URL" >> $GITHUB_ENV
+    -
+      name: Determine version
+      run: |
+        OWNER=$(echo "$URL" | cut -d/ -f4)
+        REPO=$(echo "$URL" | cut -d/ -
+        if [ "${{ inputs.LATEST_VERSION }}" == "true" ]; then
+          VERSION=$(curl -s https://api.github.com/repos/$OWNER/$REPO/releases/latest | jq -r .tag_name)
+        elif [ "${{ inputs.VERSION }}" != "" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
+          VERSION=${{ inputs.VERSION }}
+        else
+          . $INFO
+        fi
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+    -
+      name: Download source code
       run: |
         cd /tmp/SBo
-        echo -e "\e[32mls\e[0m"
-        ls -ls
-        . $INFO
-        [[ "${DOWNLOAD##*.}" == "git" || "${DOWNLOAD_x86_64##*.}" == "git" ]] && GIT_CLONE=true
-        # export GIT=${{ inputs.GIT }}
-        if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
-          echo -e "\e[32mChanging verson number from ${VERSION} to ${{ inputs.VERSION }}\e[0m"
-          DOWNLOAD="${DOWNLOAD//$VERSION/${{ inputs.VERSION }}}"
-          DOWNLOAD_x86_64="${DOWNLOAD_x86_64//$VERSION/${{ inputs.VERSION }}}"
-          export VERSION=${{ inputs.VERSION }}
-        fi
-        if [ "${{ inputs.GIT }}" != "" ] && [ "${{ inputs.GIT }}" != "null" ] || [ "${GIT_CLONE}" == "true" ]; then
+        if [ "${URL##*.}" == "git" ]; then
           echo -e "\e[32mCloning from git to $(pwd)\e[0m"
-          git clone ${{ inputs.GIT }} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
-          git clone ${{ inputs.GIT }} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
-          git clone ${{ inputs.GIT }} --depth 1 -b main --recurse-submodules || \
-          git clone ${{ inputs.GIT }} --depth 1 -b master --recurse-submodules || \
-          git clone ${DOWNLOAD} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
-          git clone ${DOWNLOAD} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
-          git clone ${DOWNLOAD} --depth 1 -b main --recurse-submodules || \
-          git clone ${DOWNLOAD} --depth 1 -b master --recurse-submodules || \
-          git clone ${DOWNLOAD_x86_64} --depth 1 -b v${{ inputs.VERSION }} --recurse-submodules || \
-          git clone ${DOWNLOAD_x86_64} --depth 1 -b ${{ inputs.VERSION }} --recurse-submodules || \
-          git clone ${DOWNLOAD_x86_64} --depth 1 -b main --recurse-submodules || \
-          git clone ${DOWNLOAD_x86_64} --depth 1 -b master --recurse-submodules
+          git clone ${URL} --depth 1 -b v$VERSION --recurse-submodules || \
+          git clone ${URL} --depth 1 -b $VERSION --recurse-submodules || \
+          git clone ${URL} --depth 1 -b main --recurse-submodules || \
+          git clone ${URL} --depth 1 -b master --recurse-submodules
         else
           echo -e "\e[32mDownloading source code to $(pwd)\e[0m"
-          wget ${{ inputs.SOURCE }} || wget $DOWNLOAD_x86_64 || wget $DOWNLOAD
+          wget $URL
         fi
     - 
       name: Build
