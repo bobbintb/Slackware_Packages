@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Fri Jul 18 05:14:30 UTC 2025
+PACKAGES.TXT;  Fri Jul 18 05:25:46 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -186,10 +186,10 @@ kflowd:
 kflowd:
 kflowd: Home: https://tarsal.co/kflow/
 
-PACKAGE NAME:  libbpf-1.5.1-x86_64-1_SBo.tgz
+PACKAGE NAME:  libbpf-1.6.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./libbpf
-PACKAGE SIZE (compressed):  512 K
-PACKAGE SIZE (uncompressed):  1550 K
+PACKAGE SIZE (compressed):  524 K
+PACKAGE SIZE (uncompressed):  1590 K
 PACKAGE DESCRIPTION:
 libbpf: libbpf (kernel-agnostic library for writing BPF programs)
 libbpf:
