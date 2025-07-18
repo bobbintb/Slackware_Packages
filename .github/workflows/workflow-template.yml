@@ -227,7 +227,7 @@ jobs:
       name: Install dependencies
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
       run: |
-        slackpkg install ${{ inputs.PACKAGES }} <<< y
+        slackpkg install ${{ inputs.PACKAGES }} <<< y || true
         slackpkg upgrade ${{ inputs.PACKAGES }} <<< y || true
         # > /dev/null
         # echo "==================== installed packages ===================="
