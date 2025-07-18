@@ -304,6 +304,7 @@ jobs:
           export BUILD=${{ inputs.BUILD }}
         fi
         cd /tmp/SBo
+        ls -ls
         output=$(sh ${{ inputs.NAME }}.SlackBuild)
         package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
         echo -e "\e[32mPackage path: ${package_path}\e[0m"
