@@ -256,14 +256,16 @@ jobs:
          INFO=${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.info
        fi
        BUILDFILES_DIR=$(dirname "$INFO")
+       echo "BUILDFILES_DIR=${BUILDFILES_DIR}" >> $GITHUB_ENV
+       echo "INFO=${INFO}" >> $GITHUB_ENV
        cp -r $BUILDFILES_DIR /tmp/SBo/
     -
       name: Downloading source code
       run: |
-        cd /tmp/SBo/${{ inputs.NAME }}
+        cd $BUILDFILES_DIR
         echo -e "\e[32mls\e[0m"
         ls -ls
-        . ${{ inputs.NAME }}.info
+        . $INFO
         [[ "${DOWNLOAD##*.}" == "git" || "${DOWNLOAD_x86_64##*.}" == "git" ]] && GIT=true
         export GIT=${{ inputs.GIT }}
         if [ "${{ inputs.VERSION }}" != "$VERSION" ]; then
