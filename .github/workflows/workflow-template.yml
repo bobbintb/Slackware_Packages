@@ -409,9 +409,21 @@ jobs:
             exit 1
           fi
           
-          # Replace version placeholders
+          # Replace version placeholders and actual version numbers
+          echo "Original URL: $FINAL_URL"
+          # First try standard placeholders
           FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
           FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
+          
+          # If no placeholders were found, try to replace the original version number
+          if [ "$FINAL_URL" = "$DOWNLOAD_x86_64" ] || [ "$FINAL_URL" = "$DOWNLOAD" ]; then
+            echo "No placeholders found, attempting to replace version $ORIGINAL_VERSION with $FINAL_VERSION"
+            # Replace version with 'v' prefix (like v0.18.0)
+            FINAL_URL=$(echo "$FINAL_URL" | sed "s/v$ORIGINAL_VERSION/v$FINAL_VERSION/g")
+            # Replace version without 'v' prefix
+            FINAL_URL=$(echo "$FINAL_URL" | sed "s/$ORIGINAL_VERSION/$FINAL_VERSION/g")
+          fi
+          
           echo "URL after version substitution: $FINAL_URL"
         fi
         
