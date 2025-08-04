@@ -354,7 +354,7 @@ jobs:
     #       URL=$(echo "$URL" | sed 's/${VERSION}/${LATEST_VERSION}/g')
     #       echo "URL=$URL" >> $GITHUB_ENV
     #     else-
--
+  -
       name: Determine version and construct URL
       run: |
         cd /tmp/SBo
