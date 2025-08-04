@@ -172,102 +172,48 @@ jobs:
       name: Enable additional repos
       run: | 
         REPOPLUS="slackpkgplus"
-        if [ "${{ inputs.alien-multilib-15 }}" == "true" ]; then
-          echo "MIRRORPLUS['alien-multilib-15']=http://slackware.nl/people/alien/multilib/15.0/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" alien-multilib-15"
-        fi
-        if [ "${{ inputs.alien-multilib-current }}" == "true" ]; then
-          echo "MIRRORPLUS['alien-multilib-current']=http://slackware.nl/people/alien/multilib/current/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" alien-multilib-current"
-        fi
-        if [ "${{ inputs.alien-15 }}" == "true" ]; then
-          echo "MIRRORPLUS['alien-15']=https://slackware.nl/people/alien/sbrepos/15.0/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" alien-15"
-        fi
-        if [ "${{ inputs.alien-current }}" == "true" ]; then
-          echo "MIRRORPLUS['alien-current']=http://slackware.nl/people/alien/sbrepos/current/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" alien-current"
-        fi
-        if [ "${{ inputs.alien-restr-15 }}" == "true" ]; then
-          echo "MIRRORPLUS['alien-restr-15']=https://slackware.nl/people/alien/restricted_sbrepos/15.0/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" alien-restr-15"
-        fi
-        if [ "${{ inputs.alien-restr-current }}" == "true" ]; then
-          echo "MIRRORPLUS['alien-restr-current']=https://slackware.nl/people/alien/restricted_sbrepos/current/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" alien-restr-current"
-        fi
-        if [ "${{ inputs.alien-slackbuilds }}" == "true" ]; then
-          echo "MIRRORPLUS['alien-slackbuilds']=https://slackware.nl/people/alien/slackbuilds/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" alien-slackbuilds"
-        fi
-        if [ "${{ inputs.conraid-current }}" == "true" ]; then
-          echo "MIRRORPLUS['conraid-current']=https://slackers.it/repository/slackware64-current/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" conraid-current"
-        fi
-        if [ "${{ inputs.conraid-extra }}" == "true" ]; then
-          echo "MIRRORPLUS['conraid-extra']=https://slackers.it/repository/slackware64-current-extra/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" conraid-extra"
-        fi
-        if [ "${{ inputs.conraid-testing }}" == "true" ]; then
-          echo "MIRRORPLUS['conraid-testing']=https://slackers.it/repository/slackware64-current-testing/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" conraid-testing"
-        fi
-        if [ "${{ inputs.csb-15 }}" == "true" ]; then
-          echo "MIRRORPLUS['csb-15']=https://slackware.uk/csb/15.0/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" csb-15"
-        fi
-        if [ "${{ inputs.csb-current }}" == "true" ]; then
-          echo "MIRRORPLUS['csb-current']=https://slackware.uk/csb/current/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" csb-current"
-        fi
-        if [ "${{ inputs.msb-15 }}" == "true" ]; then
-          echo "MIRRORPLUS['msb-15']=https://slackware.uk/msb/15.0/latest/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" msb-15"
-        fi
-        if [ "${{ inputs.msb-current }}" == "true" ]; then
-          echo "MIRRORPLUS['msb-current']=https://slackware.uk/msb/current/latest/x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" msb-current"
-        fi
-        if [ "${{ inputs.ponce-current }}" == "true" ]; then
-          echo "MIRRORPLUS['ponce-current']=https://ponce.cc/slackware/slackware64-current/packages/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" ponce-current"
-        fi
-        if [ "${{ inputs.salix-15 }}" == "true" ]; then
-          echo "MIRRORPLUS['salix-15']=https://download.salixos.org/x86_64/15.0/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" salix-15"
-        fi
-        if [ "${{ inputs.salix-15-extra }}" == "true" ]; then
-          echo "MIRRORPLUS['salix-15-extra']=https://download.salixos.org/x86_64/extra-15.0/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" salix-15-extra"
-        fi
-        if [ "${{ inputs.slackel-current }}" == "true" ]; then
-          echo "MIRRORPLUS['slackel-current']=http://www.slackel.gr/repo/x86_64/current/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" slackel-current"
-        fi
-        if [ "${{ inputs.slackonly-15 }}" == "true" ]; then
-          echo "MIRRORPLUS['slackonly-15']=https://packages.slackonly.com/pub/packages/15.0-x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" slackonly-15"
-        fi
-        if [ "${{ inputs.slackonly-current }}" == "true" ]; then
-          echo "MIRRORPLUS['slackonly-current']=https://packages.slackonly.com/pub/packages/current-x86_64/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" slackonly-current"
-        fi
-        if [ "${{ inputs.slint }}" == "true" ]; then
-          echo "MIRRORPLUS['slint']=https://slackware.uk/slint/x86_64/slint-15.0/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" slint"
-        fi
-        if [ "${{ inputs.official-15-extra }}" == "true" ]; then
-          echo "MIRRORPLUS['official-15-extra']=https://ftp.osuosl.org/pub/slackware/slackware64-15.0/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" official-15-extra"
-        fi
-        if [ "${{ inputs.bobbintb }}" == "true" ]; then
-          echo "MIRRORPLUS['bobbintb']=https://raw.githubusercontent.com/bobbintb/Slackware_Packages/refs/heads/main/builds/" >> /etc/slackpkg/slackpkgplus.conf
-          REPOPLUS+=" bobbintb"
-        fi
-        sed -i 's|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|' /etc/slackpkg/slackpkgplus.conf
+        
+        # Function to add repo if enabled
+        add_repo() {
+          local name="$1"
+          local url="$2"
+          local enabled="$3"
+          
+          if [ "$enabled" = "true" ]; then
+            echo "MIRRORPLUS['$name']=$url" >> /etc/slackpkg/slackpkgplus.conf
+            REPOPLUS+=" $name"
+            echo "Enabled: $name"
+          fi
+        }
+        
+        # Add all repos
+        add_repo "alien-multilib-15" "http://slackware.nl/people/alien/multilib/15.0/" "${{ inputs.alien-multilib-15 }}"
+        add_repo "alien-multilib-current" "http://slackware.nl/people/alien/multilib/current/" "${{ inputs.alien-multilib-current }}"
+        add_repo "alien-15" "https://slackware.nl/people/alien/sbrepos/15.0/x86_64/" "${{ inputs.alien-15 }}"
+        add_repo "alien-current" "http://slackware.nl/people/alien/sbrepos/current/x86_64/" "${{ inputs.alien-current }}"
+        add_repo "alien-restr-15" "https://slackware.nl/people/alien/restricted_sbrepos/15.0/x86_64/" "${{ inputs.alien-restr-15 }}"
+        add_repo "alien-restr-current" "https://slackware.nl/people/alien/restricted_sbrepos/current/x86_64/" "${{ inputs.alien-restr-current }}"
+        add_repo "alien-slackbuilds" "https://slackware.nl/people/alien/slackbuilds/" "${{ inputs.alien-slackbuilds }}"
+        add_repo "conraid-current" "https://slackers.it/repository/slackware64-current/" "${{ inputs.conraid-current }}"
+        add_repo "conraid-extra" "https://slackers.it/repository/slackware64-current-extra/" "${{ inputs.conraid-extra }}"
+        add_repo "conraid-testing" "https://slackers.it/repository/slackware64-current-testing/" "${{ inputs.conraid-testing }}"
+        add_repo "csb-15" "https://slackware.uk/csb/15.0/x86_64/" "${{ inputs.csb-15 }}"
+        add_repo "csb-current" "https://slackware.uk/csb/current/x86_64/" "${{ inputs.csb-current }}"
+        add_repo "msb-15" "https://slackware.uk/msb/15.0/latest/x86_64/" "${{ inputs.msb-15 }}"
+        add_repo "msb-current" "https://slackware.uk/msb/current/latest/x86_64/" "${{ inputs.msb-current }}"
+        add_repo "ponce-current" "https://ponce.cc/slackware/slackware64-current/packages/" "${{ inputs.ponce-current }}"
+        add_repo "salix-15" "https://download.salixos.org/x86_64/15.0/" "${{ inputs.salix-15 }}"
+        add_repo "salix-extra-15" "https://download.salixos.org/x86_64/extra-15.0/" "${{ inputs.salix-extra-15 }}"
+        add_repo "slackel-current" "http://www.slackel.gr/repo/x86_64/current/" "${{ inputs.slackel-current }}"
+        add_repo "slackonly-15" "https://packages.slackonly.com/pub/packages/15.0-x86_64/" "${{ inputs.slackonly-15 }}"
+        add_repo "slackonly-current" "https://packages.slackonly.com/pub/packages/current-x86_64/" "${{ inputs.slackonly-current }}"
+        add_repo "slint" "https://slackware.uk/slint/x86_64/slint-15.0/" "${{ inputs.slint }}"
+        add_repo "official-15-extra" "https://ftp.osuosl.org/pub/slackware/slackware64-15.0/" "${{ inputs.official-15-extra }}"
+        add_repo "bobbintb" "https://raw.githubusercontent.com/bobbintb/Slackware_Packages/refs/heads/main/builds/" "${{ inputs.bobbintb }}"
+        
+        # Update configuration
+        sed -i "s|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|" /etc/slackpkg/slackpkgplus.conf
         sed -i 's|WGETOPTS="--timeout=20 --tries=2"|WGETOPTS="-q --timeout=20 --tries=2"|' /etc/slackpkg/slackpkgplus.conf
-
-        cat /etc/slackpkg/slackpkgplus.conf
     - 
       name: Update slackpkg
       if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
