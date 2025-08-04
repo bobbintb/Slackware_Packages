@@ -321,7 +321,6 @@ jobs:
        echo "BUILDFILES_DIR=${BUILDFILES_DIR}" >> $GITHUB_ENV
        echo "INFO=${INFO}" >> $GITHUB_ENV
        cp $BUILDFILES_DIR/* /tmp/SBo/
-    -
     #   name: Determine source code URL
     #   run: |
     #     cd /tmp/SBo
