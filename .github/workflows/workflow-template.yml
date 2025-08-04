@@ -321,40 +321,7 @@ jobs:
        echo "BUILDFILES_DIR=${BUILDFILES_DIR}" >> $GITHUB_ENV
        echo "INFO=${INFO}" >> $GITHUB_ENV
        cp $BUILDFILES_DIR/* /tmp/SBo/
-    #   name: Determine source code URL
-    #   run: |
-    #     cd /tmp/SBo
-    #     . $INFO
-    #     if echo "${{ inputs.SOURCE }}" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-    #       URL=${{ inputs.SOURCE }}
-    #     elif echo "$DOWNLOAD_x86_64" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-    #       URL=$DOWNLOAD_x86_64
-    #     elif echo "$DOWNLOAD" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-    #       URL=$DOWNLOAD
-    #     fi
-    #     echo "URL=$URL" >> $GITHUB_ENV
-    # -
-    #   name: Determine version
-    #   run: |
-    #     cd /tmp/SBo
-
-        
-    #     OWNER=$(echo "$URL" | cut -d/ -f4)
-    #     REPO=$(echo "$URL" | cut -d/ -f5)
-    #     if [ "${{ inputs.LATEST_VERSION }}" == "true" ]; then
-    #       LATEST_VERSION=$(curl -s https://api.github.com/repos/$OWNER/$REPO/releases/latest | jq -r .tag_name)
-    #       cd /tmp/SBo
-    #       . $INFO
-    #       URL=$(echo "$URL" | sed 's/${VERSION}/${LATEST_VERSION}/g')
-    #       echo "URL=$URL" >> $GITHUB_ENV
-    #     elif [ "${{ inputs.VERSION }}" != "" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
-    #       VERSION=${{ inputs.VERSION }}
-    #       cd /tmp/SBo
-    #       . $INFO
-    #       URL=$(echo "$URL" | sed 's/${VERSION}/${LATEST_VERSION}/g')
-    #       echo "URL=$URL" >> $GITHUB_ENV
-    #     else-
-  -
+    -
       name: Determine version and construct URL
       run: |
         cd /tmp/SBo
@@ -362,6 +329,11 @@ jobs:
         # Source the info file to get the original values
         . $INFO
         ORIGINAL_VERSION=$VERSION
+        
+        echo "Original version from .info file: $ORIGINAL_VERSION"
+        echo "LATEST_VERSION input: ${{ inputs.LATEST_VERSION }}"
+        echo "VERSION input: ${{ inputs.VERSION }}"
+        echo "SOURCE input: ${{ inputs.SOURCE }}"
         
         # Determine what version we want to use
         if [ "${{ inputs.LATEST_VERSION }}" = "true" ]; then
@@ -474,7 +446,7 @@ jobs:
         if [ "${{ inputs.BUILD }}" != "" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
           export BUILD=${{ inputs.BUILD }}
         fi
-        export VERSION=${{ inputs.VERSION }}
+        export VERSION=$VERSION
         echo "version"
         echo $VERSION
         cd /tmp/SBo
