@@ -393,6 +393,70 @@ jobs:
           echo -e "\e[32mDownloading source code to $(pwd)\e[0m"
           wget $URL
         fi
+    -
+      name: Check existing build and increment build number if needed
+      run: |
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        EXISTING_BUILD_DIR="${REPO_DIR}/builds/${{ inputs.NAME }}"
+        
+        echo "Checking for existing builds in: $EXISTING_BUILD_DIR"
+        
+        if [ -d "$EXISTING_BUILD_DIR" ]; then
+          # Look for existing package files with the same version
+          EXISTING_PACKAGE=$(find "$EXISTING_BUILD_DIR" -name "${{ inputs.NAME }}-${VERSION}-*-*_SBo.t*z" 2>/dev/null | head -n 1)
+          
+          if [ -n "$EXISTING_PACKAGE" ]; then
+            echo "Found existing package: $(basename "$EXISTING_PACKAGE")"
+            
+            # Extract the current build number from the filename
+            # Pattern: name-version-arch-build_SBo.tgz
+            CURRENT_BUILD=$(basename "$EXISTING_PACKAGE" | sed -n "s/.*-${VERSION}-[^-]*-\([0-9]*\)_SBo\.t.*z/\1/p")
+            
+            if [ -n "$CURRENT_BUILD" ]; then
+              # Increment the build number
+              NEW_BUILD=$((CURRENT_BUILD + 1))
+              echo "Current build number: $CURRENT_BUILD"
+              echo "Incrementing to build number: $NEW_BUILD"
+              
+              # Export the new build number (override any existing BUILD input)
+              echo "BUILD=$NEW_BUILD" >> $GITHUB_ENV
+              export BUILD=$NEW_BUILD
+            else
+              echo "Could not extract build number from existing package"
+              # Use provided BUILD input or default to 1
+              if [ -n "${{ inputs.BUILD }}" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
+                echo "BUILD=${{ inputs.BUILD }}" >> $GITHUB_ENV
+                export BUILD=${{ inputs.BUILD }}
+              else
+                echo "BUILD=1" >> $GITHUB_ENV
+                export BUILD=1
+              fi
+            fi
+          else
+            echo "No existing package found for version $VERSION"
+            # Use provided BUILD input or default to 1
+            if [ -n "${{ inputs.BUILD }}" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
+              echo "BUILD=${{ inputs.BUILD }}" >> $GITHUB_ENV
+              export BUILD=${{ inputs.BUILD }}
+            else
+              echo "BUILD=1" >> $GITHUB_ENV
+              export BUILD=1
+            fi
+          fi
+        else
+          echo "No existing builds directory found"
+          # Use provided BUILD input or default to 1
+          if [ -n "${{ inputs.BUILD }}" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
+            echo "BUILD=${{ inputs.BUILD }}" >> $GITHUB_ENV
+            export BUILD=${{ inputs.BUILD }}
+          else
+            echo "BUILD=1" >> $GITHUB_ENV
+            export BUILD=1
+          fi
+        fi
+        
+        echo "Final BUILD number: $BUILD"
     - 
       name: Build
       run: |
