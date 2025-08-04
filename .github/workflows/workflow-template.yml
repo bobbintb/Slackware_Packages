@@ -354,7 +354,7 @@ jobs:
     #       URL=$(echo "$URL" | sed 's/${VERSION}/${LATEST_VERSION}/g')
     #       echo "URL=$URL" >> $GITHUB_ENV
     #     else-
-    -
+-
       name: Determine version and construct URL
       run: |
         cd /tmp/SBo
@@ -362,142 +362,20 @@ jobs:
         # Source the info file to get the original values
         . $INFO
         ORIGINAL_VERSION=$VERSION
-        ORIGINAL_URL=$URL
         
         # Determine what version we want to use
-        if [ "${{ inputs.LATEST_VERSION }}" == "true" ]; then
-          # First, determine which URL to check for GitHub repo info
-          CHECK_URL=""
-          if echo "${{ inputs.SOURCE }}" | grep -Eq '^https?://[^/]+(/.*)?
-        elif [ "${{ inputs.VERSION }}" != "" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
-          # Use the explicitly provided version
-          FINAL_VERSION="${{ inputs.VERSION }}"
-          echo "Using provided version: $FINAL_VERSION"
-        else
-          # Use the original version from the .info file
-          FINAL_VERSION=$ORIGINAL_VERSION
-          echo "Using original version from .info file: $FINAL_VERSION"
-        fi
-        
-        # Now construct the final URL with the determined version
-        # Handle custom SOURCE input first
-        if echo "${{ inputs.SOURCE }}" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-          FINAL_URL="${{ inputs.SOURCE }}"
-          # Replace version placeholders in custom SOURCE
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
-          echo "Using custom SOURCE URL: $FINAL_URL"
-        else
-          # Use URL from .info file and substitute version
-          if echo "$DOWNLOAD_x86_64" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-            FINAL_URL="$DOWNLOAD_x86_64"
-          elif echo "$DOWNLOAD" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-            FINAL_URL="$DOWNLOAD"
-          else
-            echo "No valid download URL found in .info file"
-            exit 1
-          fi
+        if [ "${{ inputs.LATEST_VERSION }}" = "true" ]; then
+          echo "LATEST_VERSION flag is set, attempting to fetch latest version from GitHub"
           
-          # Replace version placeholders
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
-          echo "Using .info file URL with version substitution: $FINAL_URL"
-        fi
-        
-        # Export the final values
-        echo "VERSION=$FINAL_VERSION" >> $GITHUB_ENV
-        echo "URL=$FINAL_URL" >> $GITHUB_ENV
-        
-        echo "Final version: $FINAL_VERSION"
-        echo "Final URL: $FINAL_URL"; then
+          # Determine which URL to check for GitHub repo info
+          CHECK_URL=""
+          if [ -n "${{ inputs.SOURCE }}" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
             CHECK_URL="${{ inputs.SOURCE }}"
             echo "Checking custom SOURCE for GitHub repo: $CHECK_URL"
-          elif echo "$DOWNLOAD_x86_64" | grep -Eq '^https?://[^/]+(/.*)?
-        elif [ "${{ inputs.VERSION }}" != "" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
-          # Use the explicitly provided version
-          FINAL_VERSION="${{ inputs.VERSION }}"
-          echo "Using provided version: $FINAL_VERSION"
-        else
-          # Use the original version from the .info file
-          FINAL_VERSION=$ORIGINAL_VERSION
-          echo "Using original version from .info file: $FINAL_VERSION"
-        fi
-        
-        # Now construct the final URL with the determined version
-        # Handle custom SOURCE input first
-        if echo "${{ inputs.SOURCE }}" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-          FINAL_URL="${{ inputs.SOURCE }}"
-          # Replace version placeholders in custom SOURCE
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
-          echo "Using custom SOURCE URL: $FINAL_URL"
-        else
-          # Use URL from .info file and substitute version
-          if echo "$DOWNLOAD_x86_64" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-            FINAL_URL="$DOWNLOAD_x86_64"
-          elif echo "$DOWNLOAD" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-            FINAL_URL="$DOWNLOAD"
-          else
-            echo "No valid download URL found in .info file"
-            exit 1
-          fi
-          
-          # Replace version placeholders
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
-          echo "Using .info file URL with version substitution: $FINAL_URL"
-        fi
-        
-        # Export the final values
-        echo "VERSION=$FINAL_VERSION" >> $GITHUB_ENV
-        echo "URL=$FINAL_URL" >> $GITHUB_ENV
-        
-        echo "Final version: $FINAL_VERSION"
-        echo "Final URL: $FINAL_URL"; then
+          elif [ -n "$DOWNLOAD_x86_64" ]; then
             CHECK_URL="$DOWNLOAD_x86_64"
             echo "Checking DOWNLOAD_x86_64 for GitHub repo: $CHECK_URL"
-          elif echo "$DOWNLOAD" | grep -Eq '^https?://[^/]+(/.*)?
-        elif [ "${{ inputs.VERSION }}" != "" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
-          # Use the explicitly provided version
-          FINAL_VERSION="${{ inputs.VERSION }}"
-          echo "Using provided version: $FINAL_VERSION"
-        else
-          # Use the original version from the .info file
-          FINAL_VERSION=$ORIGINAL_VERSION
-          echo "Using original version from .info file: $FINAL_VERSION"
-        fi
-        
-        # Now construct the final URL with the determined version
-        # Handle custom SOURCE input first
-        if echo "${{ inputs.SOURCE }}" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-          FINAL_URL="${{ inputs.SOURCE }}"
-          # Replace version placeholders in custom SOURCE
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
-          echo "Using custom SOURCE URL: $FINAL_URL"
-        else
-          # Use URL from .info file and substitute version
-          if echo "$DOWNLOAD_x86_64" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-            FINAL_URL="$DOWNLOAD_x86_64"
-          elif echo "$DOWNLOAD" | grep -Eq '^https?://[^/]+(/.*)?$'; then
-            FINAL_URL="$DOWNLOAD"
-          else
-            echo "No valid download URL found in .info file"
-            exit 1
-          fi
-          
-          # Replace version placeholders
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
-          echo "Using .info file URL with version substitution: $FINAL_URL"
-        fi
-        
-        # Export the final values
-        echo "VERSION=$FINAL_VERSION" >> $GITHUB_ENV
-        echo "URL=$FINAL_URL" >> $GITHUB_ENV
-        
-        echo "Final version: $FINAL_VERSION"
-        echo "Final URL: $FINAL_URL"; then
+          elif [ -n "$DOWNLOAD" ]; then
             CHECK_URL="$DOWNLOAD"
             echo "Checking DOWNLOAD for GitHub repo: $CHECK_URL"
           fi
@@ -511,7 +389,7 @@ jobs:
               echo "Fetching latest version from GitHub API for $OWNER/$REPO"
               LATEST_VERSION=$(curl -s "https://api.github.com/repos/$OWNER/$REPO/releases/latest" | jq -r '.tag_name // empty')
               
-              if [ -n "$LATEST_VERSION" ] && [ "$LATEST_VERSION" != "null" ]; then
+              if [ -n "$LATEST_VERSION" ] && [ "$LATEST_VERSION" != "null" ] && [ "$LATEST_VERSION" != "empty" ]; then
                 # Remove 'v' prefix if present
                 FINAL_VERSION=$(echo "$LATEST_VERSION" | sed 's/^v//')
                 echo "Using latest version: $FINAL_VERSION"
@@ -527,7 +405,8 @@ jobs:
             echo "URL is not from GitHub, cannot fetch latest version. Using original version: $ORIGINAL_VERSION"
             FINAL_VERSION=$ORIGINAL_VERSION
           fi
-        elif [ "${{ inputs.VERSION }}" != "" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
+          
+        elif [ -n "${{ inputs.VERSION }}" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
           # Use the explicitly provided version
           FINAL_VERSION="${{ inputs.VERSION }}"
           echo "Using provided version: $FINAL_VERSION"
@@ -538,8 +417,8 @@ jobs:
         fi
         
         # Now construct the final URL with the determined version
-        # Handle custom SOURCE input first
-        if echo "${{ inputs.SOURCE }}" | grep -Eq '^https?://[^/]+(/.*)?$'; then
+        if [ -n "${{ inputs.SOURCE }}" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
+          # Handle custom SOURCE input
           FINAL_URL="${{ inputs.SOURCE }}"
           # Replace version placeholders in custom SOURCE
           FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
@@ -547,10 +426,12 @@ jobs:
           echo "Using custom SOURCE URL: $FINAL_URL"
         else
           # Use URL from .info file and substitute version
-          if echo "$DOWNLOAD_x86_64" | grep -Eq '^https?://[^/]+(/.*)?$'; then
+          if [ -n "$DOWNLOAD_x86_64" ]; then
             FINAL_URL="$DOWNLOAD_x86_64"
-          elif echo "$DOWNLOAD" | grep -Eq '^https?://[^/]+(/.*)?$'; then
+            echo "Using DOWNLOAD_x86_64 from .info file"
+          elif [ -n "$DOWNLOAD" ]; then
             FINAL_URL="$DOWNLOAD"
+            echo "Using DOWNLOAD from .info file"
           else
             echo "No valid download URL found in .info file"
             exit 1
@@ -559,7 +440,7 @@ jobs:
           # Replace version placeholders
           FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
           FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
-          echo "Using .info file URL with version substitution: $FINAL_URL"
+          echo "URL after version substitution: $FINAL_URL"
         fi
         
         # Export the final values
@@ -568,10 +449,6 @@ jobs:
         
         echo "Final version: $FINAL_VERSION"
         echo "Final URL: $FINAL_URL"
-    #       . $INFO
-    #     fi
-    #     echo "VERSION=$VERSION" >> $GITHUB_ENV
-    # -
     -
       name: Download source code
       run: |
