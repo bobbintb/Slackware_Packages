@@ -11,11 +11,11 @@ tail +13 CHECKSUMS.md5 | md5sum --check | less
 
 MD5 message digest                Filename
 6428d8006b3a76baad84a9f02f09264d  ./ChangeLog.rss
-f5a0b7aada53817b8fcc75d93b54bf6f  ./FILELIST.TXT
+0f8f7dbabd65eb2ecf67ae346ffb0302  ./FILELIST.TXT
 a5b64b0e8c80b400dafe01cc30df1a34  ./GPG-KEY
-863a4ad85ba97738c95707ecc8b42813  ./MANIFEST.bz2
-7c211c06da73a7d26507c56394d7cc30  ./PACKAGES.TXT
-3db1d28171acda73c49fd0b7c6e93fd9  ./PACKAGES.TXT.gz
+2824ab037dae67329a7ce546a91b32ce  ./MANIFEST.bz2
+0ef7b95e19f2940cc565af6ec721b4da  ./PACKAGES.TXT
+8b3b89157adfc31be7c544adbc871941  ./PACKAGES.TXT.gz
 e079b17ab08efdbda0b942c43e5c4875  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.lst
 4cd8b8cd5e3ccf105590b7eb43e9cdb2  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.meta
 fbd298d67aa8b73cda59105fa596e171  ./SysinternalsEBPF/SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
@@ -46,12 +46,12 @@ a51a149187c089c9a4c0a0d3b063dcd4  ./bitwarden-cli/bitwarden-cli-2025.3.0-x86_64-
 c93d76a5ca5acc294f8da1d7a4682d5f  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.asc
 94e67e7077b971d12f8ff7272841ba1e  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.tgz.md5
 09de44c662d21489016f2866e2fbdeb8  ./bpftool/bpftool-7.5.0-x86_64-1_SBo.txt
-49db25ae65dd9f987e3c306e01584db1  ./bpftrace/bpftrace-0.23.5-x86_64-1_SBo.lst
-0888842ca77c50cd3e68b51d64c33194  ./bpftrace/bpftrace-0.23.5-x86_64-1_SBo.meta
-260e4f626041790ab896e8d59e0a0720  ./bpftrace/bpftrace-0.23.5-x86_64-1_SBo.tgz
-f27874324f330d048c88a8b4179f79a5  ./bpftrace/bpftrace-0.23.5-x86_64-1_SBo.tgz.asc
-faeff16329f53b5ce3f2781d6a489bfa  ./bpftrace/bpftrace-0.23.5-x86_64-1_SBo.tgz.md5
-011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.23.5-x86_64-1_SBo.txt
+ce5ce265168af91970c0f138c27907c5  ./bpftrace/bpftrace-0.23.5-x86_64-2_SBo.lst
+eb871f8d9283d58fdeaa9ac10306bae6  ./bpftrace/bpftrace-0.23.5-x86_64-2_SBo.meta
+b1880eafc797cd087e196e7ce2027dae  ./bpftrace/bpftrace-0.23.5-x86_64-2_SBo.tgz
+d961e84994de9d20aa7c7015725f8016  ./bpftrace/bpftrace-0.23.5-x86_64-2_SBo.tgz.asc
+5bfc5338e225433cdb3d75b0a69cd438  ./bpftrace/bpftrace-0.23.5-x86_64-2_SBo.tgz.md5
+011fb9dd60cf50f4e259daca6f5cfb37  ./bpftrace/bpftrace-0.23.5-x86_64-2_SBo.txt
 fcb2b812f3c3e0fbbb953db82dedd457  ./dirt/dirt-v1.0-x86_64-1_SBo.lst
 3beae201bfbcb37de19bc94618af1b4f  ./dirt/dirt-v1.0-x86_64-1_SBo.meta
 4036696bbe542560ebb096f1027328a2  ./dirt/dirt-v1.0-x86_64-1_SBo.tgz

@@ -1,4 +1,4 @@
-PACKAGES.TXT;  Mon Aug  4 23:44:52 UTC 2025
+PACKAGES.TXT;  Tue Aug  5 00:13:56 UTC 2025
 
 PACKAGE NAME:  SysinternalsEBPF-1.4.0.0-x86_64-1_SBo.tgz
 PACKAGE LOCATION:  ./SysinternalsEBPF
@@ -84,7 +84,7 @@ bpftool:
 bpftool:
 bpftool: Home: https://bpftool.dev/
 
-PACKAGE NAME:  bpftrace-0.23.5-x86_64-1_SBo.tgz
+PACKAGE NAME:  bpftrace-0.23.5-x86_64-2_SBo.tgz
 PACKAGE LOCATION:  ./bpftrace
 PACKAGE SIZE (compressed):  3720 K
 PACKAGE SIZE (uncompressed):  9510 K
