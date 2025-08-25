@@ -8,7 +8,7 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      VERSION: "1.6.0"
+      VERSION: "1.6.2"
       NAME: "libbpf"
       SBOPKG: true
       PACKAGES: "make guile gc gcc binutils kernel-headers"
