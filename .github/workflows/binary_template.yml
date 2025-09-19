@@ -1,0 +1,529 @@
+name: Binary workflow template
+on:
+  workflow_call:
+    inputs:
+      NAME:
+        description: 'Program name'
+        required: true
+        type: string
+      LATEST_VERSION:
+        description: 'Use the latest program version (ignores VERSION)'
+        required: false
+        type: string
+      VERSION:
+        description: 'Program version'
+        required: false
+        type: string
+      BUILD:
+        description: 'Program build number'
+        required: false
+        type: string
+      PACKAGES:
+        description: 'Build dependencies to install, space seperated'
+        required: false
+        type: string
+      REINSTALL:
+        description: 'Build dependencies to re-install, space seperated'
+        required: false
+        type: string
+      PIP:
+        description: 'PIP dependencies to install, space seperated'
+        required: false
+        type: string
+      SOURCE:
+        description: 'URL of source archive or Git repo to clone (ending with ".git")'
+        required: false
+        type: string
+      UPGRADE-ALL:
+        description: 'Upgrade all slackpkg files'
+        required: false
+        type: boolean
+      SBOPKG:
+        description: 'Use sbopkg instead of a local slackbuild file'
+        required: false
+        type: boolean
+      alien-multilib-15:
+        description: 'Enable alien-multilib-15 repo'
+        required: false
+        type: boolean
+      alien-multilib-current:
+        description: 'Enable alien-multilib-current repo'
+        required: false
+        type: boolean      
+      alien-15:
+        description: 'Enable alien-15 repo'
+        required: false
+        type: boolean
+      alien-current:
+        description: 'Enable alien-current repo'
+        required: false
+        type: boolean
+      alien-restr-15:
+        description: 'Enable alien-restr-15 repo'
+        required: false
+        type: boolean
+      alien-restr-current:
+        description: 'Enable alien-restr-current repo'
+        required: false
+        type: boolean
+      alien-slackbuilds:
+        description: 'Enable alien-slackbuilds repo'
+        required: false
+        type: boolean
+      conraid-current:
+        description: 'Enable conraid-current repo'
+        required: false
+        type: boolean
+      conraid-extra:
+        description: 'Enable conraid-extra repo'
+        required: false
+        type: boolean
+      conraid-testing:
+        description: 'Enable conraid-testing repo'
+        required: false
+        type: boolean
+      csb-15:
+        description: 'Enable csb-15 repo'
+        required: false
+        type: boolean
+      csb-current:
+        description: 'Enable csb-current repo'
+        required: false
+        type: boolean
+      msb-15:
+        description: 'Enable msb-15 repo'
+        required: false
+        type: boolean
+      msb-current:
+        description: 'Enable msb-current repo'
+        required: false
+        type: boolean
+      ponce-current:
+        description: 'Enable ponce-current repo'
+        required: false
+        type: boolean
+      salix-15:
+        description: 'Enable salix-15 repo'
+        required: false
+        type: boolean
+      salix-extra-15:
+        description: 'Enable salix-extra-15 repo'
+        required: false
+        type: boolean
+      slackel-current:
+        description: 'Enable slackel-current repo'
+        required: false
+        type: boolean
+      slackonly-15:
+        description: 'Enable slackonly-15 repo'
+        required: false
+        type: boolean
+      slackonly-current:
+        description: 'Enable slackonly-current repo'
+        required: false
+        type: boolean
+      slint:
+        description: 'Enable slint repo'
+        required: false
+        type: boolean
+      official-15-extra:
+        description: 'Enable official-15-extra repo'
+        required: false
+        type: boolean
+      bobbintb:
+        description: 'Enable bobbintb repo'
+        required: false
+        type: boolean
+jobs:
+  slackbuild_and_upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: bobbintb/unraid-cicd-builder-upgraded
+      options: --privileged
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+      with:
+        clean: true
+    -
+      name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+    - name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/packages
+        key: slackware-packages-${{ github.sha }}
+        restore-keys: |
+          slackware-packages-
+        # key: ${{ runner.os }}-slackpkg-${{ hashFiles('**/package-list.txt') }}
+        # restore-keys: |
+        #   ${{ runner.os }}-slackpkg-
+        #key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
+        #restore-keys: |
+        #  slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
+    - 
+      name: Enable additional repos
+      run: | 
+        REPOPLUS="slackpkgplus"
+        
+        # Function to add repo if enabled
+        add_repo() {
+          local name="$1"
+          local url="$2"
+          local enabled="$3"
+          
+          if [ "$enabled" = "true" ]; then
+            echo "MIRRORPLUS['$name']=$url" >> /etc/slackpkg/slackpkgplus.conf
+            REPOPLUS+=" $name"
+            echo "Enabled: $name"
+          fi
+        }
+        
+        # Add all repos
+        add_repo "alien-multilib-15" "http://slackware.nl/people/alien/multilib/15.0/" "${{ inputs.alien-multilib-15 }}"
+        add_repo "alien-multilib-current" "http://slackware.nl/people/alien/multilib/current/" "${{ inputs.alien-multilib-current }}"
+        add_repo "alien-15" "https://slackware.nl/people/alien/sbrepos/15.0/x86_64/" "${{ inputs.alien-15 }}"
+        add_repo "alien-current" "http://slackware.nl/people/alien/sbrepos/current/x86_64/" "${{ inputs.alien-current }}"
+        add_repo "alien-restr-15" "https://slackware.nl/people/alien/restricted_sbrepos/15.0/x86_64/" "${{ inputs.alien-restr-15 }}"
+        add_repo "alien-restr-current" "https://slackware.nl/people/alien/restricted_sbrepos/current/x86_64/" "${{ inputs.alien-restr-current }}"
+        add_repo "alien-slackbuilds" "https://slackware.nl/people/alien/slackbuilds/" "${{ inputs.alien-slackbuilds }}"
+        add_repo "conraid-current" "https://slackers.it/repository/slackware64-current/" "${{ inputs.conraid-current }}"
+        add_repo "conraid-extra" "https://slackers.it/repository/slackware64-current-extra/" "${{ inputs.conraid-extra }}"
+        add_repo "conraid-testing" "https://slackers.it/repository/slackware64-current-testing/" "${{ inputs.conraid-testing }}"
+        add_repo "csb-15" "https://slackware.uk/csb/15.0/x86_64/" "${{ inputs.csb-15 }}"
+        add_repo "csb-current" "https://slackware.uk/csb/current/x86_64/" "${{ inputs.csb-current }}"
+        add_repo "msb-15" "https://slackware.uk/msb/15.0/latest/x86_64/" "${{ inputs.msb-15 }}"
+        add_repo "msb-current" "https://slackware.uk/msb/current/latest/x86_64/" "${{ inputs.msb-current }}"
+        add_repo "ponce-current" "https://ponce.cc/slackware/slackware64-current/packages/" "${{ inputs.ponce-current }}"
+        add_repo "salix-15" "https://download.salixos.org/x86_64/15.0/" "${{ inputs.salix-15 }}"
+        add_repo "salix-extra-15" "https://download.salixos.org/x86_64/extra-15.0/" "${{ inputs.salix-extra-15 }}"
+        add_repo "slackel-current" "http://www.slackel.gr/repo/x86_64/current/" "${{ inputs.slackel-current }}"
+        add_repo "slackonly-15" "https://packages.slackonly.com/pub/packages/15.0-x86_64/" "${{ inputs.slackonly-15 }}"
+        add_repo "slackonly-current" "https://packages.slackonly.com/pub/packages/current-x86_64/" "${{ inputs.slackonly-current }}"
+        add_repo "slint" "https://slackware.uk/slint/x86_64/slint-15.0/" "${{ inputs.slint }}"
+        add_repo "official-15-extra" "https://ftp.osuosl.org/pub/slackware/slackware64-15.0/" "${{ inputs.official-15-extra }}"
+        add_repo "bobbintb" "https://raw.githubusercontent.com/bobbintb/Slackware_Packages/refs/heads/main/builds/" "${{ inputs.bobbintb }}"
+        
+        # Update configuration
+        sed -i "s|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|" /etc/slackpkg/slackpkgplus.conf
+        sed -i 's|WGETOPTS="--timeout=20 --tries=2"|WGETOPTS="-q --timeout=20 --tries=2"|' /etc/slackpkg/slackpkgplus.conf
+    - 
+      name: Update slackpkg
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
+        echo "##########################cache##########################"
+        ls -ls /var/cache/packages
+        slackpkg update gpg <<< y > /dev/null || true
+        # slackpkg update gpg <<< y > /dev/null
+        slackpkg update <<< y > /dev/null
+    - 
+      name: Upgrade all packages
+      if: ${{ inputs.UPGRADE-ALL == true }}
+      run: |
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+        slackpkg upgrade-all || true
+    - 
+      name: Install dependencies
+      if: ${{ inputs.PACKAGES != '' && inputs.PACKAGES != null }}
+      run: |
+        slackpkg install ${{ inputs.PACKAGES }} <<< y || true
+        slackpkg upgrade ${{ inputs.PACKAGES }} <<< y || true
+        # > /dev/null
+        # echo "==================== installed packages ===================="
+    - 
+      name: Re-install dependencies
+      if: ${{ inputs.REINSTALL != '' && inputs.REINSTALL != null }}
+      run: |
+        slackpkg reinstall ${{ inputs.REINSTALL }} > /dev/null
+        # echo "==================== reinstalled packages ===================="
+        # ls -1 /var/log/packages/
+    - 
+      name: Install PIP dependencies
+      if: ${{ inputs.PIP != '' && inputs.PIP != null }}
+      run: pip install ${{ inputs.PIP }}
+    -
+     name: Copying build files
+     run: |
+       if [ "${{ inputs.SBOPKG }}" == "true" ]; then
+         sbopkg -r
+         echo -e "\e[32mDownloading files from slackbuilds.org\e[0m"
+         sbopkg -d ${{ inputs.NAME }} <<< q
+         INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
+       else
+         REPO=${GITHUB_REPOSITORY##*/}
+         REPO_DIR="/__w/${REPO}/${REPO}"
+         INFO=${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.info
+       fi
+       BUILDFILES_DIR=$(dirname "$INFO")
+       echo "BUILDFILES_DIR=${BUILDFILES_DIR}" >> $GITHUB_ENV
+       echo "INFO=${INFO}" >> $GITHUB_ENV
+       cp $BUILDFILES_DIR/* /tmp/SBo/
+    -
+      name: Determine version and construct URL
+      run: |
+        cd /tmp/SBo
+        
+        # Source the info file to get the original values
+        . $INFO
+        ORIGINAL_VERSION=$VERSION
+        
+        echo "Original version from .info file: $ORIGINAL_VERSION"
+        echo "LATEST_VERSION input: ${{ inputs.LATEST_VERSION }}"
+        echo "VERSION input: ${{ inputs.VERSION }}"
+        echo "SOURCE input: ${{ inputs.SOURCE }}"
+        
+        # Determine what version we want to use
+        if [ "${{ inputs.LATEST_VERSION }}" = "true" ]; then
+          echo "LATEST_VERSION flag is set, attempting to fetch latest version from GitHub"
+          
+          # Determine which URL to check for GitHub repo info
+          CHECK_URL=""
+          if [ -n "${{ inputs.SOURCE }}" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
+            CHECK_URL="${{ inputs.SOURCE }}"
+            echo "Checking custom SOURCE for GitHub repo: $CHECK_URL"
+          elif [ -n "$DOWNLOAD_x86_64" ]; then
+            CHECK_URL="$DOWNLOAD_x86_64"
+            echo "Checking DOWNLOAD_x86_64 for GitHub repo: $CHECK_URL"
+          elif [ -n "$DOWNLOAD" ]; then
+            CHECK_URL="$DOWNLOAD"
+            echo "Checking DOWNLOAD for GitHub repo: $CHECK_URL"
+          fi
+          
+          # Extract owner/repo from the URL for GitHub API call
+          if echo "$CHECK_URL" | grep -q "github.com"; then
+            OWNER=$(echo "$CHECK_URL" | sed -n 's|.*github.com/\([^/]*\)/\([^/]*\)/.*|\1|p')
+            REPO=$(echo "$CHECK_URL" | sed -n 's|.*github.com/\([^/]*\)/\([^/]*\)/.*|\2|p')
+            
+            if [ -n "$OWNER" ] && [ -n "$REPO" ]; then
+              echo "Fetching latest version from GitHub API for $OWNER/$REPO"
+              LATEST_VERSION=$(curl -s "https://api.github.com/repos/$OWNER/$REPO/releases/latest" | jq -r '.tag_name // empty')
+              
+              if [ -n "$LATEST_VERSION" ] && [ "$LATEST_VERSION" != "null" ] && [ "$LATEST_VERSION" != "empty" ]; then
+                # Remove 'v' prefix if present
+                FINAL_VERSION=$(echo "$LATEST_VERSION" | sed 's/^v//')
+                echo "Using latest version: $FINAL_VERSION"
+              else
+                echo "Could not fetch latest version, falling back to original: $ORIGINAL_VERSION"
+                FINAL_VERSION=$ORIGINAL_VERSION
+              fi
+            else
+              echo "Could not extract owner/repo from URL, using original version: $ORIGINAL_VERSION"
+              FINAL_VERSION=$ORIGINAL_VERSION
+            fi
+          else
+            echo "URL is not from GitHub, cannot fetch latest version. Using original version: $ORIGINAL_VERSION"
+            FINAL_VERSION=$ORIGINAL_VERSION
+          fi
+          
+        elif [ -n "${{ inputs.VERSION }}" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
+          # Use the explicitly provided version
+          FINAL_VERSION="${{ inputs.VERSION }}"
+          echo "Using provided version: $FINAL_VERSION"
+        else
+          # Use the original version from the .info file
+          FINAL_VERSION=$ORIGINAL_VERSION
+          echo "Using original version from .info file: $FINAL_VERSION"
+        fi
+        
+        # Now construct the final URL with the determined version
+        if [ -n "${{ inputs.SOURCE }}" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
+          # Handle custom SOURCE input
+          FINAL_URL="${{ inputs.SOURCE }}"
+          # Replace version placeholders in custom SOURCE
+          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
+          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
+          echo "Using custom SOURCE URL: $FINAL_URL"
+        else
+          # Use URL from .info file and substitute version
+          if [ -n "$DOWNLOAD_x86_64" ]; then
+            FINAL_URL="$DOWNLOAD_x86_64"
+            echo "Using DOWNLOAD_x86_64 from .info file"
+          elif [ -n "$DOWNLOAD" ]; then
+            FINAL_URL="$DOWNLOAD"
+            echo "Using DOWNLOAD from .info file"
+          else
+            echo "No valid download URL found in .info file"
+            exit 1
+          fi
+          
+          # Replace version placeholders and actual version numbers
+          echo "Original URL: $FINAL_URL"
+          # First try standard placeholders
+          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
+          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
+          
+          # If no placeholders were found, try to replace the original version number
+          if [ "$FINAL_URL" = "$DOWNLOAD_x86_64" ] || [ "$FINAL_URL" = "$DOWNLOAD" ]; then
+            echo "No placeholders found, attempting to replace version $ORIGINAL_VERSION with $FINAL_VERSION"
+            # Replace version with 'v' prefix (like v0.18.0)
+            FINAL_URL=$(echo "$FINAL_URL" | sed "s/v$ORIGINAL_VERSION/v$FINAL_VERSION/g")
+            # Replace version without 'v' prefix
+            FINAL_URL=$(echo "$FINAL_URL" | sed "s/$ORIGINAL_VERSION/$FINAL_VERSION/g")
+          fi
+          
+          echo "URL after version substitution: $FINAL_URL"
+        fi
+        
+        # Export the final values
+        echo "VERSION=$FINAL_VERSION" >> $GITHUB_ENV
+        echo "URL=$FINAL_URL" >> $GITHUB_ENV
+        
+        echo "Final version: $FINAL_VERSION"
+        echo "Final URL: $FINAL_URL"
+    -
+      name: Download source code
+      run: |
+        cd /tmp/SBo
+        if [ "${URL##*.}" == "git" ]; then
+          echo -e "\e[32mCloning from git to $(pwd)\e[0m"
+          git clone ${URL} --depth 1 -b v$VERSION --recurse-submodules || \
+          git clone ${URL} --depth 1 -b $VERSION --recurse-submodules || \
+          git clone ${URL} --depth 1 -b main --recurse-submodules || \
+          git clone ${URL} --depth 1 -b master --recurse-submodules
+        else
+          echo -e "\e[32mDownloading source code to $(pwd)\e[0m"
+          wget $URL
+        fi
+    -
+      name: Check existing build and increment build number if needed
+      run: |
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        EXISTING_BUILD_DIR="${REPO_DIR}/builds/${{ inputs.NAME }}"
+        
+        echo "Checking for existing builds in: $EXISTING_BUILD_DIR"
+        
+        if [ -d "$EXISTING_BUILD_DIR" ]; then
+          # Look for existing package files with the same version
+          EXISTING_PACKAGE=$(find "$EXISTING_BUILD_DIR" -name "${{ inputs.NAME }}-${VERSION}-*-*_SBo.t*z" 2>/dev/null | head -n 1)
+          
+          if [ -n "$EXISTING_PACKAGE" ]; then
+            echo "Found existing package: $(basename "$EXISTING_PACKAGE")"
+            
+            # Extract the current build number from the filename
+            # Pattern: name-version-arch-build_SBo.tgz
+            CURRENT_BUILD=$(basename "$EXISTING_PACKAGE" | sed -n "s/.*-${VERSION}-[^-]*-\([0-9]*\)_SBo\.t.*z/\1/p")
+            
+            if [ -n "$CURRENT_BUILD" ]; then
+              # Increment the build number
+              NEW_BUILD=$((CURRENT_BUILD + 1))
+              echo "Current build number: $CURRENT_BUILD"
+              echo "Incrementing to build number: $NEW_BUILD"
+              
+              # Export the new build number (override any existing BUILD input)
+              echo "BUILD=$NEW_BUILD" >> $GITHUB_ENV
+              export BUILD=$NEW_BUILD
+            else
+              echo "Could not extract build number from existing package"
+              # Use provided BUILD input or default to 1
+              if [ -n "${{ inputs.BUILD }}" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
+                echo "BUILD=${{ inputs.BUILD }}" >> $GITHUB_ENV
+                export BUILD=${{ inputs.BUILD }}
+              else
+                echo "BUILD=1" >> $GITHUB_ENV
+                export BUILD=1
+              fi
+            fi
+          else
+            echo "No existing package found for version $VERSION"
+            # Use provided BUILD input or default to 1
+            if [ -n "${{ inputs.BUILD }}" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
+              echo "BUILD=${{ inputs.BUILD }}" >> $GITHUB_ENV
+              export BUILD=${{ inputs.BUILD }}
+            else
+              echo "BUILD=1" >> $GITHUB_ENV
+              export BUILD=1
+            fi
+          fi
+        else
+          echo "No existing builds directory found"
+          # Use provided BUILD input or default to 1
+          if [ -n "${{ inputs.BUILD }}" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
+            echo "BUILD=${{ inputs.BUILD }}" >> $GITHUB_ENV
+            export BUILD=${{ inputs.BUILD }}
+          else
+            echo "BUILD=1" >> $GITHUB_ENV
+            export BUILD=1
+          fi
+        fi
+        
+        echo "Final BUILD number: $BUILD"
+    - 
+      name: Build
+      run: |
+        REPO=${GITHUB_REPOSITORY##*/}
+        REPO_DIR="/__w/${REPO}/${REPO}"
+        DEST_DIR=${REPO_DIR}/builds/${{ inputs.NAME }}
+        echo "DEST_DIR=${DEST_DIR}" >> $GITHUB_ENV
+        mkdir -p $DEST_DIR
+        if [ "${{ inputs.BUILD }}" != "" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
+          export BUILD=${{ inputs.BUILD }}
+        fi
+        export VERSION=$VERSION
+        echo "version"
+        echo $VERSION
+        cd /tmp/SBo
+        output=$(sh ${{ inputs.NAME }}.SlackBuild)
+        package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
+        echo -e "\e[32mPackage path: ${package_path}\e[0m"
+        echo "package_path=${package_path}" >> $GITHUB_ENV
+        if [ -f "${package_path}" ]; then
+          echo -e "\e[32mRemoving previous package from: $DEST_DIR\e[0m"
+          rm -rf "$DEST_DIR"/*
+          echo -e "\e[32mMoving package to: $DEST_DIR\e[0m"
+        	mv ${package_path} $DEST_DIR
+        fi
+        git config --global --add safe.directory $REPO_DIR
+    - 
+      name: Upload
+      run: |
+        echo -e "\e[32mContents of $DEST_DIR:\e[0m"
+        ls -ls $DEST_DIR
+        slackpkg update gpg || true
+        slackpkg update || true
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
+        FILES=$(find "$DEST_DIR" -type f -size +100M)
+        if [ -n "$FILES" ]; then
+          slackpkg install bobbintb:git-lfs
+          git lfs install
+          echo "$FILES" | while read -r FILE; do
+            git lfs track "$FILE"
+            echo -e "\e[32mTracked $FILE with Git LFS\e[0m"
+          done
+          git add .gitattributes
+          cat .gitattributes
+        fi
+        cd ./builds/
+        gpg --list-keys
+        export REPOSOWNER="${{ github.repository_owner }}"
+        export RSS_UUID=$(uuidgen -t)
+        export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
+        cat <<EOF > script.expect
+        #!/usr/bin/expect
+        
+        set key [lindex $argv 0]
+        spawn /usr/libexec/slackrepo/gen_repos_files.sh
+        expect "Enter ChangeLog.txt description:"
+        send "\r"
+        expect "Enter your GPG passphrase:"
+        send "\$key\r"
+        expect eof
+        EOF
+        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
+        chmod +x script.expect
+        ./script.expect ${{ secrets.PASSPHRASE }}
+    - 
+      name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated ${{ inputs.NAME }}'
+        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc .gitattributes'
