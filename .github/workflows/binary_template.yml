@@ -60,7 +60,7 @@ jobs:
       run: |
         
         VERSION=$(curl -s https://api.github.com/repos/${{ inputs.OWNER }}/${{ inputs.REPO }}/releases/latest | jq -r .tag_name)
-        echo "Current version of ${{ inputs.NAME }}: $VERSION
+        echo "Current version of ${{ inputs.NAME }}: ${VERSION}"
         export VERSION=$VERSION
     - 
       name: Check existing build and increment build number if needed
