@@ -40,9 +40,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    container:
-      image: bobbintb/unraid-cicd-builder-upgraded
-      options: --privileged
+    # container:
+    #   image: bobbintb/unraid-cicd-builder-upgraded
+    #   options: --privileged
     steps:
     - 
       name: Checkout
@@ -56,7 +56,7 @@ jobs:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
     - 
-      name: Get current version numver
+      name: Get current version number
       run: |
         
         VERSION=$(curl -s https://api.github.com/repos/${{ inputs.OWNER }}/${{ inputs.REPO }}/releases/latest | jq -r .tag_name)
@@ -129,168 +129,5 @@ jobs:
     - 
       name: Build
       run: |
-        REPO=${GITHUB_REPOSITORY##*/}
-        REPO_DIR="/__w/${REPO}/${REPO}"
-        DEST_DIR=${REPO_DIR}/builds/${{ inputs.NAME }}
-        echo "DEST_DIR=${DEST_DIR}" >> $GITHUB_ENV
-        mkdir -p $DEST_DIR
-        if [ "${{ inputs.BUILD }}" != "" ] && [ "${{ inputs.BUILD }}" != "null" ]; then
-          export BUILD=${{ inputs.BUILD }}
-        fi
-        export VERSION=$VERSION
-
-        PRGNAM=${{ inputs.NAME }}
-        VERSION=$(curl -s https://api.github.com/repos/bpftrace/bpftrace/releases/latest | jq -r .tag_name)
-        BUILD=${BUILD:-1}
-        TAG=${TAG:-_loom}
-
-
-        # Automatically determine the architecture we're building on:
-        if [ -z "$ARCH" ]; then
-          case "$( uname -m )" in
-            i?86) export ARCH=i586 ;;
-            arm*) export ARCH=arm ;;
-            # Unless $ARCH is already set, use uname -m for all other archs:
-               *) export ARCH=$( uname -m ) ;;
-          esac
-        fi
-        
-        CWD=$(pwd)
-        TMP=${TMP:-/tmp/SBo}
-        PKG=$TMP/package-$PRGNAM
-        OUTPUT=${OUTPUT:-/tmp}
-        
-        if [ "$ARCH" = "i586" ]; then
-          SLKCFLAGS="-O2 -march=i586 -mtune=i686"
-          LIBDIRSUFFIX=""
-        elif [ "$ARCH" = "i686" ]; then
-          SLKCFLAGS="-O2 -march=i686 -mtune=i686"
-          LIBDIRSUFFIX=""
-        elif [ "$ARCH" = "x86_64" ]; then
-          SLKCFLAGS="-O2 -fPIC"
-          LIBDIRSUFFIX="64"
-        else
-          SLKCFLAGS="-O2"
-          LIBDIRSUFFIX=""
-        fi
-        
-        
-        rm -rf $PKG
-        mkdir -p $TMP $PKG $OUTPUT
-        cd $TMP
-        
-        mkdir -p $PKG/usr/bin
-        wget -P $PKG/usr/bin ${{ inputs.BINARY }}
-        chmod +x $PKG/usr/bin/*
-        
-        chown -R root:root .
-        find -L . \
-         \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
-          -o -perm 511 \) -exec chmod 755 {} \; -o \
-         \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
-          -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
-        
-        # Compress man pages
-        # If man pages are installed to /usr/share/man instead, you'll need to either
-        # add the --mandir=/usr/man flag to configure or move them manually after the
-        # make install process is run.
-        find $PKG/usr/man -type f -exec gzip -9 {} \;
-        for i in $( find $PKG/usr/man -type l ) ; do
-          ln -s $( readlink $i ).gz $i.gz ; rm $i
-        done
-        
-        # Compress info pages and remove the package's dir file
-        # If no info pages are installed by the software, don't leave this in the script
-        rm -f $PKG/usr/info/dir
-        gzip -9 $PKG/usr/info/*.info*
-        
-        # Remove perllocal.pod and other special files that don't need to be installed,
-        # as they will overwrite what's already on the system.  If this is not needed,
-        # remove it from the script.
-        # Remove 'special' files
-        find $PKG -name "perllocal.pod" \
-          -o -name ".packlist" \
-          -o -name "*.bs" \
-          | xargs rm -f
-        
-        # Copy program documentation into the package
-        # The included documentation varies from one application to another, so be sure
-        # to adjust your script as needed
-        
-        mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-        cp -a \
-          <documentation> \
-          $PKG/usr/doc/$PRGNAM-$VERSION
-        
-        mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
-        cp -a \
-           * \
-           $PKG/usr/doc/$PRGNAM-$VERSION
-        
-        # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
-        mkdir -p $PKG/install
-        cat $CWD/slack-desc > $PKG/install/slack-desc
-        [ -f $CWD/doinst.sh ] && cat $CWD/doinst.sh > $PKG/install/doinst.sh
-        
-        # Make the package; be sure to leave it in $OUTPUT
-        # If package symlinks need to be created during install *before*
-        # your custom contents of doinst.sh runs, then add the -p switch to
-        # the makepkg command below -- see makepkg(8) for details
-        cd $PKG
-        /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
-
-
-        package_path=$OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
-                echo -e "\e[32mPackage path: ${package_path}\e[0m"
-        echo "package_path=${package_path}" >> $GITHUB_ENV
-        if [ -f "${package_path}" ]; then
-          echo -e "\e[32mRemoving previous package from: $DEST_DIR\e[0m"
-          rm -rf "$DEST_DIR"/*
-          echo -e "\e[32mMoving package to: $DEST_DIR\e[0m"
-        	mv ${package_path} $DEST_DIR
-        fi
-        git config --global --add safe.directory $REPO_DIR
-    # - 
-    #   name: Upload
-    #   run: |
-    #     echo -e "\e[32mContents of $DEST_DIR:\e[0m"
-    #     ls -ls $DEST_DIR
-    #     slackpkg update gpg || true
-    #     slackpkg update || true
-    #     slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
-    #     FILES=$(find "$DEST_DIR" -type f -size +100M)
-    #     if [ -n "$FILES" ]; then
-    #       slackpkg install bobbintb:git-lfs
-    #       git lfs install
-    #       echo "$FILES" | while read -r FILE; do
-    #         git lfs track "$FILE"
-    #         echo -e "\e[32mTracked $FILE with Git LFS\e[0m"
-    #       done
-    #       git add .gitattributes
-    #       cat .gitattributes
-    #     fi
-    #     cd ./builds/
-    #     gpg --list-keys
-    #     export REPOSOWNER="${{ github.repository_owner }}"
-    #     export RSS_UUID=$(uuidgen -t)
-    #     export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
-    #     cat <<EOF > script.expect
-    #     #!/usr/bin/expect
-        
-    #     set key [lindex $argv 0]
-    #     spawn /usr/libexec/slackrepo/gen_repos_files.sh
-    #     expect "Enter ChangeLog.txt description:"
-    #     send "\r"
-    #     expect "Enter your GPG passphrase:"
-    #     send "\$key\r"
-    #     expect eof
-    #     EOF
-    #     chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
-    #     chmod +x script.expect
-    #     ./script.expect ${{ secrets.PASSPHRASE }}
-    # - 
-    #   name: Commit changes
-    #   uses: stefanzweifel/git-auto-commit-action@v5
-    #   with:
-    #     commit_message: 'updated ${{ inputs.NAME }}'
-    #     file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc .gitattributes'
+        echo "Version"
+        echo $VERSION
