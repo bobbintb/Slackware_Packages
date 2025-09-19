@@ -18,10 +18,23 @@ on:
         description: 'Program build number'
         required: false
         type: string
-      SOURCE:
-        description: 'URL of source archive or Git repo to clone (ending with ".git")'
+      BINARY:
+        description: 'URL of the binary to package.'
+        required: true
+        type: string
+      LICENSE:
+        description: 'URL of the LICENSE to package.'
         required: false
         type: string
+      README:
+        description: 'URL of the README to package.'
+        required: false
+        type: string
+      extra_prep:
+        description: 'Extra prep'
+        required: false
+        type: string
+        default: false
 jobs:
   slackbuild_and_upload:
     runs-on: ubuntu-latest
@@ -56,150 +69,7 @@ jobs:
         #key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
         #restore-keys: |
         #  slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
-    -
-     name: Copying build files
-     run: |
-       if [ "${{ inputs.SBOPKG }}" == "true" ]; then
-         sbopkg -r
-         echo -e "\e[32mDownloading files from slackbuilds.org\e[0m"
-         sbopkg -d ${{ inputs.NAME }} <<< q
-         INFO=$(find / -name ${{ inputs.NAME }}.info 2>/dev/null | head -n 1)
-       else
-         REPO=${GITHUB_REPOSITORY##*/}
-         REPO_DIR="/__w/${REPO}/${REPO}"
-         INFO=${REPO_DIR}/SlackBuilds/${{ inputs.NAME }}/${{ inputs.NAME }}.info
-       fi
-       BUILDFILES_DIR=$(dirname "$INFO")
-       echo "BUILDFILES_DIR=${BUILDFILES_DIR}" >> $GITHUB_ENV
-       echo "INFO=${INFO}" >> $GITHUB_ENV
-       cp $BUILDFILES_DIR/* /tmp/SBo/
-    -
-      name: Determine version and construct URL
-      run: |
-        cd /tmp/SBo
-        
-        # Source the info file to get the original values
-        . $INFO
-        ORIGINAL_VERSION=$VERSION
-        
-        echo "Original version from .info file: $ORIGINAL_VERSION"
-        echo "LATEST_VERSION input: ${{ inputs.LATEST_VERSION }}"
-        echo "VERSION input: ${{ inputs.VERSION }}"
-        echo "SOURCE input: ${{ inputs.SOURCE }}"
-        
-        # Determine what version we want to use
-        if [ "${{ inputs.LATEST_VERSION }}" = "true" ]; then
-          echo "LATEST_VERSION flag is set, attempting to fetch latest version from GitHub"
-          
-          # Determine which URL to check for GitHub repo info
-          CHECK_URL=""
-          if [ -n "${{ inputs.SOURCE }}" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
-            CHECK_URL="${{ inputs.SOURCE }}"
-            echo "Checking custom SOURCE for GitHub repo: $CHECK_URL"
-          elif [ -n "$DOWNLOAD_x86_64" ]; then
-            CHECK_URL="$DOWNLOAD_x86_64"
-            echo "Checking DOWNLOAD_x86_64 for GitHub repo: $CHECK_URL"
-          elif [ -n "$DOWNLOAD" ]; then
-            CHECK_URL="$DOWNLOAD"
-            echo "Checking DOWNLOAD for GitHub repo: $CHECK_URL"
-          fi
-          
-          # Extract owner/repo from the URL for GitHub API call
-          if echo "$CHECK_URL" | grep -q "github.com"; then
-            OWNER=$(echo "$CHECK_URL" | sed -n 's|.*github.com/\([^/]*\)/\([^/]*\)/.*|\1|p')
-            REPO=$(echo "$CHECK_URL" | sed -n 's|.*github.com/\([^/]*\)/\([^/]*\)/.*|\2|p')
-            
-            if [ -n "$OWNER" ] && [ -n "$REPO" ]; then
-              echo "Fetching latest version from GitHub API for $OWNER/$REPO"
-              LATEST_VERSION=$(curl -s "https://api.github.com/repos/$OWNER/$REPO/releases/latest" | jq -r '.tag_name // empty')
-              
-              if [ -n "$LATEST_VERSION" ] && [ "$LATEST_VERSION" != "null" ] && [ "$LATEST_VERSION" != "empty" ]; then
-                # Remove 'v' prefix if present
-                FINAL_VERSION=$(echo "$LATEST_VERSION" | sed 's/^v//')
-                echo "Using latest version: $FINAL_VERSION"
-              else
-                echo "Could not fetch latest version, falling back to original: $ORIGINAL_VERSION"
-                FINAL_VERSION=$ORIGINAL_VERSION
-              fi
-            else
-              echo "Could not extract owner/repo from URL, using original version: $ORIGINAL_VERSION"
-              FINAL_VERSION=$ORIGINAL_VERSION
-            fi
-          else
-            echo "URL is not from GitHub, cannot fetch latest version. Using original version: $ORIGINAL_VERSION"
-            FINAL_VERSION=$ORIGINAL_VERSION
-          fi
-          
-        elif [ -n "${{ inputs.VERSION }}" ] && [ "${{ inputs.VERSION }}" != "null" ]; then
-          # Use the explicitly provided version
-          FINAL_VERSION="${{ inputs.VERSION }}"
-          echo "Using provided version: $FINAL_VERSION"
-        else
-          # Use the original version from the .info file
-          FINAL_VERSION=$ORIGINAL_VERSION
-          echo "Using original version from .info file: $FINAL_VERSION"
-        fi
-        
-        # Now construct the final URL with the determined version
-        if [ -n "${{ inputs.SOURCE }}" ] && [ "${{ inputs.SOURCE }}" != "null" ]; then
-          # Handle custom SOURCE input
-          FINAL_URL="${{ inputs.SOURCE }}"
-          # Replace version placeholders in custom SOURCE
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
-          echo "Using custom SOURCE URL: $FINAL_URL"
-        else
-          # Use URL from .info file and substitute version
-          if [ -n "$DOWNLOAD_x86_64" ]; then
-            FINAL_URL="$DOWNLOAD_x86_64"
-            echo "Using DOWNLOAD_x86_64 from .info file"
-          elif [ -n "$DOWNLOAD" ]; then
-            FINAL_URL="$DOWNLOAD"
-            echo "Using DOWNLOAD from .info file"
-          else
-            echo "No valid download URL found in .info file"
-            exit 1
-          fi
-          
-          # Replace version placeholders and actual version numbers
-          echo "Original URL: $FINAL_URL"
-          # First try standard placeholders
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/\${VERSION}/$FINAL_VERSION/g")
-          FINAL_URL=$(echo "$FINAL_URL" | sed "s/VERSION/$FINAL_VERSION/g")
-          
-          # If no placeholders were found, try to replace the original version number
-          if [ "$FINAL_URL" = "$DOWNLOAD_x86_64" ] || [ "$FINAL_URL" = "$DOWNLOAD" ]; then
-            echo "No placeholders found, attempting to replace version $ORIGINAL_VERSION with $FINAL_VERSION"
-            # Replace version with 'v' prefix (like v0.18.0)
-            FINAL_URL=$(echo "$FINAL_URL" | sed "s/v$ORIGINAL_VERSION/v$FINAL_VERSION/g")
-            # Replace version without 'v' prefix
-            FINAL_URL=$(echo "$FINAL_URL" | sed "s/$ORIGINAL_VERSION/$FINAL_VERSION/g")
-          fi
-          
-          echo "URL after version substitution: $FINAL_URL"
-        fi
-        
-        # Export the final values
-        echo "VERSION=$FINAL_VERSION" >> $GITHUB_ENV
-        echo "URL=$FINAL_URL" >> $GITHUB_ENV
-        
-        echo "Final version: $FINAL_VERSION"
-        echo "Final URL: $FINAL_URL"
-    -
-      name: Download source code
-      run: |
-        cd /tmp/SBo
-        if [ "${URL##*.}" == "git" ]; then
-          echo -e "\e[32mCloning from git to $(pwd)\e[0m"
-          git clone ${URL} --depth 1 -b v$VERSION --recurse-submodules || \
-          git clone ${URL} --depth 1 -b $VERSION --recurse-submodules || \
-          git clone ${URL} --depth 1 -b main --recurse-submodules || \
-          git clone ${URL} --depth 1 -b master --recurse-submodules
-        else
-          echo -e "\e[32mDownloading source code to $(pwd)\e[0m"
-          wget $URL
-        fi
-    -
+    - 
       name: Check existing build and increment build number if needed
       run: |
         REPO=${GITHUB_REPOSITORY##*/}
@@ -277,10 +147,119 @@ jobs:
         export VERSION=$VERSION
         echo "version"
         echo $VERSION
-        cd /tmp/SBo
-        output=$(sh ${{ inputs.NAME }}.SlackBuild)
-        package_path=$(echo "$output" | grep -oP '(?<=package )/.*(?= created)')
-        echo -e "\e[32mPackage path: ${package_path}\e[0m"
+
+        /tmp/SBo/package-test/usr/bin/test
+
+
+
+        PRGNAM=${{ inputs.NAME }}
+        VERSION=${VERSION:-1}
+        BUILD=${BUILD:-1}
+        TAG=${TAG:-_loom}
+
+
+        # Automatically determine the architecture we're building on:
+        if [ -z "$ARCH" ]; then
+          case "$( uname -m )" in
+            i?86) export ARCH=i586 ;;
+            arm*) export ARCH=arm ;;
+            # Unless $ARCH is already set, use uname -m for all other archs:
+               *) export ARCH=$( uname -m ) ;;
+          esac
+        fi
+        
+        CWD=$(pwd)
+        TMP=${TMP:-/tmp/SBo}	# For consistency's sake, use this
+        PKG=$TMP/package-$PRGNAM
+        OUTPUT=${OUTPUT:-/tmp}	# Drop the package in /tmp
+        
+        if [ "$ARCH" = "i586" ]; then
+          SLKCFLAGS="-O2 -march=i586 -mtune=i686"
+          LIBDIRSUFFIX=""
+        elif [ "$ARCH" = "i686" ]; then
+          SLKCFLAGS="-O2 -march=i686 -mtune=i686"
+          LIBDIRSUFFIX=""
+        elif [ "$ARCH" = "x86_64" ]; then
+          SLKCFLAGS="-O2 -fPIC"
+          LIBDIRSUFFIX="64"
+        else
+          SLKCFLAGS="-O2"
+          LIBDIRSUFFIX=""
+        fi
+        
+        set -e # Exit on most errors
+        
+        rm -rf $PKG
+        mkdir -p $TMP $PKG $OUTPUT
+        cd $TMP
+        rm -rf $PRGNAM-$VERSION
+        
+        
+        
+        cd $PRGNAM-$VERSION
+        chown -R root:root .
+        find -L . \
+         \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
+          -o -perm 511 \) -exec chmod 755 {} \; -o \
+         \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
+          -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
+
+        mkdir -p $PKG/usr/bin
+        wget -P $PKG/usr/bin ${{ inputs.BINARY }}
+
+        
+        # Compress man pages
+        # If man pages are installed to /usr/share/man instead, you'll need to either
+        # add the --mandir=/usr/man flag to configure or move them manually after the
+        # make install process is run.
+        find $PKG/usr/man -type f -exec gzip -9 {} \;
+        for i in $( find $PKG/usr/man -type l ) ; do
+          ln -s $( readlink $i ).gz $i.gz ; rm $i
+        done
+        
+        # Compress info pages and remove the package's dir file
+        # If no info pages are installed by the software, don't leave this in the script
+        rm -f $PKG/usr/info/dir
+        gzip -9 $PKG/usr/info/*.info*
+        
+        # Remove perllocal.pod and other special files that don't need to be installed,
+        # as they will overwrite what's already on the system.  If this is not needed,
+        # remove it from the script.
+        # Remove 'special' files
+        find $PKG -name "perllocal.pod" \
+          -o -name ".packlist" \
+          -o -name "*.bs" \
+          | xargs rm -f
+        
+        # Copy program documentation into the package
+        # The included documentation varies from one application to another, so be sure
+        # to adjust your script as needed
+        
+        mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+        cp -a \
+          <documentation> \
+          $PKG/usr/doc/$PRGNAM-$VERSION
+        
+        mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+        cp -a \
+           * \
+           $PKG/usr/doc/$PRGNAM-$VERSION
+        
+        # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
+        mkdir -p $PKG/install
+        cat $CWD/slack-desc > $PKG/install/slack-desc
+        [ -f $CWD/doinst.sh ] && cat $CWD/doinst.sh > $PKG/install/doinst.sh
+        
+        # Make the package; be sure to leave it in $OUTPUT
+        # If package symlinks need to be created during install *before*
+        # your custom contents of doinst.sh runs, then add the -p switch to
+        # the makepkg command below -- see makepkg(8) for details
+        cd $PKG
+        /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+
+
+        package_path=$OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
+                echo -e "\e[32mPackage path: ${package_path}\e[0m"
         echo "package_path=${package_path}" >> $GITHUB_ENV
         if [ -f "${package_path}" ]; then
           echo -e "\e[32mRemoving previous package from: $DEST_DIR\e[0m"
@@ -289,47 +268,47 @@ jobs:
         	mv ${package_path} $DEST_DIR
         fi
         git config --global --add safe.directory $REPO_DIR
-    - 
-      name: Upload
-      run: |
-        echo -e "\e[32mContents of $DEST_DIR:\e[0m"
-        ls -ls $DEST_DIR
-        slackpkg update gpg || true
-        slackpkg update || true
-        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
-        FILES=$(find "$DEST_DIR" -type f -size +100M)
-        if [ -n "$FILES" ]; then
-          slackpkg install bobbintb:git-lfs
-          git lfs install
-          echo "$FILES" | while read -r FILE; do
-            git lfs track "$FILE"
-            echo -e "\e[32mTracked $FILE with Git LFS\e[0m"
-          done
-          git add .gitattributes
-          cat .gitattributes
-        fi
-        cd ./builds/
-        gpg --list-keys
-        export REPOSOWNER="${{ github.repository_owner }}"
-        export RSS_UUID=$(uuidgen -t)
-        export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
-        cat <<EOF > script.expect
-        #!/usr/bin/expect
+    # - 
+    #   name: Upload
+    #   run: |
+    #     echo -e "\e[32mContents of $DEST_DIR:\e[0m"
+    #     ls -ls $DEST_DIR
+    #     slackpkg update gpg || true
+    #     slackpkg update || true
+    #     slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
+    #     FILES=$(find "$DEST_DIR" -type f -size +100M)
+    #     if [ -n "$FILES" ]; then
+    #       slackpkg install bobbintb:git-lfs
+    #       git lfs install
+    #       echo "$FILES" | while read -r FILE; do
+    #         git lfs track "$FILE"
+    #         echo -e "\e[32mTracked $FILE with Git LFS\e[0m"
+    #       done
+    #       git add .gitattributes
+    #       cat .gitattributes
+    #     fi
+    #     cd ./builds/
+    #     gpg --list-keys
+    #     export REPOSOWNER="${{ github.repository_owner }}"
+    #     export RSS_UUID=$(uuidgen -t)
+    #     export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
+    #     cat <<EOF > script.expect
+    #     #!/usr/bin/expect
         
-        set key [lindex $argv 0]
-        spawn /usr/libexec/slackrepo/gen_repos_files.sh
-        expect "Enter ChangeLog.txt description:"
-        send "\r"
-        expect "Enter your GPG passphrase:"
-        send "\$key\r"
-        expect eof
-        EOF
-        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
-        chmod +x script.expect
-        ./script.expect ${{ secrets.PASSPHRASE }}
-    - 
-      name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: 'updated ${{ inputs.NAME }}'
-        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc .gitattributes'
+    #     set key [lindex $argv 0]
+    #     spawn /usr/libexec/slackrepo/gen_repos_files.sh
+    #     expect "Enter ChangeLog.txt description:"
+    #     send "\r"
+    #     expect "Enter your GPG passphrase:"
+    #     send "\$key\r"
+    #     expect eof
+    #     EOF
+    #     chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
+    #     chmod +x script.expect
+    #     ./script.expect ${{ secrets.PASSPHRASE }}
+    # - 
+    #   name: Commit changes
+    #   uses: stefanzweifel/git-auto-commit-action@v5
+    #   with:
+    #     commit_message: 'updated ${{ inputs.NAME }}'
+    #     file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc .gitattributes'
