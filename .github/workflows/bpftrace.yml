@@ -5,13 +5,9 @@ permissions:
   contents: write
 jobs:
   make_slackware_package:
-    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    uses: bobbintb/Slackware_Packages/.github/workflows/binary_template.yml@main
     secrets: inherit
     with:
-      VERSION: "0.23.5"
+      VERSION: "0.24.0"
       NAME: "bpftrace"
-      SBOPKG: true
-      bobbintb: true
-      alien-15: true
-      PACKAGES: "make cmake cc gcc guile gc binutils bobbintb:bcc libbpf cereal bison gettext lua llvm vim pahole gtest asciidoctor m4 ccache fmt kernel-headers ruby"
-      PIP: setuptools
+      BINARY: "https://github.com/bpftrace/bpftrace/releases/latest/download/bpftrace"
