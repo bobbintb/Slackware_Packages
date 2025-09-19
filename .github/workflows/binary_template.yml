@@ -6,13 +6,13 @@ on:
         description: 'Program name'
         required: true
         type: string
-      LATEST_VERSION:
-        description: 'Use the latest program version (ignores VERSION)'
-        required: false
+      REPO:
+        description: 'Github repo name'
+        required: true
         type: string
-      VERSION:
-        description: 'Program version'
-        required: false
+      OWNER:
+        description: 'Github repo owner'
+        required: true
         type: string
       BUILD:
         description: 'Program build number'
@@ -55,6 +55,13 @@ jobs:
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
+    - 
+      name: Get current version numver
+      run: |
+        
+        VERSION=$(curl -s https://api.github.com/repos/${{ inputs.OWNER }}/${{ inputs.REPO }}/releases/latest | jq -r .tag_name)
+        echo "Current version of ${{ inputs.NAME }}: $VERSION
+        export VERSION=$VERSION
     - 
       name: Check existing build and increment build number if needed
       run: |
@@ -131,8 +138,6 @@ jobs:
           export BUILD=${{ inputs.BUILD }}
         fi
         export VERSION=$VERSION
-        echo "version"
-        echo $VERSION
 
         PRGNAM=${{ inputs.NAME }}
         VERSION=$(curl -s https://api.github.com/repos/bpftrace/bpftrace/releases/latest | jq -r .tag_name)
