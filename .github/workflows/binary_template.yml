@@ -42,9 +42,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    # container:
-    #   image: bobbintb/unraid-cicd-builder-upgraded
-    #   options: --privileged
+    container:
+      image: bobbintb/unraid-cicd-builder-upgraded
+      options: --privileged
     steps:
     - 
       name: Checkout
