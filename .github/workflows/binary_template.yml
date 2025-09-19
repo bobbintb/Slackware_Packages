@@ -135,7 +135,7 @@ jobs:
         echo $VERSION
 
         PRGNAM=${{ inputs.NAME }}
-        VERSION=${VERSION:-1}
+        VERSION=$(curl -s https://api.github.com/repos/bpftrace/bpftrace/releases/latest | jq -r .tag_name)
         BUILD=${BUILD:-1}
         TAG=${TAG:-_loom}
 
@@ -151,9 +151,9 @@ jobs:
         fi
         
         CWD=$(pwd)
-        TMP=${TMP:-/tmp/SBo}	# For consistency's sake, use this
+        TMP=${TMP:-/tmp/SBo}
         PKG=$TMP/package-$PRGNAM
-        OUTPUT=${OUTPUT:-/tmp}	# Drop the package in /tmp
+        OUTPUT=${OUTPUT:-/tmp}
         
         if [ "$ARCH" = "i586" ]; then
           SLKCFLAGS="-O2 -march=i586 -mtune=i686"
@@ -169,26 +169,21 @@ jobs:
           LIBDIRSUFFIX=""
         fi
         
-        set -e # Exit on most errors
         
         rm -rf $PKG
         mkdir -p $TMP $PKG $OUTPUT
         cd $TMP
-        rm -rf $PRGNAM-$VERSION
         
+        mkdir -p $PKG/usr/bin
+        wget -P $PKG/usr/bin ${{ inputs.BINARY }}
+        chmod +x $PKG/usr/bin/*
         
-        
-        cd $PRGNAM-$VERSION
         chown -R root:root .
         find -L . \
          \( -perm 777 -o -perm 775 -o -perm 750 -o -perm 711 -o -perm 555 \
           -o -perm 511 \) -exec chmod 755 {} \; -o \
          \( -perm 666 -o -perm 664 -o -perm 640 -o -perm 600 -o -perm 444 \
           -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
-
-        mkdir -p $PKG/usr/bin
-        wget -P $PKG/usr/bin ${{ inputs.BINARY }}
-
         
         # Compress man pages
         # If man pages are installed to /usr/share/man instead, you'll need to either
