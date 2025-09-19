@@ -10,4 +10,6 @@ jobs:
     with:
       VERSION: "0.24.0"
       NAME: "bpftrace"
+      OWNER: "bpftrace"
+      REPO: "bpftrace"
       BINARY: "https://github.com/bpftrace/bpftrace/releases/latest/download/bpftrace"
