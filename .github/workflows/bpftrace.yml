@@ -18,4 +18,4 @@ jobs:
         rm $PKG/usr/bin/tools.tar.xz
         $WGET -P $PKG/usr https://github.com/bpftrace/bpftrace/releases/latest/download/man.tar.xz
         tar -xf $PKG/usr/man.tar.xz -C $PKG/usr
-        rm $PKG/usr/tools.tar.xz
+        rm $PKG/usr/man.tar.xz
