@@ -13,5 +13,9 @@ jobs:
       REPO: "bpftrace"
       BINARY: "https://github.com/bpftrace/bpftrace/releases/latest/download/bpftrace"
       extra_prep: |
-        echo "test"
-        echo $PKG
+        $WGET -P $PKG/usr/bin https://github.com/bpftrace/bpftrace/releases/latest/download/tools.tar.xz
+        tar -xf $PKG/usr/bin/tools.tar.xz -C $PKG/usr/bin
+        rm $PKG/usr/bin/tools.tar.xz
+        $WGET -P $PKG/usr https://github.com/bpftrace/bpftrace/releases/latest/download/man.tar.xz
+        tar -xf $PKG/usr/man.tar.xz -C $PKG/usr
+        rm $PKG/usr/tools.tar.xz
