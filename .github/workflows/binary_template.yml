@@ -194,6 +194,7 @@ jobs:
           
         if [ "${{ inputs.extra_prep }}" != '' ] && [ "${{ inputs.extra_prep }}" != 'null' ]; then
           echo "Running extra custom steps..."
+          echo ${{ inputs.extra_prep }}
           ${{ inputs.extra_prep }}
         fi
         
