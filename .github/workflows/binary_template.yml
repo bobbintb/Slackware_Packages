@@ -237,9 +237,10 @@ jobs:
         # the makepkg command below -- see makepkg(8) for details
         cd $PKG
 
-        /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+        package_path=$OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.tgz
 
-        package_path=$OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
+        /sbin/makepkg -l y -c n package_path
+
         echo -e "\e[32mPackage path: ${package_path}\e[0m"
         echo "package_path=${package_path}" >> $GITHUB_ENV
         if [ -f "${package_path}" ]; then
