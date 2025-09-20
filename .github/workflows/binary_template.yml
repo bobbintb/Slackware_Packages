@@ -182,7 +182,7 @@ jobs:
         cd $TMP
         
         mkdir -p $PKG/usr/bin
-        WGET -P $PKG/usr/bin ${{ inputs.BINARY }}
+        $WGET -P $PKG/usr/bin ${{ inputs.BINARY }}
         chmod +x $PKG/usr/bin/*
         
         chown -R root:root .
