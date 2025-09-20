@@ -12,3 +12,6 @@ jobs:
       OWNER: "bpftrace"
       REPO: "bpftrace"
       BINARY: "https://github.com/bpftrace/bpftrace/releases/latest/download/bpftrace"
+      extra_prep: |
+        echo "test"
+        echo "test2"
