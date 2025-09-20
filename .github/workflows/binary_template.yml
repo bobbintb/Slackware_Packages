@@ -253,3 +253,47 @@ jobs:
         	mv ${package_path} $DEST_DIR
         fi
         git config --global --add safe.directory $REPO_DIR
+    - 
+      name: Upload
+      run: |
+        echo -e "\e[32mContents of $DEST_DIR:\e[0m"
+        ls -ls $DEST_DIR
+        slackpkg update gpg || true
+        slackpkg update || true
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
+        FILES=$(find "$DEST_DIR" -type f -size +100M)
+        if [ -n "$FILES" ]; then
+          slackpkg install bobbintb:git-lfs
+          git lfs install
+          echo "$FILES" | while read -r FILE; do
+            git lfs track "$FILE"
+            echo -e "\e[32mTracked $FILE with Git LFS\e[0m"
+          done
+          git add .gitattributes
+          cat .gitattributes
+        fi
+        cd ./builds/
+        gpg --list-keys
+        export REPOSOWNER="${{ github.repository_owner }}"
+        export RSS_UUID=$(uuidgen -t)
+        export REPOSROOT="/__w/Slackware_Packages/Slackware_Packages/builds"
+        cat <<EOF > script.expect
+        #!/usr/bin/expect
+        
+        set key [lindex $argv 0]
+        spawn /usr/libexec/slackrepo/gen_repos_files.sh
+        expect "Enter ChangeLog.txt description:"
+        send "\r"
+        expect "Enter your GPG passphrase:"
+        send "\$key\r"
+        expect eof
+        EOF
+        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
+        chmod +x script.expect
+        ./script.expect ${{ secrets.PASSPHRASE }}
+    - 
+      name: Commit changes
+      uses: stefanzweifel/git-auto-commit-action@v5
+      with:
+        commit_message: 'updated ${{ inputs.NAME }}'
+        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc .gitattributes'
