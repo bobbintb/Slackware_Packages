@@ -238,8 +238,10 @@ jobs:
         # your custom contents of doinst.sh runs, then add the -p switch to
         # the makepkg command below -- see makepkg(8) for details
         cd $PKG
-        /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 
+
+
+        /sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
 
         package_path=$OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.$PKGTYPE
                 echo -e "\e[32mPackage path: ${package_path}\e[0m"
