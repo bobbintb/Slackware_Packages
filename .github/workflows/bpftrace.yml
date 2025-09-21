@@ -3,8 +3,8 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
-  pages: write
-  id-token: write
+  # pages: write
+  # id-token: write
 jobs:
   make_slackware_package:
     uses: bobbintb/Slackware_Packages/.github/workflows/binary_template.yml@main
