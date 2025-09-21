@@ -24,14 +24,21 @@ jobs:
   deploy:
     needs: make_slackware_package
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: slackware-packages   # must match what the reusable workflow uploaded
+          path: ./
 
-      - name: Upload packages to GitHub Pages
+      - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v4
         with:
-          path: ./   # replace with the actual directory containing artifacts
+          path: ./
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
