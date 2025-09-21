@@ -285,4 +285,8 @@ jobs:
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         chmod +x script.expect
         ./script.expect ${{ secrets.PASSPHRASE }}
-
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: slackware-packages
+        path: ./
