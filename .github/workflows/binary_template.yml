@@ -289,4 +289,5 @@ jobs:
       uses: actions/upload-pages-artifact@v4
       with:
         path: ${{ env.DEST_DIR }}   # must exist in the runner
-
+    - name: Deploy to GitHub Pages
+      uses: actions/deploy-pages@v4
