@@ -285,9 +285,11 @@ jobs:
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         chmod +x script.expect
         ./script.expect ${{ secrets.PASSPHRASE }}
-    - 
-      name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
+    - name: Deploy packages to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
       with:
-        commit_message: 'updated ${{ inputs.NAME }}'
-        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT *.asc .gitattributes'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: $REPO_DIR         # your directory with .txz files
+        publish_branch: gh-pages        # branch used for Pages
+        keep_files: true                # keeps existing files, adds/updates only new ones
+        commit_message: "Add/update Slackware packages"
