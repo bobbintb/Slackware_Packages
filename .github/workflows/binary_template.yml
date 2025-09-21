@@ -36,8 +36,6 @@ on:
         type: string
 permissions:
   contents: write
-  pages: write
-  id-token: write
 env:
   WGET: wget -q --show-progress --progress=bar:force --tries=5 --waitretry=5 --timeout=30 --retry-connrefused
 jobs:
