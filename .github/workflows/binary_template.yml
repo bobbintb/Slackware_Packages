@@ -289,9 +289,4 @@ jobs:
         chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         chmod +x script.expect
         ./script.expect ${{ secrets.PASSPHRASE }}
-    - name: Upload packages to GitHub Pages
-      uses: actions/upload-pages-artifact@v4
-      with:
-        path: ${{ env.DEST_DIR }}   # must exist in the runner
-    - name: Deploy to GitHub Pages
-      uses: actions/deploy-pages@v4
+
