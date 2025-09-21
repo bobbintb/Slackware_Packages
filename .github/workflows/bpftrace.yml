@@ -35,6 +35,8 @@ jobs:
           path: ./
       - name: Generate directory listings
         uses: jayanta525/github-pages-directory-listing@v4.0.0
+        with:
+          folder: ./
         
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v4
