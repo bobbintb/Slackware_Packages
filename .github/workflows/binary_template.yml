@@ -288,7 +288,5 @@ jobs:
     - name: Upload packages to GitHub Pages
       uses: actions/upload-pages-artifact@v4
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        source_dir: ${{ env.DEST_DIR }}   # directory with .txz packages
-        publish_branch: gh-pages          # branch Pages will serve
-        keep_files: true                  # keeps existing files
+        path: ${{ env.DEST_DIR }}   # must exist in the runner
+
