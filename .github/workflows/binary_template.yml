@@ -289,7 +289,7 @@ jobs:
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: $REPO_DIR         # your directory with .txz files
+        publish_dir: ./builds         # your directory with .txz files
         publish_branch: gh-pages        # branch used for Pages
         keep_files: true                # keeps existing files, adds/updates only new ones
         commit_message: "Add/update Slackware packages"
