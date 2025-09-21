@@ -33,7 +33,9 @@ jobs:
         with:
           name: slackware-packages   # must match what the reusable workflow uploaded
           path: ./
-
+      - name: Generate directory listings
+        uses: jayanta525/github-pages-directory-listing@v4.0.0
+        
       - name: Upload to GitHub Pages
         uses: actions/upload-pages-artifact@v4
         with:
