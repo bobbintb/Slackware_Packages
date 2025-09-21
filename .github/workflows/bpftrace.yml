@@ -21,9 +21,17 @@ jobs:
         $WGET -P $PKG/usr https://github.com/bpftrace/bpftrace/releases/latest/download/man.tar.xz
         tar -xf $PKG/usr/man.tar.xz -C $PKG/usr
         rm $PKG/usr/man.tar.xz
-        - name: Upload packages to GitHub Pages
-          uses: actions/upload-pages-artifact@v4
-          with:
-            path: ./   # must exist in the runner
-        - name: Deploy to GitHub Pages
-          uses: actions/deploy-pages@v4
+  deploy:
+    needs: make_slackware_package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Upload packages to GitHub Pages
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./   # replace with the actual directory containing artifacts
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
