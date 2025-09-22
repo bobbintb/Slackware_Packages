@@ -2,7 +2,7 @@ This is a repository of Slackware packages targeted for Unraid, though they shou
 
 
 ## Update - September 21, 2025
-This repo now uses Github Pages so the URL has changed to https://bobbintb.github.io/Slackware_Packages/builds/
+This repo now uses Github Pages. This change was needed to allow larger packages. The URL has changed to https://bobbintb.github.io/Slackware_Packages/builds/
 
 This repository is compatible with `slackpkg+`.
 
