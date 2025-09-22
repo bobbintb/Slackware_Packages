@@ -60,9 +60,9 @@ jobs:
         #export PASSPHRASE=${{ secrets.PASSPHRASE }}
         ./script.expect ${{ secrets.PASSPHRASE }}
         #echo ${{ secrets.PASSPHRASE }} | /usr/libexec/slackrepo/gen_repos_files.sh
-    - 
-      name: Commit changes
-      uses: stefanzweifel/git-auto-commit-action@v5
-      with:
-        commit_message: 'updated ${{ env.NAME }}'
-        file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT'
+    # - 
+      # name: Commit changes
+      # uses: stefanzweifel/git-auto-commit-action@v5
+      # with:
+      #   commit_message: 'updated ${{ env.NAME }}'
+      #   file_pattern: '*.txz *.tgz *.lst *.md5 *.meta *.txt *.gz *.bz2 *.TXT'
