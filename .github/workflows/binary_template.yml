@@ -227,8 +227,8 @@ jobs:
         #   $PKG/usr/doc/$PRGNAM-$VERSION
         
         # Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
-        #mkdir -p $PKG/install
-        #cat $CWD/slack-desc > $PKG/install/slack-desc
+        mkdir -p $PKG/install
+        cat $DEST_DIR/slack-desc > $PKG/install/slack-desc
         #[ -f $CWD/doinst.sh ] && cat $CWD/doinst.sh > $PKG/install/doinst.sh
         
         # Make the package; be sure to leave it in $OUTPUT
