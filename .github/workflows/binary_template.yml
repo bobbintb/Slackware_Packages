@@ -258,14 +258,7 @@ jobs:
         slackpkg update gpg || true
         slackpkg update || true
         slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
-        FILES=$(find "$DEST_DIR" -type f -size +100M)
-        # if [ -n "$FILES" ]; then
-        #   echo "$FILES" | while read -r FILE; do
-        #     echo -e "\e[32mTracked $FILE with Git LFS\e[0m"
-        #   done
-        #   git add .gitattributes
-        #   cat .gitattributes
-        # fi
+
         cd ./builds/
         gpg --list-keys
         export REPOSOWNER="${{ github.repository_owner }}"
