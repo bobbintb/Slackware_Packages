@@ -70,4 +70,5 @@ jobs:
         gecho "done."
         gecho "Copying kernel config... "
         # zcat /proc/config.gz > /usr/src/linux/.config
-        find / -name kernel-headers.SlackBuild
+        pwd
+        chmod +x ./SlackBuilds/kernel-headers/kernel-headers.SlackBuild
