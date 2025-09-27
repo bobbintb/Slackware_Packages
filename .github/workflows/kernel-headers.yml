@@ -71,4 +71,4 @@ jobs:
         gecho "Copying kernel config... "
         # zcat /proc/config.gz > /usr/src/linux/.config
         pwd
-        chmod +x ./SlackBuilds/kernel-headers/kernel-headers.SlackBuild
+        chmod +x ./Slackware_Packages/SlackBuilds/kernel-headers/kernel-headers.SlackBuild
