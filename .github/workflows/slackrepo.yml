@@ -8,6 +8,6 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
     secrets: inherit
     with:
-      VERSION: "20241108"
+      VERSION: "20250815"
       NAME: "slackrepo"
       SBOPKG: true
