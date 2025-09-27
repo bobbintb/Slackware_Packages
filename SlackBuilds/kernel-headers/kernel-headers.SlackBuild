@@ -42,14 +42,12 @@ fi
 if [ ! -d "${KERNEL_SOURCE}" ]; then
   echo "Error: kernel source directory ${KERNEL_SOURCE} does not exist."
   exit 1
-elif [ ! -r ${KERNEL_SOURCE}/.config ]; then
-  echo "Error: a .config was not found in ${KERNEL_SOURCE}."
-  exit 1
+# elif [ ! -r ${KERNEL_SOURCE}/.config ]; then
+#   echo "Error: a .config was not found in ${KERNEL_SOURCE}."
+#   exit 1
 fi
 # Get the kernel version from the kernel Makefile:
 VERSION=$(grep "^VERSION = " ${KERNEL_SOURCE}/Makefile | rev | cut -f 1 -d ' ' | rev).$(grep "^PATCHLEVEL = " ${KERNEL_SOURCE}/Makefile | rev | cut -f 1 -d ' ' | rev).$(grep "^SUBLEVEL = " ${KERNEL_SOURCE}/Makefile | rev | cut -f 1 -d ' ' | rev)$(grep "^EXTRAVERSION = " ${KERNEL_SOURCE}/Makefile | rev | cut -f 1 -d ' ' | rev)
-# Set LOCALVERSION to the value found inside the .config:
-LOCALVERSION="$(cat ${KERNEL_SOURCE}/.config 2> /dev/null | grep CONFIG_LOCALVERSION= | cut -f 2 -d = | tr -d \")"
 
 TMP=${TMP:-/tmp}
 PKG=$TMP/package-$PKGNAM
@@ -58,7 +56,6 @@ PKG=$TMP/package-$PKGNAM
 # the name of the created package would be, and then exit. This information
 # could be useful to other scripts.
 if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
-  # The LOCALVERSION never makes it into the headers, so no point including it:
   echo "kernel-headers-$(echo ${VERSION} | tr - _)-${HEADERS_ARCH}-$BUILD.txz"
   exit 0
 fi
@@ -87,5 +84,4 @@ cat $CWD/slack-desc/slack-desc.kernel-headers > $PKG/install/slack-desc
 
 # Make the package:
 cd $PKG
-# The LOCALVERSION never makes it into the headers, so no point including it:
 /sbin/makepkg -l y -c n $TMP/kernel-headers-$(echo ${VERSION} | tr - _)-${HEADERS_ARCH}-$BUILD.txz
