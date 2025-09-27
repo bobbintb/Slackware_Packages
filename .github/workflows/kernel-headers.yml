@@ -66,7 +66,7 @@ jobs:
         gecho "done."
         gecho "Extracting Linux kernel... "
         mkdir -p /usr/src/linux
-        tar xf linux-${KERNEL_VERSION}.tar.xz -C linux --strip-components 1
+        tar xf linux-${KERNEL_VERSION}.tar.xz -C /usr/src/linux --strip-components 1
         gecho "done."
         gecho "Copying kernel config... "
         zcat /proc/config.gz > /usr/src/linux/.config
