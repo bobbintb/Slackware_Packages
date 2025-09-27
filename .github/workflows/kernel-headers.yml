@@ -57,7 +57,6 @@ jobs:
       run: |
         . /etc/bootstrap
         gecho "Determining kernel version needed for Unraid... "
-        cd unRAIDServer    
         KERNEL_VERSION=$(uname -r | cut -d'-' -f1)
         echo "KERNEL_VERSION=$KERNEL_VERSION" >> $GITHUB_ENV
         MAJOR_VERSION=${KERNEL_VERSION%%.*}
