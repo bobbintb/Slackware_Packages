@@ -1,4 +1,4 @@
-name: Workflow template
+name: Build kernel-headers
 on:
   workflow_dispatch:
 jobs:
