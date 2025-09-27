@@ -1,0 +1,74 @@
+name: Workflow template
+on:
+  workflow_dispatch:
+jobs:
+  slackbuild_and_upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: bobbintb/unraid-cicd-builder-upgraded
+      options: --privileged
+    steps:
+    -
+      # Bootstrap step – define env vars, aliases, functions once
+      name: Bootstrap environment
+      run: |
+        # Environment variables (persist via $GITHUB_ENV)
+        # echo "MYVAR=hello" >> $GITHUB_ENV
+        # echo "FOO=bar" >> $GITHUB_ENV
+
+        # Aliases & functions (persist via $BASH_ENV)
+        cat >>"/etc/bootstrap" <<'EOF'
+        
+          gecho() { printf '\033[0;32m'; command echo "$@"; printf '\033[0m'; }
+          alias wget='wget -q'
+          slackpkginstall() {
+          command slackpkg install "$@" <<< y 2>&1 | grep -E 'Installing package|GPG key added|Package .* installed\.'
+        }
+        EOF
+    -
+      name: Install dependencies
+      run: |
+        . /etc/bootstrap
+        sed -i 's/^#*\s*BATCH=.*/BATCH=on/' /etc/slackpkg/slackpkg.conf
+        sed -i 's/^#*\s*DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/' /etc/slackpkg/slackpkg.conf
+        gecho "Installing needed packages..."
+        slackpkg update gpg <<< y
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+    - name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/packages
+        key: slackware-packages-${{ github.sha }}
+        restore-keys: |
+          slackware-packages-
+        # key: ${{ runner.os }}-slackpkg-${{ hashFiles('**/package-list.txt') }}
+        # restore-keys: |
+        #   ${{ runner.os }}-slackpkg-
+        #key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
+        #restore-keys: |
+        #  slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
+    -
+      name: Download Linux kernel
+      run: |
+        . /etc/bootstrap
+        gecho "Determining kernel version needed for Unraid... "
+        cd unRAIDServer    
+        KERNEL_VERSION=$(uname -r | cut -d'-' -f1)
+        echo "KERNEL_VERSION=$KERNEL_VERSION" >> $GITHUB_ENV
+        MAJOR_VERSION=${KERNEL_VERSION%%.*}
+        gecho "Downloading Linux kernel ${KERNEL_VERSION}... "
+        cd ..
+        [ -f linux-${KERNEL_VERSION}.tar.xz ] || wget https://cdn.kernel.org/pub/linux/kernel/v${MAJOR_VERSION}.x/linux-${KERNEL_VERSION}.tar.xz
+        gecho "done."
+        gecho "Extracting Linux kernel... "
+        mkdir -p /usr/src/linux
+        tar xf linux-${KERNEL_VERSION}.tar.xz -C linux --strip-components 1
+        gecho "done."
+        gecho "Copying kernel config... "
+        zcat /proc/config.gz > /usr/src/linux/.config
+        find / -name kernel-headers.SlackBuild
