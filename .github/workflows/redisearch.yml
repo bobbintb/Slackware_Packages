@@ -11,4 +11,4 @@ jobs:
       VERSION: "2.10.23"
       NAME: "redisearch"
       PACKAGES: "make cmake guile gc gcc binutils kernel-headers && slackpkg upgrade glibc"
-      GIT: "https://github.com/RediSearch/RediSearch.git"
+      SOURCE: "https://github.com/RediSearch/RediSearch.git"
