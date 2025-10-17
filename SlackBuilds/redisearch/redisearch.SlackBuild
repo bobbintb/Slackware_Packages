@@ -116,7 +116,7 @@ CFLAGS="$SLKCFLAGS" \
 CXXFLAGS="$SLKCFLAGS" \
 
 # Compile the application and install it into the $PKG directory
-make
+make IGNORE_MISSING_DEPS=1
 # make install DESTDIR=$PKG
 
 # Strip binaries and libraries - this can be done with 'make install-strip'
