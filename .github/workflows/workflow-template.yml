@@ -209,7 +209,7 @@ jobs:
         add_repo "slackonly-current" "https://packages.slackonly.com/pub/packages/current-x86_64/" "${{ inputs.slackonly-current }}"
         add_repo "slint" "https://slackware.uk/slint/x86_64/slint-15.0/" "${{ inputs.slint }}"
         add_repo "official-15-extra" "https://ftp.osuosl.org/pub/slackware/slackware64-15.0/" "${{ inputs.official-15-extra }}"
-        add_repo "bobbintb" "https://raw.githubusercontent.com/bobbintb/Slackware_Packages/refs/heads/main/builds/" "${{ inputs.bobbintb }}"
+        add_repo "bobbintb" "https://bobbintb.github.io/Slackware_Packages/builds/" "${{ inputs.bobbintb }}"
         
         # Update configuration
         sed -i "s|REPOPLUS=( slackpkgplus )|REPOPLUS=( $REPOPLUS )|" /etc/slackpkg/slackpkgplus.conf
