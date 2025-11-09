@@ -1,0 +1,25 @@
+name: -Build redisgears
+on:
+  workflow_dispatch:
+env:
+  VERSION: "0.6.3"
+  NAME: "redisgears"
+jobs:
+  slackware-job:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    - name: Build
+      run: |
+        apt-get update
+        apt-get install -y git build-essential autoconf libtool curl libssl-dev pkg-config clang wget
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install_rust.sh
+        sh install_rust.sh -y
+        git clone https://github.com/redis/redis; cd redis; git checkout 7.2.1; make install
+        $HOME/.cargo/bin/cargo install cargo-deny
+        $HOME/.cargo/bin/cargo build --release
+        $HOME/.cargo/bin/cargo deny check licenses
+        $HOME/.cargo/bin/cargo deny check bans
+        
