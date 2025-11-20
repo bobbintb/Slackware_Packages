@@ -58,7 +58,7 @@ jobs:
         . /etc/bootstrap
         gecho "Determining kernel version needed for Unraid... "
         # KERNEL_VERSION=$(uname -r | cut -d'-' -f1)
-        KERNEL_VERSION=6.12.24
+        KERNEL_VERSION=6.12.54
         MAJOR_VERSION=${KERNEL_VERSION%%.*}
         gecho "Downloading Linux kernel ${KERNEL_VERSION}... "
         cd ..
