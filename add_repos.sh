@@ -48,14 +48,12 @@ fi
 for ck in $(printf '%s\n' "${!MIRRORPLUS[@]}" | sort); do
   line="MIRRORPLUS['$ck']=${MIRRORPLUS[$ck]}"
   if [[ -n "${ENABLED_REPOS[$ck]}" ]]; then
-    # Repo is enabled: uncomment if commented, append if missing
     if grep -qF "#$line" "$CONF"; then
-      sed -i "s|#${line}|${line}|" "$CONF"
+      grep -n -F "#$line" "$CONF" | cut -d: -f1 | xargs -I{} sed -i "{}s/^#//" "$CONF"
     elif ! grep -qF "$line" "$CONF"; then
       echo "$line" >> "$CONF"
     fi
   else
-    # Repo is not enabled: add commented out if not already present in any form
     if ! grep -qF "$line" "$CONF"; then
       echo "#$line" >> "$CONF"
     fi
