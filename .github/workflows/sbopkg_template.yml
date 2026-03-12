@@ -1,0 +1,64 @@
+name: sbopkg template
+on:
+  workflow_call:
+    inputs:
+      NAME:
+        description: 'Program name'
+        required: true
+        type: string
+      PACKAGES:
+        description: 'Build dependencies to install, space seperated'
+        required: false
+        type: string
+      REINSTALL:
+        description: 'Build dependencies to re-install, space seperated'
+        required: false
+        type: string
+      PIP:
+        description: 'PIP dependencies to install, space seperated'
+        required: false
+        type: string
+      REPOS:
+        description: 'Additional repos to enable, space-separated (e.g. alien-15 conraid-current bobbintb)'
+        required: false
+        type: string
+jobs:
+  slackbuild_and_upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: bobbintb/unraid-cicd-builder-upgraded
+      options: --privileged
+    steps:
+    - 
+      name: Checkout
+      uses: actions/checkout@v4
+      with:
+        clean: true
+    -
+      name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v6
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+    - name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v4
+      with:
+        path: /var/cache/packages
+        key: slackware-packages-${{ github.sha }}
+        restore-keys: |
+          slackware-packages-
+        # key: ${{ runner.os }}-slackpkg-${{ hashFiles('**/package-list.txt') }}
+        # restore-keys: |
+        #   ${{ runner.os }}-slackpkg-
+        #key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
+        #restore-keys: |
+        #  slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
+    - 
+      name: Enable additional repos
+      run: | 
+        ./add_repos.sh ${{ inputs.REPOS }}
+        ls
+        
