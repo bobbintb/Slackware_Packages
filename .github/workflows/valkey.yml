@@ -5,10 +5,8 @@ permissions:
   contents: write
 jobs:
   make_slackware_package:
-    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    uses: bobbintb/Slackware_Packages/.github/workflows/sbopkg_template.yml@main
     secrets: inherit
     with:
-      VERSION: "9.0.0"
       NAME: "valkey"
-      SBOPKG: true
       PACKAGES: "make guile gc gcc kernel-headers binutils pkgconf"
