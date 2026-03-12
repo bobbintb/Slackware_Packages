@@ -1,0 +1,17 @@
+name: -Build SysmonForLinux
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "1.3.4.0"
+      alien-15: true
+      bobbintb: true
+      salix-extra-15: true
+      NAME: "SysmonForLinux"
+      PACKAGES: "slackware64:make slackware64:guile slackware64:gc slackware64:cmake slackware64:gcc slackware64:binutils slackware64:kernel-headers alien-15:gtest bobbintb:SysinternalsEBPF && slackpkg upgrade libxml2 && sbopkg -b dotnet-sdk-6.0 <<< p && installpkg /tmp/dotnet-sdk-6.0* && dotnet tool install --global dotnet-t4"
+      GIT: https://github.com/microsoft/SysmonForLinux.git

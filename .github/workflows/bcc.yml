@@ -1,0 +1,15 @@
+name: Build bcc
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      bobbintb: true
+      VERSION: "0.35.0"
+      NAME: "bcc"
+      PACKAGES: "llvm ccache libssh2 libedit fmt cmake make guile gc gettext binutils gcc kernel-headers bobbintb:libbpf"
+      PIP: setuptools

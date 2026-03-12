@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+       |-----handy-ruler------------------------------------------------------|
+bpftool: bpftool (A command-line tool to inspect and manage BPF objects.)
+bpftool:
+bpftool: List, dump, load BPF programs, and more! Powered by libbpf, bpftool
+bpftool: is the reference utility to quickly inspect and manage BPF objects on
+bpftool: your system, to manipulate BPF object files, or to perform various
+bpftool: other BPF-related tasks.
+bpftool:
+bpftool:
+bpftool:
+bpftool:
+bpftool: Home: https://bpftool.dev/

@@ -1,0 +1,48 @@
+name: Build bpftrace
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/binary_template.yml@main
+    secrets: inherit
+    with:
+      NAME: "bpftrace"
+      OWNER: "bpftrace"
+      REPO: "bpftrace"
+      BINARY: "https://github.com/bpftrace/bpftrace/releases/latest/download/bpftrace"
+      extra_prep: |
+        $WGET -P $PKG/usr/bin https://github.com/bpftrace/bpftrace/releases/latest/download/tools.tar.xz
+        tar -xf $PKG/usr/bin/tools.tar.xz -C $PKG/usr/bin
+        rm $PKG/usr/bin/tools.tar.xz
+        $WGET -P $PKG/usr https://github.com/bpftrace/bpftrace/releases/latest/download/man.tar.xz
+        tar -xf $PKG/usr/man.tar.xz -C $PKG/usr
+        rm $PKG/usr/man.tar.xz
+  deploy:
+    needs: make_slackware_package
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: slackware-packages   # must match what the reusable workflow uploaded
+          path: ./
+      - name: Generate directory listings
+        uses: jayanta525/github-pages-directory-listing@v4.0.0
+        with:
+          folder: ./
+        
+      - name: Upload to GitHub Pages
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ./
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

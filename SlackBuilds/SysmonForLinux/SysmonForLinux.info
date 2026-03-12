@@ -1,0 +1,4 @@
+PRGNAM="SysmonForLinux"
+VERSION="1.3.4.0"
+HOMEPAGE="https://github.com/microsoft/SysmonForLinux"
+DOWNLOAD="https://github.com/microsoft/SysmonForLinux/archive/refs/tags/1.3.4.0.tar.gz"

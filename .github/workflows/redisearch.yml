@@ -1,0 +1,14 @@
+name: Build redisearch
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "2.10.25"
+      NAME: "redisearch"
+      PACKAGES: "make cmake guile gc gcc binutils kernel-headers && slackpkg upgrade glibc"
+      SOURCE: "https://github.com/RediSearch/RediSearch.git"

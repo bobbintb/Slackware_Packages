@@ -1,0 +1,4 @@
+PRGNAM="itwarden-cli"
+VERSION="2025.3.0"
+HOMEPAGE="https://bitwarden.com/"
+DOWNLOAD="https://github.com/bitwarden/clients/releases/download/cli-v2025.3.0/bw-linux-2025.3.0.zip"

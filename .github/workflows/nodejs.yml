@@ -1,0 +1,14 @@
+name: Build nodejs
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "22.14.0"
+      NAME: "nodejs"
+      SBOPKG: true
+      PACKAGES: "gcc gc make guile ninja kernel-headers binutils && slackpkg reinstall openssl ; slackpkg upgrade glibc"

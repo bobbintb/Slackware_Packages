@@ -1,0 +1,14 @@
+name: Build kflowd
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "0.9.23"
+      NAME: "kflowd"
+      PACKAGES: "make guile gc gcc kernel-headers binutils llvm"
+      GIT: https://github.com/bobbintb/kflowd.git

@@ -1,0 +1,13 @@
+name: Build fsprobe
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      NAME: "fsprobe"
+      VERSION: "1.0"
+      GIT: https://github.com/Gui774ume/fsprobe.git

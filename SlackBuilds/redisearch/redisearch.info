@@ -1,0 +1,6 @@
+PRGNAM="redisearch"
+VERSION="2.10.12"
+HOMEPAGE="https://github.com/RediSearch/RediSearch"
+DOWNLOAD="https://github.com/RediSearch/RediSearch/archive/refs/tags/v2.10.12.tar.gz"
+MAINTAINER="name of SlackBuild script maintainer"
+EMAIL="email address of author"

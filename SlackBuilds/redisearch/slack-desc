@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.  Line
+# up the first '|' above the ':' following the base package name, and the '|'
+# on the right side marks the last column you can put a character in.  You must
+# make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':'.
+
+          |-----handy-ruler------------------------------------------------------|
+redisearch: redisearch (Querying, secondary indexing, and full-text search for Redis)
+redisearch:
+redisearch: RediSearch is a Redis module that provides querying, secondary
+redisearch: indexing, and full-text search for Redis. To use RediSearch, you
+redisearch: first declare indexes on your Redis data. You can then use the
+redisearch: RediSearch query language to query that data.
+redisearch:
+redisearch:
+redisearch:
+redisearch:
+redisearch: Home: https://github.com/RediSearch/RediSearch

@@ -1,0 +1,15 @@
+name: Build google-go-lang
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  make_slackware_package:
+    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    secrets: inherit
+    with:
+      VERSION: "1.24.1"
+      NAME: "google-go-lang"
+      alien-15: true
+      # PACKAGES: "alien-15:google-go-lang"
+      SBOPKG: true

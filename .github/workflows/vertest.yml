@@ -1,0 +1,16 @@
+name: verttest
+on:
+  workflow_dispatch: # Allow manual trigger workflows
+jobs:
+  build:
+    name: RedisTimeSeries
+    runs-on: ubuntu-latest
+    steps:
+      - id: dragonfly
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          repository: dragonflydb/dragonfly
+          excludes: prerelease, draft
+      - name: Enable additional repos
+        run: |
+          echo ${{ steps.dragonfly.outputs.release }}

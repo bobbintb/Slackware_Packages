@@ -1,0 +1,19 @@
+# HOW TO EDIT THIS FILE:
+# The "handy ruler" below makes it easier to edit a package description.
+# Line up the first '|' above the ':' following the base package name, and
+# the '|' on the right side marks the last column you can put a character in.
+# You must make exactly 11 lines for the formatting to be correct.  It's also
+# customary to leave one space after the ':' except on otherwise blank lines.
+
+    |-----handy-ruler------------------------------------------------------|
+dirt: DiRT (De-duplication in Real Time)
+dirt:
+dirt: DiRT is a tool for de-duplicating files in real time. It works by monitoring
+dirt: file system events and identifying duplicate files as they are created or
+dirt: modified. When a duplicate is detected, DiRT can take action to remove
+dirt: the duplicate file or link it to the original file, saving disk space
+dirt: and reducing clutter.
+dirt:
+dirt: 
+dirt:
+dirt:
