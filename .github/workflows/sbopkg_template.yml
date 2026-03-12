@@ -28,7 +28,7 @@ jobs:
     permissions:
       contents: write
     container:
-      image: bobbintb/unraid-cicd-builder-upgraded
+      image: bobbintb/unraid-cicd-builder
       options: --privileged
     steps:
     - 
