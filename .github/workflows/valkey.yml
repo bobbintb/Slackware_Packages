@@ -9,4 +9,5 @@ jobs:
     secrets: inherit
     with:
       NAME: "valkey"
+      REPOS: alienbob-15.0 bobbintb
       PACKAGES: "make guile gc gcc kernel-headers binutils pkgconf"
