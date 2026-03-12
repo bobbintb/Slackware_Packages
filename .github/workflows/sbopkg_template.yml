@@ -65,4 +65,10 @@ jobs:
     - 
       name: Install dependencies
       run: | 
+        slackpkg update gpg
+        slackpkg update
         slackpkg install ${{ inputs.PACKAGES }}
+    - 
+      name: Build
+      run: | 
+        sbopkg -b ${{ inputs.NAME }} <<< q
