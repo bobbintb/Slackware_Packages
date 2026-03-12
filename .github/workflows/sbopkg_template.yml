@@ -72,4 +72,4 @@ jobs:
       name: Build
       run: | 
         sbopkg -r
-        sbopkg -b ${{ inputs.NAME }} <<< q
+        sbopkg -b ${{ inputs.NAME }} <<< p
