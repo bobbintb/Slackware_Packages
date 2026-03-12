@@ -32,9 +32,11 @@ for key in "${!REPO_IDS[@]}"; do
 done
 
 # Write config
-sed -i "s|^#\?REPOPLUS=.*|REPOPLUS=( $REPOPLUS )|" "$CONF" \
-  || echo "REPOPLUS=( $REPOPLUS )" >> "$CONF"
-grep -q "^REPOPLUS=" "$CONF" || echo "REPOPLUS=( $REPOPLUS )" >> "$CONF"
+if grep -q "^REPOPLUS=" "$CONF"; then
+  sed -i "s|^REPOPLUS=.*|REPOPLUS=( $REPOPLUS )|" "$CONF"
+else
+  echo "REPOPLUS=( $REPOPLUS )" >> "$CONF"
+fi
 for ck in $(printf '%s\n' "${!MIRRORPLUS[@]}" | sort); do
   grep -qF "MIRRORPLUS['$ck']" "$CONF" || echo "MIRRORPLUS['$ck']=${MIRRORPLUS[$ck]}" >> "$CONF"
 done
