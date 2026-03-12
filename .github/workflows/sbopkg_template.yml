@@ -61,4 +61,5 @@ jobs:
       run: | 
         ./add_repos.sh ${{ inputs.REPOS }}
         ls
+        cat /etc/slackpkg/slackpkgplus.conf
         
