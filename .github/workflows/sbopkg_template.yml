@@ -33,18 +33,18 @@ jobs:
     steps:
     - 
       name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@latest
       with:
         clean: true
     -
       name: Import GPG key
-      uses: crazy-max/ghaction-import-gpg@v6
+      uses: crazy-max/ghaction-import-gpg@latest
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
     - name: Cache packages
       id: cache-packages
-      uses: actions/cache@v4
+      uses: actions/cache@latest
       with:
         path: /var/cache/packages
         key: slackware-packages-${{ github.sha }}
