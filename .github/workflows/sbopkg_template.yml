@@ -62,4 +62,7 @@ jobs:
         ./add_repos.sh ${{ inputs.REPOS }}
         ls
         cat /etc/slackpkg/slackpkgplus.conf
-        
+    - 
+      name: Install dependencies
+      run: | 
+        slackpkg install ${{ inputs.PACKAGES }}
