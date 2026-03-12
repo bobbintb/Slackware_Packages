@@ -68,7 +68,8 @@ jobs:
         slackpkg update gpg
         slackpkg update
         slackpkg install ${{ inputs.PACKAGES }}
-        slackpkg upgrade glibc
+        slackpkg remove glibc
+        slackpkg install glibc
     - 
       name: Build
       run: | 
