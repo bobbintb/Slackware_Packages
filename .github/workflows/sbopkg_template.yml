@@ -71,4 +71,5 @@ jobs:
     - 
       name: Build
       run: | 
+        sbopkg -r
         sbopkg -b ${{ inputs.NAME }} <<< q
