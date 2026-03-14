@@ -58,8 +58,8 @@ jobs:
         ./add_repos.sh ${{ inputs.REPOS }}
     - 
       name: Install dependencies
+      if: ${{ inputs.PACKAGES != '' }}
       run: | 
-        if: ${{ inputs.PACKAGES != '' }}
         slackpkg update gpg
         slackpkg update
         slackpkg install ${{ inputs.PACKAGES }}
