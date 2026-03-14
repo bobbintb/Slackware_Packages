@@ -1,0 +1,9 @@
+#!/usr/bin/expect
+
+set key [lindex  0]
+spawn /usr/libexec/slackrepo/gen_repos_files.sh
+expect "Enter ChangeLog.txt description:"
+send "\r"
+expect "Enter your GPG passphrase:"
+send "$key\r"
+expect eof
