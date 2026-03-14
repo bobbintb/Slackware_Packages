@@ -25,10 +25,6 @@ on:
 jobs:
   slackbuild_and_upload:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pages: write
-      id-token: write
     container:
       image: bobbintb/unraid-cicd-builder
       options: --privileged
