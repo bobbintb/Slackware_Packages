@@ -58,7 +58,6 @@ jobs:
         ./add_repos.sh ${{ inputs.REPOS }}
     - 
       name: Install dependencies
-      if: ${{ inputs.PACKAGES != '' }}
       run: | 
         slackpkg update gpg
         slackpkg update
@@ -74,13 +73,13 @@ jobs:
       name: Download existing site
       run: |
         mkdir -p /tmp/old_site
+        # We download the contents of /builds/ into /tmp/old_site
         wget -r -np -nH --cut-dirs=1 -P /tmp/old_site \
           https://bobbintb.github.io/Slackware_Packages/builds/ || true
     -
       name: Prepare package folder
       run: |
         mkdir -p /tmp/current_build/${{ inputs.NAME }}
-        # Search /tmp recursively for .t?z files (matches .tgz and .txz)
         find /tmp -name "${{ inputs.NAME }}-*.t?z" -exec cp {} /tmp/current_build/${{ inputs.NAME }}/ \;
     -
       name: Generate repo files
@@ -110,16 +109,19 @@ jobs:
     -
       name: Prepare deploy artifact
       run: |
-        # This structure ensures the URL contains /builds/
+        # 1. Create the base directory
         mkdir -p $GITHUB_WORKSPACE/site/builds
         
-        # Merge old site files
+        # 2. Merge old site files (using /. syntax to copy contents, not the folder)
         if [ -d "/tmp/old_site" ]; then
           cp -rn /tmp/old_site/. $GITHUB_WORKSPACE/site/builds/ || true
         fi
         
-        # Copy new build and repo files
+        # 3. Copy new build and repo files (using /. syntax to copy contents)
         cp -r /tmp/current_build/. $GITHUB_WORKSPACE/site/builds/
+
+        # 4. Clean up any accidental nested builds folder if it still exists from previous logic
+        rm -rf $GITHUB_WORKSPACE/site/builds/builds
     -
       name: Generate directory listing
       uses: jayanta525/github-pages-directory-listing@v4.0.0
