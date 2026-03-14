@@ -120,25 +120,20 @@ jobs:
       run: |
         find /tmp/pages-artifact/builds -mindepth 1 -maxdepth 1 -type d \
           ! -name "${{ inputs.NAME }}" -exec rm -rf {} +
+        mkdir -p ${{ github.workspace }}/site
+        cp -r /tmp/pages-artifact/builds/. ${{ github.workspace }}/site/
     -
       name: Generate directory listing
       uses: jayanta525/github-pages-directory-listing@v4.0.0
       with:
-        FOLDER: /tmp/pages-artifact/builds
+        FOLDER: site
+    -
+      name: Generate directory listing (package)
+      uses: jayanta525/github-pages-directory-listing@v4.0.0
+      with:
+        FOLDER: site/${{ inputs.NAME }}
     -
       name: Upload pages artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: /tmp/pages-artifact/builds
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-    -
-      name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+        path: site
