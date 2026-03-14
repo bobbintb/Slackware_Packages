@@ -31,44 +31,68 @@ jobs:
       image: bobbintb/unraid-cicd-builder
       options: --privileged
     steps:
-    - name: Checkout
+    - 
+      name: Checkout
       uses: actions/checkout@v6
       with:
         clean: true
-
-    - name: Import GPG key
+    -
+      name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v7
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
-
-    - name: Build
+    - 
+      name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v5
+      with:
+        path: /var/cache/packages
+        key: slackware-packages-${{ github.sha }}
+        restore-keys: |
+          slackware-packages-
+    - 
+      name: Enable additional repos
+      if: ${{ inputs.REPOS != '' }}
       run: | 
-        slackpkg update gpg && slackpkg update
-        slackpkg install ${{ inputs.PACKAGES }} || true
+        ./add_repos.sh ${{ inputs.REPOS }}
+    - 
+      name: Install dependencies
+      run: | 
+        if: ${{ inputs.PACKAGES != '' }}
+        slackpkg update gpg
+        slackpkg update
+        slackpkg install ${{ inputs.PACKAGES }}
+        slackpkg remove glibc
+        slackpkg install glibc
+    - 
+      name: Build
+      run: | 
         sbopkg -r
         sbopkg -b ${{ inputs.NAME }} <<< p
 
-    - name: 1. Download the existing site
+    - name: Download the existing site
       run: |
         mkdir -p /tmp/site-root/builds
         wget -r -np -nH --cut-dirs=2 -P /tmp/site-root/builds \
           --reject "index.html*" \
           https://bobbintb.github.io/Slackware_Packages/builds/ || true
 
-    - name: 2. Remove existing files from package subfolder
+    - name: Remove existing files from package subfolder
       run: |
         rm -rf /tmp/site-root/builds/${{ inputs.NAME }}
         mkdir -p /tmp/site-root/builds/${{ inputs.NAME }}
 
-    - name: 3. Move the package into its subfolder
+    - name: Move the package into its subfolder
       run: |
+        # Using .t?z to catch .tgz or .txz
         find /tmp -name "${{ inputs.NAME }}-*.t?z" -exec cp {} /tmp/site-root/builds/${{ inputs.NAME }}/ \;
 
-    - name: 4. Run the gen_repos_files.sh file
+    - name: Run the gen_repos_files.sh file
       run: |
-        # Setup environment for the script
-        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect || true
+        slackpkg update gpg || true
+        slackpkg update || true
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
         
         export REPOSOWNER="${{ github.repository_owner }}"
         export RSS_UUID=$(uuidgen -t)
@@ -85,24 +109,30 @@ jobs:
         expect eof
         EOF
 
+        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         chmod +x /tmp/script.expect
         cd /tmp/site-root/builds
         /tmp/script.expect ${{ secrets.PASSPHRASE }}
 
-    - name: Prepare for Upload
+    - name: Prepare Workspace for Upload
       run: |
-        mkdir -p $GITHUB_WORKSPACE/deploy-folder
-        cp -a /tmp/site-root/. $GITHUB_WORKSPACE/deploy-folder/
+        mkdir -p $GITHUB_WORKSPACE/deploy
+        cp -a /tmp/site-root/. $GITHUB_WORKSPACE/deploy/
 
-    - name: Generate directory listings
+    - name: Generate directory listing
       uses: jayanta525/github-pages-directory-listing@v4.0.0
       with:
-        FOLDER: deploy-folder/builds
+        FOLDER: deploy/builds
+
+    - name: Generate directory listing (package)
+      uses: jayanta525/github-pages-directory-listing@v4.0.0
+      with:
+        FOLDER: deploy/builds/${{ inputs.NAME }}
 
     - name: Upload pages artifact
-      uses: actions/upload-pages-artifact@v4
+      uses: actions/upload-pages-artifact@v3
       with:
-        path: deploy-folder
+        path: deploy
 
   deploy:
     needs: build
@@ -111,6 +141,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: 5. Deploy the page
+      - name: Deploy the page
         id: deployment
         uses: actions/deploy-pages@v4
