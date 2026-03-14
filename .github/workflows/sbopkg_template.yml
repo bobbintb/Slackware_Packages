@@ -120,8 +120,10 @@ jobs:
       run: |
         find /tmp/pages-artifact/builds -mindepth 1 -maxdepth 1 -type d \
           ! -name "${{ inputs.NAME }}" -exec rm -rf {} +
-        mkdir -p ${{ github.workspace }}/site
-        cp -r /tmp/pages-artifact/builds/. ${{ github.workspace }}/site/
+        mkdir -p $GITHUB_WORKSPACE/site
+        cp -r /tmp/pages-artifact/builds/. $GITHUB_WORKSPACE/site/
+        echo "Contents of site:"
+        ls -la $GITHUB_WORKSPACE/site
     -
       name: Generate directory listing
       uses: jayanta525/github-pages-directory-listing@v4.0.0
