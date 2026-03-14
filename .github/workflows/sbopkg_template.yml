@@ -123,12 +123,12 @@ jobs:
       name: Generate directory listing
       uses: jayanta525/github-pages-directory-listing@v4.0.0
       with:
-        FOLDER: /tmp/pages-artifact
+        FOLDER: ./
     -
       name: Upload pages artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: /tmp/pages-artifact
+        path: ./
 
   deploy:
     needs: build
