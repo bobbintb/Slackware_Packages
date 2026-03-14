@@ -23,8 +23,10 @@ on:
         required: false
         type: string
 jobs:
-  slackbuild_and_upload:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: bobbintb/unraid-cicd-builder
       options: --privileged
@@ -76,10 +78,8 @@ jobs:
     -
       name: Prepare package folder
       run: |
-        # Clear out old version of this package
         rm -rf /tmp/pages-artifact/builds/${{ inputs.NAME }}
         mkdir -p /tmp/pages-artifact/builds/${{ inputs.NAME }}
-        # Copy newly built package in
         find /tmp -maxdepth 1 -name "${{ inputs.NAME }}-*.txz" \
           -exec cp {} /tmp/pages-artifact/builds/${{ inputs.NAME }}/ \;
     -
@@ -117,7 +117,6 @@ jobs:
     -
       name: Prepare deploy artifact
       run: |
-        # Remove all package subfolders except the new one
         find /tmp/pages-artifact/builds -mindepth 1 -maxdepth 1 -type d \
           ! -name "${{ inputs.NAME }}" -exec rm -rf {} +
     -
@@ -126,10 +125,22 @@ jobs:
       with:
         FOLDER: /tmp/pages-artifact
     -
-      name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v4
+      name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v3
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: /tmp/pages-artifact
-        destination_dir: .
-        keep_files: true
+        path: /tmp/pages-artifact
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+    -
+      name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
