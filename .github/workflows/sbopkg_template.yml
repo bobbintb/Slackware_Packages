@@ -57,14 +57,17 @@ jobs:
       run: | 
         ./add_repos.sh ${{ inputs.REPOS }}
     - 
-      name: Install dependencies
-      if: ${{ inputs.PACKAGES != '' }}
+      name: Update slackpkg and fix glibc
       run: | 
         slackpkg update gpg
         slackpkg update
-        slackpkg install ${{ inputs.PACKAGES }}
         slackpkg remove glibc
         slackpkg install glibc
+    - 
+      name: Install dependencies
+      if: ${{ inputs.PACKAGES != '' }}
+      run: | 
+        slackpkg install ${{ inputs.PACKAGES }}
     - 
       name: Build
       run: | 
