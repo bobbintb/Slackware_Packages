@@ -31,68 +31,49 @@ jobs:
       image: bobbintb/unraid-cicd-builder
       options: --privileged
     steps:
-    - 
-      name: Checkout
+    - name: Checkout
       uses: actions/checkout@v6
       with:
         clean: true
-    -
-      name: Import GPG key
+
+    - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v7
       with:
         gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
         passphrase: ${{ secrets.PASSPHRASE }}
-    - 
-      name: Cache packages
-      id: cache-packages
-      uses: actions/cache@v5
-      with:
-        path: /var/cache/packages
-        key: slackware-packages-${{ github.sha }}
-        restore-keys: |
-          slackware-packages-
-    - 
-      name: Enable additional repos
-      if: ${{ inputs.REPOS != '' }}
+
+    - name: Build
       run: | 
-        ./add_repos.sh ${{ inputs.REPOS }}
-    - 
-      name: Install dependencies
-      if: ${{ inputs.PACKAGES != '' }}
-      run: | 
-        slackpkg update gpg
-        slackpkg update
-        slackpkg install ${{ inputs.PACKAGES }}
-        slackpkg remove glibc
-        slackpkg install glibc
-    - 
-      name: Build
-      run: | 
+        slackpkg update gpg && slackpkg update
+        slackpkg install ${{ inputs.PACKAGES }} || true
         sbopkg -r
         sbopkg -b ${{ inputs.NAME }} <<< p
-    -
-      name: Download existing site
+
+    - name: 1. Download the existing site
       run: |
-        mkdir -p /tmp/old_site
-        # We download the contents of /builds/ into /tmp/old_site
-        wget -r -np -nH --cut-dirs=1 -P /tmp/old_site \
+        mkdir -p /tmp/site-root/builds
+        wget -r -np -nH --cut-dirs=2 -P /tmp/site-root/builds \
+          --reject "index.html*" \
           https://bobbintb.github.io/Slackware_Packages/builds/ || true
-    -
-      name: Prepare package folder
+
+    - name: 2. Remove existing files from package subfolder
       run: |
-        mkdir -p /tmp/current_build/${{ inputs.NAME }}
-        find /tmp -name "${{ inputs.NAME }}-*.t?z" -exec cp {} /tmp/current_build/${{ inputs.NAME }}/ \;
-    -
-      name: Generate repo files
+        rm -rf /tmp/site-root/builds/${{ inputs.NAME }}
+        mkdir -p /tmp/site-root/builds/${{ inputs.NAME }}
+
+    - name: 3. Move the package into its subfolder
       run: |
-        cd /tmp/current_build
-        slackpkg update gpg || true
-        slackpkg update || true
-        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
+        find /tmp -name "${{ inputs.NAME }}-*.t?z" -exec cp {} /tmp/site-root/builds/${{ inputs.NAME }}/ \;
+
+    - name: 4. Run the gen_repos_files.sh file
+      run: |
+        # Setup environment for the script
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect || true
+        
         export REPOSOWNER="${{ github.repository_owner }}"
         export RSS_UUID=$(uuidgen -t)
-        export REPOSROOT="/tmp/current_build"
-
+        export REPOSROOT="/tmp/site-root/builds"
+        
         cat <<EOF > /tmp/script.expect
         #!/usr/bin/expect
         set key [lindex \$argv 0]
@@ -104,40 +85,24 @@ jobs:
         expect eof
         EOF
 
-        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
         chmod +x /tmp/script.expect
+        cd /tmp/site-root/builds
         /tmp/script.expect ${{ secrets.PASSPHRASE }}
-    -
-      name: Prepare deploy artifact
-      run: |
-        # 1. Create the base directory
-        mkdir -p $GITHUB_WORKSPACE/site/builds
-        
-        # 2. Merge old site files (using /. syntax to copy contents, not the folder)
-        if [ -d "/tmp/old_site" ]; then
-          cp -rn /tmp/old_site/. $GITHUB_WORKSPACE/site/builds/ || true
-        fi
-        
-        # 3. Copy new build and repo files (using /. syntax to copy contents)
-        cp -r /tmp/current_build/. $GITHUB_WORKSPACE/site/builds/
 
-        # 4. Clean up any accidental nested builds folder if it still exists from previous logic
-        rm -rf $GITHUB_WORKSPACE/site/builds/builds
-    -
-      name: Generate directory listing
+    - name: Prepare for Upload
+      run: |
+        mkdir -p $GITHUB_WORKSPACE/deploy-folder
+        cp -a /tmp/site-root/. $GITHUB_WORKSPACE/deploy-folder/
+
+    - name: Generate directory listings
       uses: jayanta525/github-pages-directory-listing@v4.0.0
       with:
-        FOLDER: site/builds
-    -
-      name: Generate directory listing (package)
-      uses: jayanta525/github-pages-directory-listing@v4.0.0
-      with:
-        FOLDER: site/builds/${{ inputs.NAME }}
-    -
-      name: Upload pages artifact
+        FOLDER: deploy-folder/builds
+
+    - name: Upload pages artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: site
+        path: deploy-folder
 
   deploy:
     needs: build
@@ -146,6 +111,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Deploy to GitHub Pages
+      - name: 5. Deploy the page
         id: deployment
         uses: actions/deploy-pages@v4
