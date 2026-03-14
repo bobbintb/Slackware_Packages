@@ -25,111 +25,115 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: bobbintb/unraid-cicd-builder
       options: --privileged
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          clean: true
+    - 
+      name: Checkout
+      uses: actions/checkout@v6
+      with:
+        clean: true
+    -
+      name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v7
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+    - 
+      name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v5
+      with:
+        path: /var/cache/packages
+        key: slackware-packages-${{ github.sha }}
+        restore-keys: |
+          slackware-packages-
+    - 
+      name: Enable additional repos
+      if: ${{ inputs.REPOS != '' }}
+      run: | 
+        ./add_repos.sh ${{ inputs.REPOS }}
+    - 
+      name: Install dependencies
+      run: | 
+        slackpkg update gpg
+        slackpkg update
+        slackpkg install ${{ inputs.PACKAGES }}
+        slackpkg remove glibc
+        slackpkg install glibc
+    - 
+      name: Build
+      run: | 
+        sbopkg -r
+        sbopkg -b ${{ inputs.NAME }} <<< p
+    -
+      name: Download existing site
+      run: |
+        mkdir -p /tmp/old_site
+        wget -r -np -nH --cut-dirs=1 -P /tmp/old_site \
+          https://bobbintb.github.io/Slackware_Packages/builds/ || true
+    -
+      name: Prepare package folder
+      run: |
+        mkdir -p /tmp/current_build/${{ inputs.NAME }}
+        # Search /tmp recursively for .t?z files (matches .tgz and .txz)
+        find /tmp -name "${{ inputs.NAME }}-*.t?z" -exec cp {} /tmp/current_build/${{ inputs.NAME }}/ \;
+    -
+      name: Generate repo files
+      run: |
+        cd /tmp/current_build
+        slackpkg update gpg || true
+        slackpkg update || true
+        slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
+        export REPOSOWNER="${{ github.repository_owner }}"
+        export RSS_UUID=$(uuidgen -t)
+        export REPOSROOT="/tmp/current_build"
 
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v6
-        with:
-          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE }}
+        cat <<EOF > /tmp/script.expect
+        #!/usr/bin/expect
+        set key [lindex \$argv 0]
+        spawn /usr/libexec/slackrepo/gen_repos_files.sh
+        expect "Enter ChangeLog.txt description:"
+        send "\r"
+        expect "Enter your GPG passphrase:"
+        send "\$key\r"
+        expect eof
+        EOF
 
-      - name: Cache packages
-        id: cache-packages
-        uses: actions/cache@v4
-        with:
-          path: /var/cache/packages
-          key: slackware-packages-${{ github.sha }}
-          restore-keys: |
-            slackware-packages-
-
-      - name: Enable additional repos
-        if: ${{ inputs.REPOS != '' }}
-        run: | 
-          ./add_repos.sh ${{ inputs.REPOS }}
-          ls
-          cat /etc/slackpkg/slackpkgplus.conf
-
-      - name: Install dependencies
-        run: | 
-          slackpkg update gpg
-          slackpkg update
-          slackpkg install ${{ inputs.PACKAGES }}
-          slackpkg remove glibc
-          slackpkg install glibc
-
-      - name: Build
-        run: | 
-          sbopkg -r
-          sbopkg -b ${{ inputs.NAME }} <<< p
-
-      - name: Download existing site
-        run: |
-          wget -r -np -nH --cut-dirs=1 -P /tmp/pages-artifact \
-            https://bobbintb.github.io/Slackware_Packages/builds/ || true
-
-      - name: Prepare package folder
-        run: |
-          rm -rf /tmp/pages-artifact/builds/${{ inputs.NAME }}
-          mkdir -p /tmp/pages-artifact/builds/${{ inputs.NAME }}
-          find /tmp -maxdepth 1 -name "${{ inputs.NAME }}-*.txz" \
-            -exec cp {} /tmp/pages-artifact/builds/${{ inputs.NAME }}/ \;
-
-      - name: Generate repo files
-        run: |
-          cd /tmp/pages-artifact/builds
-          echo -e "\e[32mContents of builds:\e[0m"
-          ls -ls
-          slackpkg update gpg || true
-          slackpkg update || true
-          slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect
-          gpg --list-keys
-          export REPOSOWNER="${{ github.repository_owner }}"
-          export RSS_UUID=$(uuidgen -t)
-          export REPOSROOT="/tmp/pages-artifact/builds"
-          cat <<EOF > /tmp/script.expect
-          #!/usr/bin/expect
-          set key [lindex \$argv 0]
-          spawn /usr/libexec/slackrepo/gen_repos_files.sh
-          expect "Enter ChangeLog.txt description:"
-          send "\r"
-          expect "Enter your GPG passphrase:"
-          send "\$key\r"
-          expect eof
-          EOF
-          chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
-          chmod +x /tmp/script.expect
-          /tmp/script.expect ${{ secrets.PASSPHRASE }}
-
-      - name: Prepare deploy artifact
-        run: |
-          find /tmp/pages-artifact/builds -mindepth 1 -maxdepth 1 -type d \
-            ! -name "${{ inputs.NAME }}" -exec rm -rf {} +
-          mkdir -p $GITHUB_WORKSPACE/site
-          cp -r /tmp/pages-artifact/builds/. $GITHUB_WORKSPACE/site/
-          echo "Contents of site:"
-          ls -la $GITHUB_WORKSPACE/site
-
-      - name: Generate directory listing
-        uses: jayanta525/github-pages-directory-listing@v4.0.0
-        with:
-          FOLDER: site
-
-      - name: Generate directory listing (package)
-        uses: jayanta525/github-pages-directory-listing@v4.0.0
-        with:
-          FOLDER: site/${{ inputs.NAME }}
-
-      - name: Upload pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
+        chmod +x /usr/libexec/slackrepo/gen_repos_files.sh
+        chmod +x /tmp/script.expect
+        /tmp/script.expect ${{ secrets.PASSPHRASE }}
+    -
+      name: Prepare deploy artifact
+      run: |
+        # This structure ensures the URL contains /builds/
+        mkdir -p $GITHUB_WORKSPACE/site/builds
+        
+        # Merge old site files
+        if [ -d "/tmp/old_site" ]; then
+          cp -rn /tmp/old_site/. $GITHUB_WORKSPACE/site/builds/ || true
+        fi
+        
+        # Copy new build and repo files
+        cp -r /tmp/current_build/. $GITHUB_WORKSPACE/site/builds/
+    -
+      name: Generate directory listing
+      uses: jayanta525/github-pages-directory-listing@v4.0.0
+      with:
+        FOLDER: site/builds
+    -
+      name: Generate directory listing (package)
+      uses: jayanta525/github-pages-directory-listing@v4.0.0
+      with:
+        FOLDER: site/builds/${{ inputs.NAME }}
+    -
+      name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: site
 
   deploy:
     needs: build
