@@ -53,6 +53,7 @@ jobs:
           slackware-packages-
     - 
       name: Enable additional repos
+      if: ${{ inputs.REPOS != '' }}
       run: | 
         ./add_repos.sh ${{ inputs.REPOS }}
         ls
