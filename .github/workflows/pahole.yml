@@ -3,12 +3,11 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  pages: write
+  id-token: write
 jobs:
   make_slackware_package:
-    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    uses: bobbintb/Slackware_Packages/.github/workflows/sbopkg_template.yml@main
     secrets: inherit
     with:
-      VERSION: "1.21"
       NAME: "pahole"
-      SBOPKG: true
-      GIT: https://git.kernel.org/pub/scm/devel/pahole/pahole.git
