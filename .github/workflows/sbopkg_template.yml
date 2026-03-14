@@ -100,7 +100,7 @@ jobs:
         FOLDER: deploy-folder/builds
 
     - name: Upload pages artifact
-      uses: actions/upload-pages-artifact@v7
+      uses: actions/upload-pages-artifact@v4
       with:
         path: deploy-folder
 
