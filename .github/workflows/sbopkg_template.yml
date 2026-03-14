@@ -74,7 +74,7 @@ jobs:
       name: Download existing site
       run: |
         wget -r -np -nH --cut-dirs=1 -P /tmp/pages-artifact \
-          https://bobbintb.github.io/Slackware_Packages/builds/
+          https://bobbintb.github.io/Slackware_Packages/builds/ || true
     -
       name: Prepare package folder
       run: |
