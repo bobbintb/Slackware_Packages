@@ -6,7 +6,7 @@ This repo now uses Github Pages. This change was needed to allow larger packages
 
 This repository is compatible with `slackpkg+`.
 
-To use it, add `bobbintb` to the `REPOPLUS` variable and `MIRRORPLUS['bobbintb']=https://raw.githubusercontent.com/bobbintb/Slackware_Packages/refs/heads/main/builds/` to your `/etc/slackpkg/slackpkgplus.conf` file. Make sure you run `slackpkg update gpg` and `slackpkg update` after modifying the config file.
+To use it, add `bobbintb` to the `REPOPLUS` variable and `MIRRORPLUS['bobbintb']=[https://raw.githubusercontent.com/bobbintb/Slackware_Packages/refs/heads/main/builds](https://bobbintb.github.io/Slackware_Packages/builds/` to your `/etc/slackpkg/slackpkgplus.conf` file. Make sure you run `slackpkg update gpg` and `slackpkg update` after modifying the config file.
 You can download `slackpkg` and `slackpkg+` here:
 
   slackpkg 15.0.10 https://www.slackpkg.org/
