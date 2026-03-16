@@ -14,6 +14,10 @@ on:
         description: 'Build dependencies to re-install, space seperated'
         required: false
         type: string
+      UPGRADE:
+        description: 'Build dependencies to upgrade, space seperated'
+        required: false
+        type: string
       PIP:
         description: 'PIP dependencies to install, space seperated'
         required: false
@@ -68,6 +72,16 @@ jobs:
       if: ${{ inputs.PACKAGES != '' }}
       run: | 
         slackpkg install ${{ inputs.PACKAGES }}
+    - 
+      name: Re-install dependencies
+      if: ${{ inputs.REINSTALL != '' }}
+      run: | 
+        slackpkg install ${{ inputs.REINSTALL }}
+    - 
+      name: Upgrade dependencies
+      if: ${{ inputs.UPGRADE != '' }}
+      run: | 
+        slackpkg install ${{ inputs.UPGRADE }}
     - 
       name: Build
       run: | 
