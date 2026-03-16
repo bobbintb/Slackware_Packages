@@ -76,12 +76,12 @@ jobs:
       name: Re-install dependencies
       if: ${{ inputs.REINSTALL != '' }}
       run: | 
-        slackpkg install ${{ inputs.REINSTALL }}
+        slackpkg reinstall ${{ inputs.REINSTALL }} || true
     - 
       name: Upgrade dependencies
       if: ${{ inputs.UPGRADE != '' }}
       run: | 
-        slackpkg install ${{ inputs.UPGRADE }}
+        slackpkg upgrade ${{ inputs.UPGRADE }} || true
     - 
       name: Build
       run: | 
