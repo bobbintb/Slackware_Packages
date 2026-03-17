@@ -138,16 +138,43 @@ info "Download URL(s): ${NEW_DOWNLOADS}"
 SRCDIR="$(mktemp -d /tmp/sbo-build.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
-for url in ${NEW_DOWNLOADS}; do
-    info "Fetching: ${url}"
+# Given a URL, insert VERSION before the final .tar.* extension.
+# e.g. bcc-src-with-submodule.tar.gz -> bcc-src-with-submodule-0.36.1.tar.gz
+versioned_url() {
+    local url="$1"
+    local base ext versioned_base
+    base="$(basename "${url}")"
+    # Strip the compression extension(s): .tar.gz, .tar.xz, .tar.bz2, etc.
+    ext="$(echo "${base}" | grep -oP '\.tar\.(gz|xz|bz2|zst)$')"
+    [[ -n "${ext}" ]] || ext="$(echo "${base}" | grep -oP '\.(tgz|tbz2)$')"
+    [[ -n "${ext}" ]] || { echo "${url}"; return; }  # unrecognised extension, return as-is
+    versioned_base="${base%${ext}}-${VERSION}${ext}"
+    echo "${url%/*}/${versioned_base}"
+}
+
+download_file() {
+    local url="$1" dest="$2"
     if command -v curl &>/dev/null; then
-        curl -fL --progress-bar -o "${SRCDIR}/$(basename "${url}")" "${url}" \
-            || die "Download failed: ${url}"
+        curl -fL --progress-bar -o "${dest}" "${url}" 2>/dev/null
     elif command -v wget &>/dev/null; then
-        wget -q --show-progress -P "${SRCDIR}" "${url}" \
-            || die "Download failed: ${url}"
+        wget -q --show-progress -O "${dest}" "${url}" 2>/dev/null
     else
         die "Neither curl nor wget found — cannot download source"
+    fi
+}
+
+for url in ${NEW_DOWNLOADS}; do
+    dest="${SRCDIR}/$(basename "${url}")"
+    info "Fetching: ${url}"
+    if ! download_file "${url}" "${dest}"; then
+        alt_url="$(versioned_url "${url}")"
+        if [[ "${alt_url}" != "${url}" ]]; then
+            info "Got 404, retrying with versioned filename: ${alt_url}"
+            alt_dest="${SRCDIR}/$(basename "${alt_url}")"
+            download_file "${alt_url}" "${alt_dest}"                 || die "Download failed (tried original and versioned filename):\n  ${url}\n  ${alt_url}"
+        else
+            die "Download failed: ${url}"
+        fi
     fi
 done
 
