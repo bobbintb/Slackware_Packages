@@ -11,4 +11,4 @@ jobs:
     secrets: inherit
     with:
       NAME: "libbpf"
-      UPGRADE: elfutils
+      UPGRADE: elfutils zlib
