@@ -11,4 +11,3 @@ jobs:
     secrets: inherit
     with:
       NAME: "libbpf"
-      PACKAGES: "make guile gc gcc binutils kernel-headers"
