@@ -1,11 +1,12 @@
 #!/bin/bash
-# sbo-build — Download a SlackBuild via sbopkg, then build it at a custom version.
+# sbo-build — Download a SlackBuild via sbopkg, then build it at the latest
+#             GitHub release version (or a specific version if supplied).
 #
-# Usage: sbo-build <package> <version>
-#   package  : exact SlackBuild name (e.g. "python3-requests")
-#   version  : upstream version to fetch and build (e.g. "2.31.0")
+# Usage: sbo-build <package> [version]
+#   package  : exact SlackBuild name (e.g. "bpftrace")
+#   version  : upstream version to build (optional; auto-detected from GitHub)
 #
-# Requirements: sbopkg, curl/wget, standard build tools (makepkg, etc.)
+# Requirements: sbopkg, curl, standard build tools
 
 set -euo pipefail
 
@@ -15,14 +16,18 @@ info() { echo ">>> $*"; }
 
 usage() {
     cat <<EOF
-Usage: $(basename "$0") <package> <version>
+Usage: $(basename "$0") [OPTIONS] <package> [version]
 
-  package   SlackBuild package name   (e.g. python3-requests)
-  version   Upstream version to build (e.g. 2.31.0)
+  package   SlackBuild package name            (e.g. bpftrace)
+  version   Upstream version to build          (optional; auto-detected from GitHub)
 
 Options:
   -h, --help    Show this help and exit
   -d, --dir     Override SlackBuilds tree root (default: /var/lib/sbopkg)
+
+When no version is given the script reads the DOWNLOAD URL from the package's
+.info file, extracts the GitHub owner/repo, and queries the GitHub releases API
+for the latest published release tag.
 EOF
     exit 0
 }
@@ -40,10 +45,10 @@ while [[ ${1:-} == -* ]]; do
     shift
 done
 
-[[ $# -eq 2 ]] || usage
+[[ $# -ge 1 ]] || usage
 
 PACKAGE="$1"
-VERSION="$2"
+VERSION="${2:-}"   # may be empty — will be resolved from GitHub below
 
 # ── sanity checks ──────────────────────────────────────────────────────────────
 command -v sbopkg &>/dev/null || die "sbopkg not found in PATH"
@@ -80,6 +85,42 @@ if [[ -z "${RAW_DOWNLOAD}" || "${RAW_DOWNLOAD}" == "UNSUPPORTED" ]]; then
 fi
 [[ -n "${RAW_DOWNLOAD}" && "${RAW_DOWNLOAD}" != "UNSUPPORTED" ]] \
     || die "No supported DOWNLOAD URL found in '${INFO_FILE}' for arch '${ARCH}'"
+
+# ── step 3b: auto-detect latest GitHub version if none was supplied ────────────
+# Extract the GitHub owner/repo slug from the first download URL.
+# Handles both:
+#   https://github.com/OWNER/REPO/archive/...
+#   https://github.com/OWNER/REPO/releases/download/...
+github_latest_version() {
+    local url="$1"
+    local slug api_url tag
+
+    slug="$(echo "${url}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')"
+    [[ -n "${slug}" ]] || die "Cannot extract GitHub owner/repo from URL: ${url}"
+
+    api_url="https://api.github.com/repos/${slug}/releases/latest"
+    info "Querying GitHub API: ${api_url}"
+
+    tag="$(curl -fsSL "${api_url}" \
+        -H "Accept: application/vnd.github+json" \
+        | grep -oP '"tag_name"\s*:\s*"\K[^"]+')"
+    [[ -n "${tag}" ]] || die "GitHub API returned no tag for '${slug}'. The repo may have no releases — supply a version manually."
+
+    # Strip a leading 'v' to get a plain version number (e.g. v0.25.0 → 0.25.0)
+    LATEST_VERSION="${tag#v}"
+}
+
+if [[ -z "${VERSION}" ]]; then
+    # Use the first URL in the download list to find the GitHub repo
+    FIRST_URL="${RAW_DOWNLOAD%% *}"
+    if echo "${FIRST_URL}" | grep -q 'github\.com'; then
+        github_latest_version "${FIRST_URL}"
+        VERSION="${LATEST_VERSION}"
+        info "Auto-detected latest version: ${VERSION}"
+    else
+        die "No version supplied and the download URL is not on GitHub. Please pass the desired version as the second argument."
+    fi
+fi
 
 # Substitute the old version with the requested version in every URL
 NEW_DOWNLOADS=""
