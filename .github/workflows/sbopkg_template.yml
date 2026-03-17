@@ -86,7 +86,7 @@ jobs:
       name: Build
       run: | 
         sbopkg -r
-        /sbo-build.sh ${{ inputs.NAME }} <<< p
+        ./sbo-build.sh ${{ inputs.NAME }} <<< p
 
     - name: Download the existing site
       run: |
