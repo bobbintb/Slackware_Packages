@@ -26,6 +26,10 @@ on:
         description: 'Additional repos to enable, space-separated (e.g. alien-15 conraid-current bobbintb)'
         required: false
         type: string
+      GIT:
+        description: 'Git repository URL to clone and build from instead of sbopkg'
+        required: false
+        type: string
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -83,10 +87,19 @@ jobs:
       run: | 
         slackpkg upgrade ${{ inputs.UPGRADE }} || true
     - 
-      name: Build
+      name: Build (sbopkg)
+      if: ${{ inputs.GIT == '' }}
       run: | 
         sbopkg -r
         ./sbo-build.sh ${{ inputs.NAME }} <<< p
+    -
+      name: Build (git)
+      if: ${{ inputs.GIT != '' }}
+      run: |
+        git clone ${{ inputs.GIT }} /tmp/git-build/${{ inputs.NAME }}
+        cd /tmp/git-build/${{ inputs.NAME }}
+        chmod +x ${{ inputs.NAME }}.SlackBuild
+        ./${{ inputs.NAME }}.SlackBuild
 
     - name: Download the existing site
       run: |
