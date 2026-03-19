@@ -96,10 +96,7 @@ jobs:
       name: Build (git)
       if: ${{ inputs.GIT != '' }}
       run: |
-        git clone ${{ inputs.GIT }} /tmp/git-build/${{ inputs.NAME }}
-        cd /tmp/git-build/${{ inputs.NAME }}
-        chmod +x ${{ inputs.NAME }}.SlackBuild
-        ./${{ inputs.NAME }}.SlackBuild
+        ./git-build.sh ${{ inputs.NAME }} ${{ inputs.GIT }}
 
     - name: Download the existing site
       run: |
