@@ -1,42 +1,93 @@
 #!/bin/bash
+# sbo-git-build — Download a SlackBuild via sbopkg, clone a git repo as the
+#                 source, then build using the SlackBuild script.
+#
+# Usage: sbo-git-build <package> <git-repo-url>
+#   package      : exact SlackBuild name (e.g. "bcc")
+#   git-repo-url : git repository to clone as the build source
 
-set -e
+set -euo pipefail
 
-NAME="$1"
+# ── helpers ────────────────────────────────────────────────────────────────────
+die()  { echo "ERROR: $*" >&2; exit 1; }
+info() { echo ">>> $*"; }
+
+usage() {
+    cat <<EOF
+Usage: $(basename "$0") [OPTIONS] <package> <git-repo-url>
+
+  package       SlackBuild package name   (e.g. bcc)
+  git-repo-url  Git repository to use as the build source
+
+Options:
+  -h, --help    Show this help and exit
+  -d, --dir     Override SlackBuilds tree root (default: /var/lib/sbopkg)
+EOF
+    exit 0
+}
+
+# ── defaults ───────────────────────────────────────────────────────────────────
+SBO_ROOT="/var/lib/sbopkg"
+
+# ── argument parsing ───────────────────────────────────────────────────────────
+while [[ ${1:-} == -* ]]; do
+    case "$1" in
+        -h|--help) usage ;;
+        -d|--dir)  SBO_ROOT="${2:?--dir requires a path}"; shift ;;
+        *) die "Unknown option: $1" ;;
+    esac
+    shift
+done
+
+[[ $# -ge 2 ]] || usage
+
+PACKAGE="$1"
 GIT_REPO="$2"
 
-if [[ -z "$NAME" || -z "$GIT_REPO" ]]; then
-    echo "Usage: $0 <package-name> <git-repo-url>"
-    exit 1
-fi
+# ── sanity checks ──────────────────────────────────────────────────────────────
+command -v sbopkg &>/dev/null || die "sbopkg not found in PATH"
+command -v git    &>/dev/null || die "git not found in PATH"
 
-# Download build files from sbopkg
-echo "Downloading build files for $NAME..."
-sbopkg -d "$NAME"
+# ── step 1: download / sync the SlackBuild via sbopkg ─────────────────────────
+info "Downloading SlackBuild for '${PACKAGE}' via sbopkg ..."
+echo "y" | sbopkg -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
 
-# Find where sbopkg put the build files
-SBO_DIR=$(find /var/lib/sbopkg -type d -name "$NAME" 2>/dev/null | head -1)
-if [[ -z "$SBO_DIR" ]]; then
-    echo "Error: Could not find sbopkg build directory for $NAME"
-    exit 1
-fi
+# ── step 2: locate the .SlackBuild directory ───────────────────────────────────
+SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
+[[ -n "${SBO_DIR}" ]] || die "Cannot find SlackBuild directory for '${PACKAGE}' under ${SBO_ROOT}"
+info "Found SlackBuild at: ${SBO_DIR}"
 
-# Clone the git repo into a temp directory
-WORK_DIR=$(mktemp -d)
-echo "Cloning $GIT_REPO into $WORK_DIR..."
-git clone "$GIT_REPO" "$WORK_DIR/$NAME"
+SLACKBUILD_SCRIPT="${SBO_DIR}/${PACKAGE}.SlackBuild"
+[[ -f "${SLACKBUILD_SCRIPT}" ]] || die "No .SlackBuild script found at '${SLACKBUILD_SCRIPT}'"
 
-# Copy the SlackBuild and supporting files from sbopkg over the cloned source
-echo "Copying build files from sbopkg..."
-cp "$SBO_DIR"/*.SlackBuild "$WORK_DIR/$NAME/"
-cp "$SBO_DIR"/*.info "$WORK_DIR/$NAME/" 2>/dev/null || true
-cp "$SBO_DIR"/slack-desc "$WORK_DIR/$NAME/" 2>/dev/null || true
-cp "$SBO_DIR"/doinst.sh "$WORK_DIR/$NAME/" 2>/dev/null || true
+# ── step 3: read the version from the .info file ──────────────────────────────
+INFO_FILE="${SBO_DIR}/${PACKAGE}.info"
+[[ -f "${INFO_FILE}" ]] || die "No .info file found at '${INFO_FILE}'"
 
-# Build
-echo "Building $NAME..."
-cd "$WORK_DIR/$NAME"
-chmod +x "$NAME.SlackBuild"
-./"$NAME.SlackBuild"
+VERSION="$(grep -E '^VERSION=' "${INFO_FILE}" | cut -d= -f2 | tr -d '"' | tr -d "'")"
+[[ -n "${VERSION}" ]] || die "Could not parse VERSION from '${INFO_FILE}'"
+info "SlackBuild version: ${VERSION}"
 
-echo "Done. Package should be in /tmp."
+# ── step 4: clone the git repo ────────────────────────────────────────────────
+SRCDIR="$(mktemp -d /tmp/sbo-git-build.XXXXXX)"
+trap 'rm -rf "${SRCDIR}"' EXIT
+
+info "Cloning ${GIT_REPO} ..."
+git clone --depth=1 "${GIT_REPO}" "${SRCDIR}/${PACKAGE}"
+
+# ── step 5: stage everything and build ────────────────────────────────────────
+BUILD_DIR="$(mktemp -d /tmp/sbo-git-build-stage.XXXXXX)"
+trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
+
+cp -r "${SBO_DIR}/." "${BUILD_DIR}/"
+cp -r "${SRCDIR}/${PACKAGE}" "${BUILD_DIR}/"
+
+chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
+
+info "Building '${PACKAGE}' version ${VERSION} ..."
+(
+    cd "${BUILD_DIR}"
+    VERSION="${VERSION}" bash "${PACKAGE}.SlackBuild"
+)
+
+info "Build complete. Check /tmp or \$OUTPUT for the resulting .txz / .tgz package."
