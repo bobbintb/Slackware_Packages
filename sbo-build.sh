@@ -68,6 +68,10 @@ INFO_FILE="${SBO_DIR}/${PACKAGE}.info"
 
 OLD_VERSION="$(grep -E '^VERSION=' "${INFO_FILE}" | cut -d= -f2 | tr -d '"' | tr -d "'")"
 
+# Read TARNAM from the SlackBuild if present, otherwise fall back to PACKAGE name
+TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
+TARNAM="${TARNAM:-${PACKAGE}}"
+
 # Logic for Git vs Standard Download
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
@@ -75,7 +79,7 @@ trap 'rm -rf "${SRCDIR}"' EXIT
 if [[ -n "${GIT_URL}" ]]; then
     # --- GIT CLONE PATH ---
     info "Git URL detected: ${GIT_URL}. Cloning source..."
-    
+
     if [[ -n "${VERSION}" ]]; then
         git clone --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --depth 1 "${GIT_URL}" "${SRCDIR}/source"
@@ -85,10 +89,12 @@ if [[ -n "${GIT_URL}" ]]; then
         VERSION=$(git -C "${SRCDIR}/source" rev-parse --short HEAD)
     fi
 
-    # Create a tarball because .SlackBuild scripts expect a file to extract
+    # Create a tarball named after TARNAM, with a top-level directory named
+    # after PACKAGE — because SlackBuilds do "tar xvf $TARNAM.tar.gz" then "cd $PRGNAM"
     info "Packaging git source into tarball for the SlackBuild..."
-    tar -czf "${SRCDIR}/${PACKAGE}-${VERSION}.tar.gz" -C "${SRCDIR}/source" .
-    rm -rf "${SRCDIR}/source"
+    mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}"
+    tar -czf "${SRCDIR}/${TARNAM}.tar.gz" -C "${SRCDIR}" "${PACKAGE}"
+    rm -rf "${SRCDIR}/${PACKAGE}"
 
 else
     # --- STANDARD DOWNLOAD PATH ---
@@ -105,11 +111,10 @@ else
         fi
     fi
 
-    # Download logic (Summary: replaces OLD_VERSION with NEW in URLs and curls them)
-    # [Simplified for brevity but retains original logic]
+    # Download logic (replaces OLD_VERSION with NEW in URLs and curls them)
     RAW_DOWNLOAD="$(grep -E '^DOWNLOAD=' "${INFO_FILE}" | cut -d= -f2- | tr -d '"' | tr -d "'")"
     NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
-    
+
     info "Fetching source from: ${NEW_URL}"
     curl -fL -o "${SRCDIR}/$(basename ${NEW_URL%% *})" "${NEW_URL%% *}" || die "Download failed"
 fi
