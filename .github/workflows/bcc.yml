@@ -11,7 +11,7 @@ jobs:
     secrets: inherit
     with:
       NAME: "bcc"
-      PACKAGES: "ccache gettext lua luajit"
+      PACKAGES: "ccache gettext lua luajit fmt"
       REINSTALL: libedit
-      UPGRADE: "libxml2 xz"
+      UPGRADE: "libxml2 xz zlib elfutils"
       GIT: "https://github.com/iovisor/bcc.git"
