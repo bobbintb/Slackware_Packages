@@ -77,16 +77,12 @@ SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
 if [[ -n "${GIT_URL}" ]]; then
-    # --- GIT CLONE PATH ---
+    # --- GIT  PATH ---
     info "Git URL detected: ${GIT_URL}. Cloning source..."
 
     if [[ -n "${VERSION}" ]]; then
-        git clone --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
-        git clone --depth 1 "${GIT_URL}" "${SRCDIR}/source"
-    else
-        git clone --depth 1 "${GIT_URL}" "${SRCDIR}/source"
-        # If no version was provided, use the short commit hash
-        VERSION=$(git -C "${SRCDIR}/source" rev-parse --short HEAD)
+        git  --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
+        git  --depth 1 --branch "v${VERSION}" "${GIT_URL}" "${SRCDIR}/source"
     fi
 
     # Create a tarball named after TARNAM, with a top-level directory named
