@@ -62,28 +62,47 @@ SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
 SLACKBUILD_SCRIPT="${SBO_DIR}/${PACKAGE}.SlackBuild"
 [[ -f "${SLACKBUILD_SCRIPT}" ]] || die "No .SlackBuild script found at '${SLACKBUILD_SCRIPT}'"
 
-# ── step 3: Resolve Version & Source ──────────────────────────────────────────
+# ── step 3: resolve version ────────────────────────────────────────────────────
 INFO_FILE="${SBO_DIR}/${PACKAGE}.info"
 [[ -f "${INFO_FILE}" ]] || die "No .info file found"
 
 OLD_VERSION="$(grep -E '^VERSION=' "${INFO_FILE}" | cut -d= -f2 | tr -d '"' | tr -d "'")"
 
+if [[ -z "${VERSION}" ]]; then
+    # First try the DOWNLOAD= URL in the .info file
+    RAW_DOWNLOAD="$(grep -E '^DOWNLOAD=' "${INFO_FILE}" | cut -d= -f2- | tr -d '"' | tr -d "'")"
+    FIRST_URL="${RAW_DOWNLOAD%% *}"
+    if [[ "$FIRST_URL" == *"github.com"* ]]; then
+        slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
+        tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
+        VERSION="${tag#v}"
+        info "Auto-detected latest version from .info URL: ${VERSION}"
+    elif [[ "${GIT_URL}" == *"github.com"* ]]; then
+        # Fall back to querying the GIT_URL repo via the GitHub API
+        slug=$(echo "${GIT_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
+        tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
+        VERSION="${tag#v}"
+        info "Auto-detected latest version from GIT_URL: ${VERSION}"
+    else
+        die "No version supplied and no GitHub URL found in .info or GIT_URL"
+    fi
+fi
+
 # Read TARNAM from the SlackBuild if present, otherwise fall back to PACKAGE name
 TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
 TARNAM="${TARNAM:-${PACKAGE}}"
 
-# Logic for Git vs Standard Download
+# ── step 4: fetch source ───────────────────────────────────────────────────────
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
 if [[ -n "${GIT_URL}" ]]; then
-    # --- GIT  PATH ---
-    info "Git URL detected: ${GIT_URL}. Cloning source..."
+    # --- GIT PATH ---
+    info "Git URL detected: ${GIT_URL}. Cloning source at version ${VERSION}..."
 
-    if [[ -n "${VERSION}" ]]; then
-        git  clone --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
-        git  clone --depth 1 --branch "v${VERSION}" "${GIT_URL}" "${SRCDIR}/source"
-    fi
+    git clone --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
+    git clone --depth 1 --branch "v${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
+    die "git clone failed for '${GIT_URL}' at version '${VERSION}' (tried both '${VERSION}' and 'v${VERSION}')"
 
     # Create a tarball named after TARNAM, with a top-level directory named
     # after PACKAGE — because SlackBuilds do "tar xvf $TARNAM.tar.gz" then "cd $PRGNAM"
@@ -94,28 +113,14 @@ if [[ -n "${GIT_URL}" ]]; then
 
 else
     # --- STANDARD DOWNLOAD PATH ---
-    # Extract GitHub info if VERSION is missing
-    if [[ -z "${VERSION}" ]]; then
-        RAW_DOWNLOAD="$(grep -E '^DOWNLOAD=' "${INFO_FILE}" | cut -d= -f2- | tr -d '"' | tr -d "'")"
-        FIRST_URL="${RAW_DOWNLOAD%% *}"
-        if [[ "$FIRST_URL" == *"github.com"* ]]; then
-            slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
-            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
-            VERSION="${tag#v}"
-        else
-            die "No version supplied and no GitHub URL found in .info"
-        fi
-    fi
-
-    # Download logic (replaces OLD_VERSION with NEW in URLs and curls them)
     RAW_DOWNLOAD="$(grep -E '^DOWNLOAD=' "${INFO_FILE}" | cut -d= -f2- | tr -d '"' | tr -d "'")"
     NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
 
     info "Fetching source from: ${NEW_URL}"
-    curl -fL -o "${SRCDIR}/$(basename ${NEW_URL%% *})" "${NEW_URL%% *}" || die "Download failed"
+    curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
 fi
 
-# ── step 4: stage everything and build ────────────────────────────────────────
+# ── step 5: stage everything and build ────────────────────────────────────────
 BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
 trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
