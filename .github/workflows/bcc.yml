@@ -11,7 +11,7 @@ jobs:
     secrets: inherit
     with:
       NAME: "bcc"
-      PACKAGES: "ccache gettext lua luajit fmt && wget https://slackware.uk/cumulative/slackware64-current/slackware64/d/llvm-17.0.6-x86_64-1.txz && installpkg llvm-17.0.6-x86_64-1.txz"
+      PACKAGES: "ccache gettext lua luajit fmt && wget 'https://slackware.uk/cumulative/slackware64-current/slackware64/d/llvm-17.0.6-x86_64-1.txz' && installpkg llvm-17.0.6-x86_64-1.txz"
       REINSTALL: libedit
       UPGRADE: "libxml2 xz zlib elfutils"
       GIT: "https://github.com/iovisor/bcc.git"
