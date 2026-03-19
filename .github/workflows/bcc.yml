@@ -14,3 +14,4 @@ jobs:
       PACKAGES: "ccache gettext lua luajit"
       REINSTALL: libedit
       UPGRADE: "libxml2 xz"
+      GIT: "https://github.com/iovisor/bcc.git"
