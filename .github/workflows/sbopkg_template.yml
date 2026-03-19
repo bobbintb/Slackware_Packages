@@ -88,17 +88,14 @@ jobs:
         slackpkg upgrade ${{ inputs.UPGRADE }} || true
     - 
       name: Build (sbopkg)
-      if: ${{ inputs.GIT == '' }}
       run: | 
         sbopkg -r
+        if [ -n "${{ inputs.GIT }}" ]; then
+          export GIT_URL="${{ inputs.GIT }}"
+        fi
         ./sbo-build.sh ${{ inputs.NAME }} <<< p
-    -
-      name: Build (git)
-      if: ${{ inputs.GIT != '' }}
-      run: |
-        ./git-build.sh ${{ inputs.NAME }} ${{ inputs.GIT }}
-
-    - name: Download the existing site
+    - 
+      name: Download the existing site
       run: |
         mkdir -p /tmp/site-root/builds
         wget -r -np -nH --cut-dirs=2 -P /tmp/site-root/builds \
