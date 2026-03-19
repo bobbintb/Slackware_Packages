@@ -47,10 +47,16 @@ GIT_REPO="$2"
 # ── sanity checks ──────────────────────────────────────────────────────────────
 command -v sbopkg &>/dev/null || die "sbopkg not found in PATH"
 command -v git    &>/dev/null || die "git not found in PATH"
+command -v expect &>/dev/null || die "expect not found in PATH"
 
 # ── step 1: download / sync the SlackBuild via sbopkg ─────────────────────────
 info "Downloading SlackBuild for '${PACKAGE}' via sbopkg ..."
-echo "y" | sbopkg -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
+expect -c "
+    spawn sbopkg -d \"${PACKAGE}\"
+    expect -re {Yes|yes|Y\|y}
+    send \"y\r\"
+    expect eof
+" || die "sbopkg -d failed for '${PACKAGE}'"
 
 # ── step 2: locate the .SlackBuild directory ───────────────────────────────────
 SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
