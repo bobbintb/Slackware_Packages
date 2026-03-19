@@ -30,6 +30,7 @@ EOF
 
 # ── defaults ───────────────────────────────────────────────────────────────────
 SBO_ROOT="/var/lib/sbopkg"
+export CMAKE_POLICY_VERSION_MINIMUM=3.5
 
 # ── argument parsing ───────────────────────────────────────────────────────────
 while [[ ${1:-} == -* ]]; do
