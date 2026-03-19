@@ -81,8 +81,8 @@ if [[ -n "${GIT_URL}" ]]; then
     info "Git URL detected: ${GIT_URL}. Cloning source..."
 
     if [[ -n "${VERSION}" ]]; then
-        git  --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
-        git  --depth 1 --branch "v${VERSION}" "${GIT_URL}" "${SRCDIR}/source"
+        git  clone --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
+        git  clone --depth 1 --branch "v${VERSION}" "${GIT_URL}" "${SRCDIR}/source"
     fi
 
     # Create a tarball named after TARNAM, with a top-level directory named
