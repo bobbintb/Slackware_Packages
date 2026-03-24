@@ -1,16 +1,19 @@
-name: verttest
+name: test
 on:
   workflow_dispatch: # Allow manual trigger workflows
 jobs:
   build:
-    name: RedisTimeSeries
+    name: test
     runs-on: ubuntu-latest
     steps:
-      - id: dragonfly
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
-          repository: dragonflydb/dragonfly
-          excludes: prerelease, draft
-      - name: Enable additional repos
+      - name: Import GPG Key
         run: |
-          echo ${{ steps.dragonfly.outputs.release }}
+          # 1. Import the key
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          
+          # 2. Verify it's there and get the ID
+          KEY_ID=$(gpg --list-secret-keys --with-colons | grep '^sec' | cut -d: -f5)
+          echo "Imported Key ID: $KEY_ID"
+          
+          # 3. Sign your file (using loopback for the passphrase)
+          #echo "${{ secrets.GPG_PASSPHRASE }}" | gpg --batch --yes --pinentry-mode loopback --passphrase-fd 0 --armor --detach-sign bpftool.tar.gz
