@@ -69,8 +69,8 @@ INFO_FILE="${SBO_DIR}/${PACKAGE}.info"
 OLD_VERSION="$(grep -E '^VERSION=' "${INFO_FILE}" | cut -d= -f2 | tr -d '"' | tr -d "'")"
 
 if [[ -z "${VERSION}" ]]; then
-    # First try the DOWNLOAD= URL in the .info file
-    RAW_DOWNLOAD="$(grep -E '^DOWNLOAD=' "${INFO_FILE}" | cut -d= -f2- | tr -d '"' | tr -d "'")"
+    # Check DOWNLOAD= and DOWNLOAD_x86_64= for a GitHub URL
+    RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
     FIRST_URL="${RAW_DOWNLOAD%% *}"
     if [[ "$FIRST_URL" == *"github.com"* ]]; then
         slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
@@ -78,7 +78,6 @@ if [[ -z "${VERSION}" ]]; then
         VERSION="${tag#v}"
         info "Auto-detected latest version from .info URL: ${VERSION}"
     elif [[ "${GIT_URL}" == *"github.com"* ]]; then
-        # Fall back to querying the GIT_URL repo via the GitHub API
         slug=$(echo "${GIT_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
         tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
         VERSION="${tag#v}"
@@ -113,7 +112,7 @@ if [[ -n "${GIT_URL}" ]]; then
 
 else
     # --- STANDARD DOWNLOAD PATH ---
-    RAW_DOWNLOAD="$(grep -E '^DOWNLOAD=' "${INFO_FILE}" | cut -d= -f2- | tr -d '"' | tr -d "'")"
+    RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
     NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
 
     info "Fetching source from: ${NEW_URL}"
