@@ -14,4 +14,4 @@ jobs:
       PACKAGES: "bcc cereal gettext vim bpftool pahole gtest m4 ccache fmt"
       UPGRADE: "zlib elfutils libxml2 libpcap"
       REINSTALL: "libedit"
-      
+      REPOS: "bobbintb SlackDCE_Project-15.0"
