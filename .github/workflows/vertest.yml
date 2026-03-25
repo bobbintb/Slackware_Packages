@@ -34,4 +34,6 @@ jobs:
       name: test
       run: | 
         pwd
-        find / -name *.SlackBuild
+        cp /__w/Slackware_Packages/Slackware_Packages/SlackBuilds/bpftool /var/lib/sbopkg/SBo/15.0/development/bpftool
+        #find / -name *.SlackBuild
+        ls /var/lib/sbopkg/SBo/15.0/development/bpftool
