@@ -1,12 +1,37 @@
-name: test
+name: test template
 on:
-  workflow_dispatch: # Allow manual trigger workflows
+  workflow_call:
 jobs:
   build:
-    name: test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: bobbintb/unraid-cicd-builder
+      options: --privileged
     steps:
-      - name: Import and Sign
-        run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 -w 0
-          # gpg --batch --yes --armor --detach-sign bpftool.tar.gz
+    - 
+      name: Checkout
+      uses: actions/checkout@v6
+      with:
+        clean: true
+    -
+      name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v7
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.PASSPHRASE }}
+    - 
+      name: Cache packages
+      id: cache-packages
+      uses: actions/cache@v5
+      with:
+        path: /var/cache/packages
+        key: slackware-packages-${{ github.sha }}
+        restore-keys: |
+          slackware-packages-
+    - 
+      name: test
+      run: | 
+        pwd
+        find / -name *.SlackBuild
