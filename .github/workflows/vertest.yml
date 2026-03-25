@@ -8,5 +8,5 @@ jobs:
     steps:
       - name: Import and Sign
         run: |
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64
           # gpg --batch --yes --armor --detach-sign bpftool.tar.gz
