@@ -33,10 +33,14 @@ jobs:
     - 
       name: test
       run: | 
-        pwd
+        sbopkg -r
         cp -r /__w/Slackware_Packages/Slackware_Packages/SlackBuilds/bpftool /var/lib/sbopkg/SBo/15.0/development/bpftool
         #find / -name *.SlackBuild
         ls /var/lib/sbopkg/SBo/15.0/development/bpftool
         tar -czf bpftool.tar.gz /var/lib/sbopkg/SBo/15.0/development/bpftool/
         gpg --armor --detach-sign bpftool.tar.gz
         ls -ls
+        mv bpftool.tar.gz /var/lib/sbopkg/SBo/15.0/development/
+        mv bpftool.tar.gz.asc /var/lib/sbopkg/SBo/15.0/development/
+        sbopkg -b bpftool <<< p
+        
