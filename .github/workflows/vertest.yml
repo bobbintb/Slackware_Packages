@@ -37,3 +37,5 @@ jobs:
         cp -r /__w/Slackware_Packages/Slackware_Packages/SlackBuilds/bpftool /var/lib/sbopkg/SBo/15.0/development/bpftool
         #find / -name *.SlackBuild
         ls /var/lib/sbopkg/SBo/15.0/development/bpftool
+        tar -czf bpftool.tar.gz /var/lib/sbopkg/SBo/15.0/development/bpftool/
+        gpg --armor --detach-sign bpftool.tar.gz
