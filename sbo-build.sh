@@ -63,7 +63,7 @@ if [[ -d "${WORKSPACE_SRC}" ]]; then
     info "Local workspace detected at ${WORKSPACE_SRC}. Copying..."
     mkdir -p "$(dirname "${DEST_DIR}")"
     
-    if cp -r "${WORKSPACE_SRC}" "${DEST_DIR}"; then
+    if cp -r -f "${WORKSPACE_SRC}" "${DEST_DIR}"; then
         info "Local workspace copy successful."
         tar -czf ${PACKAGE}.tar.gz /var/lib/sbopkg/SBo/15.0/development/${PACKAGE}/
         gpg --armor --detach-sign ${PACKAGE}.tar.gz
