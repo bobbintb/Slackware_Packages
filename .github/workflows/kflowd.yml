@@ -1,4 +1,4 @@
-name: Build kflowd
+name: -Build kflowd
 on:
   workflow_dispatch:
 permissions:
