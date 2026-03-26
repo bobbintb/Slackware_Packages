@@ -1,5 +1,5 @@
 #!/bin/bash
-# sbo-build — Download a SlackBuild via sbopkg, then build it.
+# sbo-build — Build a SlackBuild from a local workspace or sbopkg.
 # Supports GitHub API auto-detection OR direct Git cloning via $GIT_URL.
 #
 # Usage: sbo-build <package> [version]
@@ -15,15 +15,15 @@ usage() {
     cat <<EOF
 Usage: $(basename "$0") [OPTIONS] <package> [version]
 
-  package    SlackBuild package name            (e.g. bpftrace)
-  version    Upstream version to build          (optional)
+  package     SlackBuild package name            (e.g. bpftrace)
+  version     Upstream version to build          (optional)
 
 Options:
   -h, --help    Show this help and exit
   -d, --dir     Override SlackBuilds tree root (default: /var/lib/sbopkg)
 
-If GIT_URL is set in the environment, the script clones that repo instead of
-using the download link in the .info file.
+If a local workspace is found in /__w/..., that is used first.
+Otherwise, the script falls back to downloading via sbopkg.
 EOF
     exit 0
 }
@@ -49,14 +49,42 @@ VERSION="${2:-}"
 GIT_URL="${GIT_URL:-}"
 
 # ── sanity checks ──────────────────────────────────────────────────────────────
-command -v sbopkg &>/dev/null || die "sbopkg not found in PATH"
+command -v sbopkg &>/dev/null || info "Note: sbopkg not found, local-only mode active."
 
-# ── step 1: download / sync the SlackBuild via sbopkg ─────────────────────────
-info "Downloading SlackBuild for '${PACKAGE}' via sbopkg …"
-sbopkg -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
+# ── step 1: locate workspace OR download via sbopkg ───────────────────────────
+if [ -d "/__w/Slackware_Packages/Slackware_Packages/SlackBuilds/${PACKAGE}" ]; then
+    WORKSPACE_SRC="/__w/Slackware_Packages/Slackware_Packages/SlackBuilds/${PACKAGE}"
+else
+    WORKSPACE_SRC="/root/Slackware_Packages/SlackBuilds/${PACKAGE}"
+fi
+DEST_DIR="${SBO_ROOT}/SBo/15.0/development/${PACKAGE}"
 
-# ── step 2: locate the .SlackBuild directory ───────────────────────────────────
-SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
+if [[ -d "${WORKSPACE_SRC}" ]]; then
+    info "Local workspace detected at ${WORKSPACE_SRC}. Copying..."
+    mkdir -p "$(dirname "${DEST_DIR}")"
+    
+    if cp -r "${WORKSPACE_SRC}" "${DEST_DIR}"; then
+        info "Local workspace copy successful."
+        tar -czf ${PACKAGE}.tar.gz /var/lib/sbopkg/SBo/15.0/development/${PACKAGE}/
+        gpg --armor --detach-sign ${PACKAGE}.tar.gz
+        mv ${PACKAGE}.tar.gz /var/lib/sbopkg/SBo/15.0/development/
+        mv ${PACKAGE}.tar.gz.asc /var/lib/sbopkg/SBo/15.0/development/
+        sbopkg -b ${PACKAGE} <<< p
+        
+        SBO_DIR="${DEST_DIR}"
+    else
+        die "Failed to copy workspace files from ${WORKSPACE_SRC}"
+    fi
+else
+    info "Workspace source not found. Attempting sbopkg download..."
+    command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
+    sbopkg -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
+    
+    # Locate where sbopkg put it
+    SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
+fi
+
+# ── step 2: final directory verification ──────────────────────────────────────
 [[ -n "${SBO_DIR}" ]] || die "Cannot find SlackBuild directory for '${PACKAGE}'"
 
 SLACKBUILD_SCRIPT="${SBO_DIR}/${PACKAGE}.SlackBuild"
@@ -99,12 +127,10 @@ if [[ -n "${GIT_URL}" ]]; then
     # --- GIT PATH ---
     info "Git URL detected: ${GIT_URL}. Cloning source at version ${VERSION}..."
 
-    git clone --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
-    git clone --depth 1 --branch "v${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
+    git clone --recursive --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
+    git clone --recursive --depth 1 --branch "v${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
     die "git clone failed for '${GIT_URL}' at version '${VERSION}' (tried both '${VERSION}' and 'v${VERSION}')"
 
-    # Create a tarball named after TARNAM, with a top-level directory named
-    # after PACKAGE — because SlackBuilds do "tar xvf $TARNAM.tar.gz" then "cd $PRGNAM"
     info "Packaging git source into tarball for the SlackBuild..."
     mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}"
     tar -czf "${SRCDIR}/${TARNAM}.tar.gz" -C "${SRCDIR}" "${PACKAGE}"
@@ -121,6 +147,7 @@ fi
 
 # ── step 5: stage everything and build ────────────────────────────────────────
 BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
+# Update trap to clean up the second temp dir
 trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
 cp -r "${SBO_DIR}/." "${BUILD_DIR}/"
