@@ -1,4 +1,4 @@
-name: Build dragonfly
+name: -Build dragonfly
 on:
   workflow_dispatch:
 permissions:
