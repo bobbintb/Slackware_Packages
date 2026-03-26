@@ -1,4 +1,4 @@
-name: Build dirt
+name: -Build dirt
 on:
   workflow_dispatch:
 permissions:
