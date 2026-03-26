@@ -95,8 +95,8 @@ set -e # Exit on most errors
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-# rm -rf $PRGNAM-$VERSION
-# tar xvf $CWD/v$VERSION.tar.gz
+rm -rf $PRGNAM-$VERSION
+tar xvf $CWD/v$VERSION.tar.gz
 cd $PRGNAM-$VERSION/src
 chown -R root:root .
 find -L . \
