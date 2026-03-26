@@ -1,4 +1,4 @@
-name: Build kernel-headers
+name: -Build kernel-headers
 on:
   workflow_dispatch:
 jobs:
