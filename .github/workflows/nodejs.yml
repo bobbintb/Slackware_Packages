@@ -1,4 +1,4 @@
-name: Build nodejs
+name: -Build nodejs
 on:
   workflow_dispatch:
 permissions:
