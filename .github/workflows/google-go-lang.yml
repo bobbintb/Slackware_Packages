@@ -1,4 +1,4 @@
-name: Build google-go-lang
+name: -Build google-go-lang
 on:
   workflow_dispatch:
 permissions:
