@@ -97,9 +97,6 @@ mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
 # tar xvf $CWD/v$VERSION.tar.gz
-pwd
-ls -ls
-find / -name Dockerfile
 cd $PRGNAM/src
 chown -R root:root .
 find -L . \
