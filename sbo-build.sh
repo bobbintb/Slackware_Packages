@@ -69,8 +69,6 @@ if [[ -d "${WORKSPACE_SRC}" ]]; then
         gpg --armor --detach-sign ${PACKAGE}.tar.gz
         mv ${PACKAGE}.tar.gz /var/lib/sbopkg/SBo/15.0/development/
         mv ${PACKAGE}.tar.gz.asc /var/lib/sbopkg/SBo/15.0/development/
-        sbopkg -b ${PACKAGE} <<< p
-        
         SBO_DIR="${DEST_DIR}"
     else
         die "Failed to copy workspace files from ${WORKSPACE_SRC}"
