@@ -1,4 +1,4 @@
-name: Build alien
+name: -Build alien
 on:
   workflow_dispatch:
 permissions:
