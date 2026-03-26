@@ -1,4 +1,4 @@
-name: Build pigz
+name: -Build pigz
 on:
   workflow_dispatch:
 permissions:
