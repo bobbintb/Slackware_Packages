@@ -1,4 +1,4 @@
-name: Build bitwarden-cli
+name: -Build bitwarden-cli
 on:
   workflow_dispatch:
 permissions:
