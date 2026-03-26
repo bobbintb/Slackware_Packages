@@ -13,3 +13,4 @@ jobs:
       NAME: "bpftool"
       PACKAGES: "openssl"
       UPGRADE: "elfutils zlib openssl"
+      GIT: "https://github.com/libbpf/bpftool.git"
