@@ -1,4 +1,4 @@
-name: Build re2
+name: -Build re2
 on:
   workflow_dispatch:
 permissions:
