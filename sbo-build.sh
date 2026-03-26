@@ -125,8 +125,8 @@ if [[ -n "${GIT_URL}" ]]; then
     # --- GIT PATH ---
     info "Git URL detected: ${GIT_URL}. Cloning source at version ${VERSION}..."
 
-    git clone --recursive --depth 1 --branch "${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
-    git clone --recursive --depth 1 --branch "v${VERSION}" "${GIT_URL}" "${SRCDIR}/source" || \
+    git clone --depth 1 --branch "${VERSION}" --recurse-submodules --shallow-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+    git clone --depth 1 --branch "v${VERSION}" --recurse-submodules --shallow-submodules "${GIT_URL}" "${SRCDIR}/source" || \
     die "git clone failed for '${GIT_URL}' at version '${VERSION}' (tried both '${VERSION}' and 'v${VERSION}')"
 
     info "Packaging git source into tarball for the SlackBuild..."
