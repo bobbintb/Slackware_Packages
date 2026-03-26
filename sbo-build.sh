@@ -130,10 +130,9 @@ if [[ -n "${GIT_URL}" ]]; then
     die "git clone failed for '${GIT_URL}' at version '${VERSION}' (tried both '${VERSION}' and 'v${VERSION}')"
 
     info "Packaging git source into tarball for the SlackBuild..."
-    mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}"
-    tar -czf "${SRCDIR}/${TARNAM}.tar.gz" -C "${SRCDIR}" "${PACKAGE}"
-    rm -rf "${SRCDIR}/${PACKAGE}"
-
+    mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
+    tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
+    rm -rf "${SRCDIR}/${PACKAGE}-${VERSION}"
 else
     # --- STANDARD DOWNLOAD PATH ---
     RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
