@@ -113,9 +113,9 @@ if [[ -z "${VERSION}" ]]; then
     fi
 fi
 
-# Read TARNAM from the SlackBuild if present, otherwise fall back to PACKAGE name
+# Read TARNAM from the SlackBuild if present, otherwise fall back to PACKAGE name and version
 TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
-TARNAM="${TARNAM:-${PACKAGE}}"
+TARNAM="${TARNAM:-${PACKAGE}-${VERSION}}"
 
 # ── step 4: fetch source ───────────────────────────────────────────────────────
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
