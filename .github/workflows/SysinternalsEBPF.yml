@@ -1,5 +1,4 @@
-
-name: Build SysinternalsEBPF
+name: -Build SysinternalsEBPF
 on:
   workflow_dispatch:
 permissions:
