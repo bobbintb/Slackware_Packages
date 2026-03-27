@@ -35,7 +35,6 @@ GIT_URL="${GIT_URL:-}"
 LOCAL_MODE=false
 
 # ── step 1: locate workspace OR download via sbopkg ───────────────────────────
-# Prioritize GitHub Actions workspace then local root path
 if [ -d "/__w/Slackware_Packages/Slackware_Packages/SlackBuilds/${PACKAGE}" ]; then
     WORKSPACE_SRC="/__w/Slackware_Packages/Slackware_Packages/SlackBuilds/${PACKAGE}"
 elif [ -d "/root/Slackware_Packages/SlackBuilds/${PACKAGE}" ]; then
@@ -49,12 +48,8 @@ DEST_DIR="${SBO_ROOT}/SBo/15.0/development/${PACKAGE}"
 if [[ -n "${WORKSPACE_SRC}" ]]; then
     info "Local workspace detected at ${WORKSPACE_SRC}. Syncing to ${DEST_DIR}..."
     mkdir -p "$(dirname "${DEST_DIR}")"
-    
-    # Use -a to preserve permissions and -v to see what is happening
-    # This overwrites the 'official' files if they existed in development/
     cp -af "${WORKSPACE_SRC}/." "${DEST_DIR}/"
     
-    # FLAG: We found it locally, so we LOCK the path here.
     SBO_DIR="${DEST_DIR}"
     LOCAL_MODE=true
 
@@ -67,8 +62,6 @@ else
     info "Workspace source not found. Falling back to sbopkg..."
     command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
     sbopkg -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
-
-    # Only run find if we aren't in LOCAL_MODE to avoid grabbing the wrong tree
     SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
 fi
 
@@ -96,7 +89,7 @@ if [[ -z "${VERSION}" ]]; then
         VERSION="${tag#v}"
     else
         VERSION="${OLD_VERSION}"
-        info "No version override or GitHub URL found. Using version from .info: ${VERSION}"
+        info "Using version from .info: ${VERSION}"
     fi
 fi
 
@@ -104,19 +97,30 @@ TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'
 TARNAM="${TARNAM:-${PACKAGE}}"
 
 # ── step 4: fetch source ───────────────────────────────────────────────────────
-# SKIP this step if we are in Local Mode, as the source should be in the workspace
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
 if [[ "${LOCAL_MODE}" == "true" ]]; then
-    info "Local mode active: using source files from workspace."
-else
-    if [[ -n "${GIT_URL}" ]]; then
-        info "Cloning source from Git: ${GIT_URL}..."
+    info "Local mode: Ensuring source tarball is present..."
+    # If the tarball isn't in the workspace, we may still need to fetch it 
+    # OR you need to ensure it's copied from your workspace.
+    if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
+        cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
+    elif [[ -n "${GIT_URL}" ]]; then
+        info "Source not found in workspace. Cloning from Git..."
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         die "git clone failed"
-
+        mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
+        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
+    else
+        die "Source tarball ${TARNAM}-${VERSION}.tar.gz not found in workspace and no GIT_URL provided."
+    fi
+else
+    if [[ -n "${GIT_URL}" ]]; then
+        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        die "git clone failed"
         mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
     else
@@ -130,17 +134,12 @@ fi
 BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
 trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
-# 1. Copy the SlackBuild directory (Local or Official)
 cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
-
-# 2. Copy the fetched source (If not in Local Mode)
-if [ "$(ls -A "${SRCDIR}")" ]; then
-    cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
-fi
+cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
 
 chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
 
-info "Building '${PACKAGE}' version ${VERSION} using script at ${SLACKBUILD_SCRIPT}..."
+info "Building '${PACKAGE}' version ${VERSION}..."
 (
     cd "${BUILD_DIR}"
     VERSION="${VERSION}" bash "${PACKAGE}.SlackBuild"
