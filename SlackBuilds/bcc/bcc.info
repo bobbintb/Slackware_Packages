@@ -1,6 +1,6 @@
 PRGNAM="bcc"
-VERSION="0.35.0"
+VERSION="0.36.1"
 HOMEPAGE="https://github.com/iovisor/bcc"
-DOWNLOAD="https://github.com/iovisor/bcc.git"
+DOWNLOAD="https://github.com/iovisor/bcc/releases/download/v0.36.1/bcc-src-with-submodule-0.36.1.tar.gz"
 MD5SUM=""
 REQUIRES="libbpf"
