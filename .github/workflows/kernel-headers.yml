@@ -1,74 +1,140 @@
 name: -Build kernel-headers
 on:
   workflow_dispatch:
+
 jobs:
   slackbuild_and_upload:
     runs-on: ubuntu-latest
+    outputs:
+      pkg_version: ${{ steps.set-version.outputs.VERSION }}
     permissions:
       contents: write
     container:
       image: bobbintb/unraid-cicd-builder-upgraded
       options: --privileged
     steps:
-    -
-      # Bootstrap step – define env vars, aliases, functions once
-      name: Bootstrap environment
-      run: |
-        # Environment variables (persist via $GITHUB_ENV)
-        # echo "MYVAR=hello" >> $GITHUB_ENV
-        # echo "FOO=bar" >> $GITHUB_ENV
-
-        # Aliases & functions (persist via $BASH_ENV)
-        cat >>"/etc/bootstrap" <<'EOF'
-        
+      - name: Bootstrap environment
+        run: |
+          cat >>"/etc/bootstrap" <<'EOF'
           gecho() { printf '\033[0;32m'; command echo "$@"; printf '\033[0m'; }
           alias wget='wget -q'
-          slackpkginstall() {
-          command slackpkg install "$@" <<< y 2>&1 | grep -E 'Installing package|GPG key added|Package .* installed\.'
-        }
-        EOF
-    -
-      name: Install dependencies
-      run: |
-        . /etc/bootstrap
-        sed -i 's/^#*\s*BATCH=.*/BATCH=on/' /etc/slackpkg/slackpkg.conf
-        sed -i 's/^#*\s*DEFAULT_ANSWER=.*/DEFAULT_ANSWER=y/' /etc/slackpkg/slackpkg.conf
-        gecho "Installing needed packages..."
-        slackpkg update gpg <<< y
-    - 
-      name: Checkout
-      uses: actions/checkout@v4
-    - name: Cache packages
-      id: cache-packages
-      uses: actions/cache@v4
-      with:
-        path: /var/cache/packages
-        key: slackware-packages-${{ github.sha }}
-        restore-keys: |
-          slackware-packages-
-        # key: ${{ runner.os }}-slackpkg-${{ hashFiles('**/package-list.txt') }}
-        # restore-keys: |
-        #   ${{ runner.os }}-slackpkg-
-        #key: slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-${{ hashFiles('SlackBuilds/**/*') }}
-        #restore-keys: |
-        #  slackpkg-${{ runner.os }}-${{ inputs.VERSION }}-
-    -
-      name: Download Linux kernel
-      run: |
-        . /etc/bootstrap
-        gecho "Determining kernel version needed for Unraid... "
-        # KERNEL_VERSION=$(uname -r | cut -d'-' -f1)
-        KERNEL_VERSION=6.12.54
-        MAJOR_VERSION=${KERNEL_VERSION%%.*}
-        gecho "Downloading Linux kernel ${KERNEL_VERSION}... "
-        cd ..
-        [ -f linux-${KERNEL_VERSION}.tar.xz ] || wget https://cdn.kernel.org/pub/linux/kernel/v${MAJOR_VERSION}.x/linux-${KERNEL_VERSION}.tar.xz
-        gecho "done."
-        gecho "Extracting Linux kernel... "
-        mkdir -p /usr/src/linux
-        tar xf linux-${KERNEL_VERSION}.tar.xz -C /usr/src/linux --strip-components 1
-        gecho "done."
-        gecho "Copying kernel config... "
-        # zcat /proc/config.gz > /usr/src/linux/.config
-        chmod +x ./Slackware_Packages/SlackBuilds/kernel-headers/kernel-headers.SlackBuild
-        ./Slackware_Packages/SlackBuilds/kernel-headers/kernel-headers.SlackBuild
+          EOF
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download and Build
+        id: set-version
+        run: |
+          . /etc/bootstrap
+          KERNEL_VERSION=6.12.54
+          echo "VERSION=$KERNEL_VERSION" >> $GITHUB_OUTPUT
+          
+          MAJOR_VERSION=${KERNEL_VERSION%%.*}
+          cd ..
+          [ -f linux-${KERNEL_VERSION}.tar.xz ] || wget https://cdn.kernel.org/pub/linux/kernel/v${MAJOR_VERSION}.x/linux-${KERNEL_VERSION}.tar.xz
+          mkdir -p /usr/src/linux
+          tar xf linux-${KERNEL_VERSION}.tar.xz -C /usr/src/linux --strip-components 1
+          
+          chmod +x ./Slackware_Packages/SlackBuilds/kernel-headers/kernel-headers.SlackBuild
+          ./Slackware_Packages/SlackBuilds/kernel-headers/kernel-headers.SlackBuild
+          
+          # Move result to workspace for upload
+          cp /tmp/kernel-headers-${KERNEL_VERSION}-*.t?z $GITHUB_WORKSPACE/ 2>/dev/null || true
+
+      - name: Upload built package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-package
+          path: kernel-headers-*.t?z
+
+  prepare-deploy:
+    needs: slackbuild_and_upload
+    runs-on: ubuntu-latest
+    container:
+      image: bobbintb/unraid-cicd-builder
+      options: --privileged
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+
+      - name: Download built package
+        uses: actions/download-artifact@v4
+        with:
+          name: built-package
+          path: /tmp/new-build/
+
+      - name: Sync Existing Repository
+        run: |
+          mkdir -p /tmp/site-root/builds
+          # Download existing files to ensure we don't lose old versions
+          wget -r -np -nH --cut-dirs=2 -P /tmp/site-root/builds \
+            --reject "index.html*" \
+            https://bobbintb.github.io/Slackware_Packages/builds/ || true
+
+      - name: Update Repository Files
+        run: |
+          # Use the version passed from the build job
+          VERSION="${{ needs.slackbuild_and_upload.outputs.pkg_version }}"
+          PKG_DIR="/tmp/site-root/builds/kernel-headers"
+          
+          # Ensure directory exists (do NOT rm -rf)
+          mkdir -p "$PKG_DIR"
+          
+          # Copy only the new version into the folder containing old versions
+          cp /tmp/new-build/kernel-headers-${VERSION}-*.t?z "$PKG_DIR/"
+          
+          slackpkg update gpg || true
+          slackpkg update || true
+          slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect -y
+          
+          export REPOSOWNER="${{ github.repository_owner }}"
+          export RSS_UUID=$(uuidgen -t)
+          export REPOSROOT="/tmp/site-root/builds"
+          
+          cat <<EOF > /tmp/script.expect
+          #!/usr/bin/expect
+          set key [lindex \$argv 0]
+          spawn /usr/libexec/slackrepo/gen_repos_files.sh
+          expect "Enter ChangeLog.txt description:"
+          send "Updated kernel-headers to $VERSION\r"
+          expect "Enter your GPG passphrase:"
+          send "\$key\r"
+          expect eof
+          EOF
+
+          chmod +x /usr/libexec/slackrepo/gen_repos_files.sh /tmp/script.expect
+          cd /tmp/site-root/builds
+          /tmp/script.expect ${{ secrets.PASSPHRASE }}
+
+      - name: Prepare Artifact
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/deploy
+          cp -a /tmp/site-root/. $GITHUB_WORKSPACE/deploy/
+
+      - name: Generate Listings
+        uses: jayanta525/github-pages-directory-listing@v4.0.0
+        with:
+          FOLDER: deploy/builds
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: deploy
+
+  deploy:
+    needs: prepare-deploy
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - name: Deploy
+        uses: actions/deploy-pages@v4
