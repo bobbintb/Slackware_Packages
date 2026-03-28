@@ -1,4 +1,4 @@
-name: Build slackrepo
+name: -Build slackrepo
 on:
   workflow_dispatch:
 permissions:
