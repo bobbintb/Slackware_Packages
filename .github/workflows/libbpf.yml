@@ -1,6 +1,12 @@
 name: Build libbpf
 on:
   workflow_dispatch:
+    inputs:
+      do_deploy:
+        description: 'Deploy to GitHub Pages?'
+        required: false
+        type: boolean
+        default: true
 permissions:
   contents: write
   pages: write
@@ -10,5 +16,6 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/sbopkg_template.yml@main
     secrets: inherit
     with:
+      DEPLOY: ${{ inputs.do_deploy }}
       NAME: "libbpf"
       UPGRADE: elfutils zlib
