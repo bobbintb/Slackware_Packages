@@ -1,14 +1,21 @@
 name: Build redisearch
 on:
   workflow_dispatch:
+    inputs:
+      do_deploy:
+        description: 'Deploy to GitHub Pages?'
+        required: false
+        type: boolean
+        default: true
 permissions:
   contents: write
+  pages: write
+  id-token: write
 jobs:
   make_slackware_package:
-    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    uses: bobbintb/Slackware_Packages/.github/workflows/sbopkg_template.yml@main
     secrets: inherit
     with:
-      VERSION: "2.10.25"
+      DEPLOY: ${{ inputs.do_deploy }}
       NAME: "redisearch"
-      PACKAGES: "make cmake guile gc gcc binutils kernel-headers && slackpkg upgrade glibc"
-      SOURCE: "https://github.com/RediSearch/RediSearch.git"
+      GIT: "https://github.com/RediSearch/RediSearch.git"
