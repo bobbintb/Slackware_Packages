@@ -104,22 +104,27 @@ fetch_and_verify_tarball() {
     local tarball_path="$1"
 
     # Extract the actual top-level directory name from inside the tarball.
-    # Capture full listing first to avoid SIGPIPE from head closing the pipe early.
+    # Capture full listing first to avoid SIGPIPE killing tar under pipefail.
     local tarball_listing
     tarball_listing="$(tar -tzf "${tarball_path}")"
     EXTRACTED_DIR="$(echo "${tarball_listing}" | head -n1 | cut -d/ -f1)"
     [[ -n "${EXTRACTED_DIR}" ]] || die "Could not determine extracted directory from tarball: ${tarball_path}"
     info "Tarball extracts to directory: '${EXTRACTED_DIR}'"
 
-    # Attempt to resolve the directory the SlackBuild expects to cd into.
-    # Capture grep output fully before piping to avoid SIGPIPE under pipefail.
-    local slackbuild_cds
-    slackbuild_cds="$(grep -oP '(?<=cd\s)[\$\{}\w/"-]+' "${SLACKBUILD_SCRIPT}" || true)"
-    EXPECTED_DIR="$(echo "${slackbuild_cds}" | head -n1 \
-        | sed "s/\${VERSION}/${VERSION}/g; \
-               s/\${PRGNAM}/${PACKAGE}/g; \
-               s/\${SRCNAM}/${TARNAM}/g; \
-               s/\${TARNAM}/${TARNAM}/g" \
+    # Find the cd in the SlackBuild that enters the source directory.
+    # Capture all cd targets first, then filter out build infrastructure:
+    # $TMP, $PKG, $OUTPUT, $CWD, and absolute paths.
+    # The first remaining entry should be the source directory cd.
+    local all_cds source_cd
+    all_cds="$(grep -oP '(?<=cd\s)[\$\{}\w/"-]+' "${SLACKBUILD_SCRIPT}" || true)"
+    source_cd="$(echo "${all_cds}" | grep -vE '^\$\{?(TMP|PKG|OUTPUT|CWD)\}?' | grep -v '^/' | head -n1 || true)"
+
+    EXPECTED_DIR="$(echo "${source_cd}" \
+        | sed \
+            -e "s/\${VERSION}/${VERSION}/g" \
+            -e "s/\${PRGNAM}/${PACKAGE}/g" \
+            -e "s/\${SRCNAM}/${TARNAM}/g" \
+            -e "s/\${TARNAM}/${TARNAM}/g" \
         | tr -d '"' | tr -d "'")"
 
     if [[ -n "${EXPECTED_DIR}" && "${EXTRACTED_DIR}" != "${EXPECTED_DIR}" ]]; then
@@ -128,6 +133,13 @@ fetch_and_verify_tarball() {
     else
         NEED_DIR_FIX=false
     fi
+}
+
+# git_clone: wraps git clone so a failing first attempt doesn't trigger set -e
+git_clone() {
+    local branch="$1" dest="$2"
+    git clone --branch "${branch}" --recurse-submodules "${GIT_URL}" "${dest}" && return 0
+    return 1
 }
 
 NEED_DIR_FIX=false
@@ -141,9 +153,9 @@ if [[ "${LOCAL_MODE}" == "true" ]]; then
         fetch_and_verify_tarball "${STAGED_TARBALL}"
     elif [[ -n "${GIT_URL}" ]]; then
         info "Source not found in workspace. Cloning from Git..."
-        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        die "git clone failed"
+        git_clone "${VERSION}" "${SRCDIR}/source" \
+            || git_clone "v${VERSION}" "${SRCDIR}/source" \
+            || die "git clone failed for both '${VERSION}' and 'v${VERSION}'"
         mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
         STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
@@ -153,9 +165,9 @@ if [[ "${LOCAL_MODE}" == "true" ]]; then
     fi
 else
     if [[ -n "${GIT_URL}" ]]; then
-        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        die "git clone failed"
+        git_clone "${VERSION}" "${SRCDIR}/source" \
+            || git_clone "v${VERSION}" "${SRCDIR}/source" \
+            || die "git clone failed for both '${VERSION}' and 'v${VERSION}'"
         mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
         STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
@@ -183,8 +195,7 @@ cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
 cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
 
 # If the tarball's top-level directory doesn't match what the SlackBuild expects,
-# extract the tarball now, symlink the directory to the expected name, and repack
-# so the SlackBuild sees exactly what it's looking for.
+# extract it, rename the directory to the expected name, then proceed.
 if [[ "${NEED_DIR_FIX}" == "true" ]]; then
     info "Fixing directory name mismatch: '${EXTRACTED_DIR}' -> '${EXPECTED_DIR}'"
     STAGED_TARBALL_IN_BUILD="${BUILD_DIR}/$(basename "${STAGED_TARBALL}")"
