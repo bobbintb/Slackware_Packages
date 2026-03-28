@@ -92,21 +92,22 @@ if [[ -z "${VERSION}" ]]; then
     fi
 fi
 
-# ── step 4: source variable definitions from the SlackBuild ───────────────────
-# Extract only simple scalar assignments (no functions, no commands) and
-# evaluate them so PRGNAM, TARNAM, SRCNAM etc. are live bash variables.
-# We override VERSION with ours afterward in case the SlackBuild hardcodes it.
-sbo_vars="$(grep -E '^[A-Za-z_][A-Za-z0-9_]*=["'\''"]?[^(]' "${SLACKBUILD_SCRIPT}" \
+# ── step 4: resolve TARNAM by sourcing SlackBuild vars in a subshell ──────────
+# Run in a subshell so nothing can affect the current shell's state.
+# We source only simple scalar assignments, skipping command substitutions,
+# backticks, and comments, then print the resolved TARNAM.
+TARNAM="$(bash 2>/dev/null <<SUBSHELL
+$(grep -E '^[A-Za-z_][A-Za-z0-9_]*=' "${SLACKBUILD_SCRIPT}" \
     | grep -vE '^\s*#' \
-    | grep -vE '=\$\(' \
-    | grep -vE '=\`' \
-    || true)"
-eval "${sbo_vars}" 2>/dev/null || true
-# Our VERSION always wins
+    | grep -vE '=\s*\$\(' \
+    | grep -vE '=\s*\`' \
+    || true)
 VERSION="${VERSION}"
-# Resolve TARNAM from whatever the SlackBuild defined, fallback to PRGNAM then PACKAGE
-TARNAM="${TARNAM:-${SRCNAM:-${PRGNAM:-${PACKAGE}}}}"
-info "Resolved TARNAM='${TARNAM}' PRGNAM='${PRGNAM:-${PACKAGE}}' VERSION='${VERSION}'"
+echo "\${TARNAM:-\${SRCNAM:-\${PRGNAM:-}}}"
+SUBSHELL
+)"
+TARNAM="${TARNAM:-${PACKAGE}}"
+info "Resolved TARNAM='${TARNAM}' VERSION='${VERSION}'"
 
 # ── step 5: fetch source ───────────────────────────────────────────────────────
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
