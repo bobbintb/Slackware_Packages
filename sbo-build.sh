@@ -104,7 +104,8 @@ fetch_and_verify_tarball() {
     local tarball_path="$1"
 
     # Extract the actual top-level directory name from inside the tarball
-    EXTRACTED_DIR="$(tar -tzf "${tarball_path}" | head -n1 | cut -d/ -f1)"
+    TARBALL_CONTENTS="$(tar -tzf "${tarball_path}")"
+    EXTRACTED_DIR="$(echo "${TARBALL_CONTENTS}" | head -n1 | cut -d/ -f1)"
     [[ -n "${EXTRACTED_DIR}" ]] || die "Could not determine extracted directory from tarball: ${tarball_path}"
     info "Tarball extracts to directory: '${EXTRACTED_DIR}'"
 
