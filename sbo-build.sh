@@ -103,9 +103,11 @@ trap 'rm -rf "${SRCDIR}"' EXIT
 fetch_and_verify_tarball() {
     local tarball_path="$1"
 
-    # Extract the actual top-level directory name from inside the tarball
-    TARBALL_CONTENTS="$(tar -tzf "${tarball_path}")"
-    EXTRACTED_DIR="$(echo "${TARBALL_CONTENTS}" | head -n1 | cut -d/ -f1)"
+    # Extract the actual top-level directory name from inside the tarball.
+    # Capture full listing first to avoid SIGPIPE from head closing the pipe early.
+    local tarball_listing
+    tarball_listing="$(tar -tzf "${tarball_path}")"
+    EXTRACTED_DIR="$(echo "${tarball_listing}" | head -n1 | cut -d/ -f1)"
     [[ -n "${EXTRACTED_DIR}" ]] || die "Could not determine extracted directory from tarball: ${tarball_path}"
     info "Tarball extracts to directory: '${EXTRACTED_DIR}'"
 
@@ -126,12 +128,14 @@ fetch_and_verify_tarball() {
 }
 
 NEED_DIR_FIX=false
+STAGED_TARBALL=""
 
 if [[ "${LOCAL_MODE}" == "true" ]]; then
     info "Local mode: Ensuring source tarball is present..."
     if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
         cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
-        fetch_and_verify_tarball "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
+        STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
+        fetch_and_verify_tarball "${STAGED_TARBALL}"
     elif [[ -n "${GIT_URL}" ]]; then
         info "Source not found in workspace. Cloning from Git..."
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
@@ -139,7 +143,8 @@ if [[ "${LOCAL_MODE}" == "true" ]]; then
         die "git clone failed"
         mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
-        fetch_and_verify_tarball "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
+        STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
+        fetch_and_verify_tarball "${STAGED_TARBALL}"
     else
         die "Source tarball ${TARNAM}-${VERSION}.tar.gz not found in workspace and no GIT_URL provided."
     fi
@@ -150,7 +155,8 @@ else
         die "git clone failed"
         mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
-        fetch_and_verify_tarball "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
+        STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
+        fetch_and_verify_tarball "${STAGED_TARBALL}"
     else
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
         NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
@@ -161,7 +167,8 @@ else
             || die "Substituted download URL does not resolve: ${NEW_URL%% *}"
 
         curl -fL -o "${SRCDIR}/${TARBALL_NAME}" "${NEW_URL%% *}" || die "Download failed"
-        fetch_and_verify_tarball "${SRCDIR}/${TARBALL_NAME}"
+        STAGED_TARBALL="${SRCDIR}/${TARBALL_NAME}"
+        fetch_and_verify_tarball "${STAGED_TARBALL}"
     fi
 fi
 
@@ -177,8 +184,9 @@ cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
 # so the SlackBuild sees exactly what it's looking for.
 if [[ "${NEED_DIR_FIX}" == "true" ]]; then
     info "Fixing directory name mismatch: '${EXTRACTED_DIR}' -> '${EXPECTED_DIR}'"
-    TARBALL_FILE="$(ls "${BUILD_DIR}"/*.tar.gz | head -n1)"
-    tar -xzf "${TARBALL_FILE}" -C "${BUILD_DIR}"
+    STAGED_TARBALL_IN_BUILD="${BUILD_DIR}/$(basename "${STAGED_TARBALL}")"
+    [[ -f "${STAGED_TARBALL_IN_BUILD}" ]] || die "Expected staged tarball not found in build dir: ${STAGED_TARBALL_IN_BUILD}"
+    tar -xzf "${STAGED_TARBALL_IN_BUILD}" -C "${BUILD_DIR}"
     mv "${BUILD_DIR}/${EXTRACTED_DIR}" "${BUILD_DIR}/${EXPECTED_DIR}"
 fi
 
