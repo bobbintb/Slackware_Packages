@@ -18,3 +18,4 @@ jobs:
     with:
       NAME: "pahole"
       UPGRADE: "elfutils zlib"
+      DEPLOY: ${{ inputs.do_deploy }}
