@@ -3,13 +3,12 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  pages: write
+  id-token: write
 jobs:
   make_slackware_package:
-    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-template.yml@main
+    uses: bobbintb/Slackware_Packages/.github/workflows/sbopkg_template.yml@main
     secrets: inherit
     with:
-      VERSION: "1.37.0"
       NAME: "dragonfly"
-      bobbintb: true
-      SOURCE: "https://github.com/dragonflydb/dragonfly/releases/latest/download/dragonfly-x86_64.tar.gz"
-      PACKAGES: "ninja boost m4 gettext automake autoconf libtool bobbintb:re2"
+      PACKAGES: "ninja boost m4 gettext automake autoconf libtool re2"
