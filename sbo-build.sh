@@ -111,16 +111,19 @@ fetch_and_verify_tarball() {
     [[ -n "${EXTRACTED_DIR}" ]] || die "Could not determine extracted directory from tarball: ${tarball_path}"
     info "Tarball extracts to directory: '${EXTRACTED_DIR}'"
 
-    # Attempt to resolve the directory the SlackBuild expects to cd into
-    EXPECTED_DIR="$(grep -oP '(?<=cd\s)[\$\{}\w/"-]+' "${SLACKBUILD_SCRIPT}" | head -n1 \
+    # Attempt to resolve the directory the SlackBuild expects to cd into.
+    # Capture grep output fully before piping to avoid SIGPIPE under pipefail.
+    local slackbuild_cds
+    slackbuild_cds="$(grep -oP '(?<=cd\s)[\$\{}\w/"-]+' "${SLACKBUILD_SCRIPT}" || true)"
+    EXPECTED_DIR="$(echo "${slackbuild_cds}" | head -n1 \
         | sed "s/\${VERSION}/${VERSION}/g; \
                s/\${PRGNAM}/${PACKAGE}/g; \
                s/\${SRCNAM}/${TARNAM}/g; \
                s/\${TARNAM}/${TARNAM}/g" \
-        | tr -d '"' | tr -d "'" || true)"
+        | tr -d '"' | tr -d "'")"
 
     if [[ -n "${EXPECTED_DIR}" && "${EXTRACTED_DIR}" != "${EXPECTED_DIR}" ]]; then
-        info "WARNING: Tarball extracts to '${EXTRACTED_DIR}' but SlackBuild expects '${EXPECTED_DIR}'. A symlink will be created at build time."
+        info "WARNING: Tarball extracts to '${EXTRACTED_DIR}' but SlackBuild expects '${EXPECTED_DIR}'. Directory will be renamed at build time."
         NEED_DIR_FIX=true
     else
         NEED_DIR_FIX=false
