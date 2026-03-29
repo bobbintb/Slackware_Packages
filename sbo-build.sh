@@ -49,10 +49,11 @@ if [[ -n "${WORKSPACE_SRC}" ]]; then
     info "Local workspace detected at ${WORKSPACE_SRC}. Syncing to ${DEST_DIR}..."
     mkdir -p "$(dirname "${DEST_DIR}")"
     cp -af "${WORKSPACE_SRC}/." "${DEST_DIR}/"
-
+    
     SBO_DIR="${DEST_DIR}"
     LOCAL_MODE=true
 
+    # Your intentional tar/gpg logic
     tar -czf ${PACKAGE}.tar.gz -C "$(dirname "${DEST_DIR}")" "${PACKAGE}"
     gpg --armor --detach-sign ${PACKAGE}.tar.gz
     mv ${PACKAGE}.tar.gz "${SBO_ROOT}/SBo/15.0/development/"
@@ -92,81 +93,44 @@ if [[ -z "${VERSION}" ]]; then
     fi
 fi
 
-# ── step 4: resolve TARNAM by sourcing SlackBuild vars in a subshell ──────────
-# Run in a subshell so nothing can affect the current shell's state.
-# We source only simple scalar assignments, skipping command substitutions,
-# backticks, and comments, then print the resolved TARNAM.
-TARNAM="$(bash 2>/dev/null <<SUBSHELL
-$(grep -E '^[A-Za-z_][A-Za-z0-9_]*=' "${SLACKBUILD_SCRIPT}" \
-    | grep -vE '^\s*#' \
-    | grep -vE '=\s*\$\(' \
-    | grep -vE '=\s*\`' \
-    || true)
-VERSION="${VERSION}"
-echo "\${TARNAM:-\${SRCNAM:-\${PRGNAM:-}}}"
-SUBSHELL
-)"
+TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
 TARNAM="${TARNAM:-${PACKAGE}}"
-info "Resolved TARNAM='${TARNAM}' VERSION='${VERSION}'"
 
-# ── step 5: fetch source ───────────────────────────────────────────────────────
+# ── step 4: fetch source ───────────────────────────────────────────────────────
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
-# git_clone: pipefail is disabled for the duration because git
-# --recurse-submodules spawns child processes that can trigger SIGPIPE (141).
-git_clone() {
-    local branch="$1" dest="$2"
-    set +o pipefail
-    git clone --branch "${branch}" --recurse-submodules "${GIT_URL}" "${dest}"
-    local rc=$?
-    set -o pipefail
-    return $rc
-}
-
-STAGED_TARBALL=""
-
 if [[ "${LOCAL_MODE}" == "true" ]]; then
     info "Local mode: Ensuring source tarball is present..."
+    # If the tarball isn't in the workspace, we may still need to fetch it 
+    # OR you need to ensure it's copied from your workspace.
     if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
         cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
-        STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
     elif [[ -n "${GIT_URL}" ]]; then
         info "Source not found in workspace. Cloning from Git..."
-        git_clone "${VERSION}" "${SRCDIR}/source" \
-            || git_clone "v${VERSION}" "${SRCDIR}/source" \
-            || die "git clone failed for both '${VERSION}' and 'v${VERSION}'"
-        mv "${SRCDIR}/source" "${SRCDIR}/${TARNAM}-${VERSION}"
-        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${TARNAM}-${VERSION}"
-        STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
+        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        die "git clone failed"
+        mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
+        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
     else
         die "Source tarball ${TARNAM}-${VERSION}.tar.gz not found in workspace and no GIT_URL provided."
     fi
 else
     if [[ -n "${GIT_URL}" ]]; then
-        git_clone "${VERSION}" "${SRCDIR}/source" \
-            || git_clone "v${VERSION}" "${SRCDIR}/source" \
-            || die "git clone failed for both '${VERSION}' and 'v${VERSION}'"
-        mv "${SRCDIR}/source" "${SRCDIR}/${TARNAM}-${VERSION}"
-        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${TARNAM}-${VERSION}"
-        STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
+        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        die "git clone failed"
+        mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
+        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
     else
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
         NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
-        TARBALL_NAME="$(basename "${NEW_URL%% *}")"
-
-        info "Verifying download URL resolves before fetching..."
-        curl --head --silent --fail "${NEW_URL%% *}" > /dev/null \
-            || die "Substituted download URL does not resolve: ${NEW_URL%% *}"
-
-        curl -fL -o "${SRCDIR}/${TARBALL_NAME}" "${NEW_URL%% *}" || die "Download failed"
-        STAGED_TARBALL="${SRCDIR}/${TARBALL_NAME}"
+        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
     fi
 fi
 
-info "Staged tarball: $(basename "${STAGED_TARBALL}")"
-
-# ── step 6: stage everything and build ────────────────────────────────────────
+# ── step 5: stage everything and build ────────────────────────────────────────
 BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
 trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
