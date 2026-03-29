@@ -113,15 +113,17 @@ info "Resolved TARNAM='${TARNAM}' VERSION='${VERSION}'"
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
-# git_clone: pipefail is disabled for the duration because git
-# --recurse-submodules spawns child processes that can trigger SIGPIPE (141).
+# git_clone: disables both errexit and pipefail for the duration of the clone.
+# git --recurse-submodules can exit 141 (SIGPIPE) due to internal pipe handling
+# even when the clone completes successfully. We verify success by checking
+# that .git exists in the destination rather than trusting the exit code.
 git_clone() {
     local branch="$1" dest="$2"
-    set +o pipefail
+    set +eo pipefail
     git clone --branch "${branch}" --recurse-submodules "${GIT_URL}" "${dest}"
-    local rc=$?
-    set -o pipefail
-    return $rc
+    set -eo pipefail
+    [[ -d "${dest}/.git" ]] || return 1
+    return 0
 }
 
 STAGED_TARBALL=""
