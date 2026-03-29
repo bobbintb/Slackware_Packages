@@ -120,7 +120,7 @@ trap 'rm -rf "${SRCDIR}"' EXIT
 git_clone() {
     local branch="$1" dest="$2"
     set +eo pipefail
-    git clone --branch "${branch}" --recurse-submodules "${GIT_URL}" "${dest}"
+    git clone --quiet --branch "${branch}" --recurse-submodules "${GIT_URL}" "${dest}"
     set -eo pipefail
     [[ -d "${dest}/.git" ]] || return 1
     return 0
