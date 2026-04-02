@@ -113,17 +113,29 @@ info "Resolved TARNAM='${TARNAM}' VERSION='${VERSION}'"
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
-# git_clone: disables both errexit and pipefail for the duration of the clone.
-# git --recurse-submodules can exit 141 (SIGPIPE) due to internal pipe handling
-# even when the clone completes successfully. We verify success by checking
-# that .git exists in the destination rather than trusting the exit code.
+# git_clone: all git output is redirected to a temp file so it never touches
+# the GitHub Actions log pipe. Writing too much to that pipe causes git to
+# receive SIGPIPE and exit 141, even when the clone itself succeeded.
+# We verify success by checking that .git exists in the destination.
+# The log is shown only on genuine failure.
 git_clone() {
-    local branch="$1" dest="$2"
+    local branch="$1" dest="$2" log
+    log="$(mktemp /tmp/git-clone-XXXXXX.log)"
     set +eo pipefail
-    git clone --quiet --branch "${branch}" --recurse-submodules "${GIT_URL}" "${dest}"
+    git -c advice.detachedHead=false clone \
+        --branch "${branch}" \
+        --recurse-submodules \
+        "${GIT_URL}" "${dest}" \
+        >"${log}" 2>&1
     set -eo pipefail
-    [[ -d "${dest}/.git" ]] || return 1
-    return 0
+    if [[ -d "${dest}/.git" ]]; then
+        rm -f "${log}"
+        return 0
+    fi
+    echo "--- git clone output ---" >&2
+    cat "${log}" >&2
+    rm -f "${log}"
+    return 1
 }
 
 STAGED_TARBALL=""
