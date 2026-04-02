@@ -1,7 +1,6 @@
 #!/bin/bash
 # sbo-build — Build a SlackBuild from a local workspace or sbopkg.
 set -euo pipefail
-trap 'echo "TRAP: exit $? at line $LINENO" >&2' ERR
 
 # ── helpers ────────────────────────────────────────────────────────────────────
 die()  { echo "ERROR: $*" >&2; exit 1; }
@@ -198,7 +197,8 @@ else
 fi
 
 # ── diagnostic: show tarball name and its actual top-level directory ───────────
-TARBALL_TOPLEVEL="$(tar -tzf "${STAGED_TARBALL}" | head -n1 | cut -d/ -f1)"
+TARBALL_LISTING="$(tar -tzf "${STAGED_TARBALL}")"
+TARBALL_TOPLEVEL="$(echo "${TARBALL_LISTING}" | head -n1 | cut -d/ -f1)"
 info "Staged tarball : $(basename "${STAGED_TARBALL}")"
 info "Top-level dir  : ${TARBALL_TOPLEVEL}"
 
