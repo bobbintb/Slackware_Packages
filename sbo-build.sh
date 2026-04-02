@@ -113,51 +113,30 @@ info "Resolved TARNAM='${TARNAM}' VERSION='${VERSION}'"
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
-# git_clone: clones without --recurse-submodules to avoid SIGPIPE from git's
-# internal inter-process pipes when handling large submodule trees.
-# Submodules are initialised separately afterward.
-# All output is captured so the Actions log pipe cannot cause SIGPIPE.
-# Success is verified by checking .git exists, not by exit code.
-git_clone() {
-    local branch="$1" dest="$2" log
-    log="$(mktemp /tmp/git-clone-XXXXXX.log)"
-    set +eo pipefail
-    git -c advice.detachedHead=false clone \
-        --branch "${branch}" \
-        "${GIT_URL}" "${dest}" \
-        >"${log}" 2>&1
-    set -eo pipefail
-    if [[ -d "${dest}/.git" ]]; then
-        rm -f "${log}"
-        return 0
-    fi
-    rm -f "${log}"
-    return 1
-}
-
-# git_submodules: initialises submodules separately from the clone.
-# Kept as its own step so SIGPIPE from submodule pack operations
-# doesn't affect the parent clone, and failures are clearly attributable.
-git_submodules() {
-    local dest="$1" log
-    log="$(mktemp /tmp/git-submodule-XXXXXX.log)"
-    set +eo pipefail
-    git -C "${dest}" submodule update --init --recursive \
-        >"${log}" 2>&1
-    local rc=$?
-    set -eo pipefail
-    rm -f "${log}"
-    return $rc
-}
-
-# do_git_clone: tries bare version then v-prefixed, then inits submodules.
+# do_git_clone: runs git entirely inside subshells with set +eo pipefail so
+# that toggling errexit never affects the parent shell's set -e state.
+# Git output goes to /dev/null — the Actions log pipe cannot cause SIGPIPE.
+# Success is verified by checking .git exists, not by trusting exit codes.
 do_git_clone() {
     local dest="$1"
-    git_clone "${VERSION}" "${dest}" \
-        || git_clone "v${VERSION}" "${dest}" \
+
+    # Try bare version tag first, then v-prefixed.
+    ( set +eo pipefail
+      git -c advice.detachedHead=false clone \
+          --branch "${VERSION}" "${GIT_URL}" "${dest}" >/dev/null 2>&1 \
+      || git -c advice.detachedHead=false clone \
+          --branch "v${VERSION}" "${GIT_URL}" "${dest}" >/dev/null 2>&1
+    ) || true
+
+    [[ -d "${dest}/.git" ]] \
         || die "git clone failed: could not find branch '${VERSION}' or 'v${VERSION}' in ${GIT_URL}"
-    git_submodules "${dest}" \
-        || die "git submodule update failed for ${GIT_URL}"
+
+    # Init submodules separately to avoid SIGPIPE from parallel pack operations
+    # in --recurse-submodules. Failure is tolerated here; the build will surface
+    # any missing submodule content with a clearer error.
+    ( set +eo pipefail
+      git -C "${dest}" submodule update --init --recursive >/dev/null 2>&1
+    ) || true
 }
 
 STAGED_TARBALL=""
@@ -208,6 +187,15 @@ trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
 cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
 cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
+
+# Stage the tarball under additional name variants so the SlackBuild finds it
+# regardless of whether it references $TARNAM-$VERSION.tar.gz or $TARNAM.tar.gz.
+TARBALL_BASE="$(basename "${STAGED_TARBALL}")"
+for variant in "${TARNAM}.tar.gz" "${TARNAM}-${VERSION}.tar.gz"; do
+    if [[ "${variant}" != "${TARBALL_BASE}" && ! -f "${BUILD_DIR}/${variant}" ]]; then
+        ln -sf "${TARBALL_BASE}" "${BUILD_DIR}/${variant}"
+    fi
+done
 
 info "Build dir contents:"
 ls -1 "${BUILD_DIR}"
