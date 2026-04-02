@@ -1,6 +1,7 @@
 #!/bin/bash
 # sbo-build — Build a SlackBuild from a local workspace or sbopkg.
 set -euo pipefail
+trap 'echo "TRAP: exit $? at line $LINENO" >&2' ERR
 
 # ── helpers ────────────────────────────────────────────────────────────────────
 die()  { echo "ERROR: $*" >&2; exit 1; }
