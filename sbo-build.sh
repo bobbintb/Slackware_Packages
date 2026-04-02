@@ -113,17 +113,17 @@ info "Resolved TARNAM='${TARNAM}' VERSION='${VERSION}'"
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
-# git_clone: all output is captured to a temp file — never touches stdout/stderr
-# so the Actions log pipe cannot cause SIGPIPE regardless of output volume.
-# Returns 0 if .git exists in dest (clone succeeded), 1 otherwise.
-# Silent on failure — caller decides whether to retry or die.
+# git_clone: clones without --recurse-submodules to avoid SIGPIPE from git's
+# internal inter-process pipes when handling large submodule trees.
+# Submodules are initialised separately afterward.
+# All output is captured so the Actions log pipe cannot cause SIGPIPE.
+# Success is verified by checking .git exists, not by exit code.
 git_clone() {
     local branch="$1" dest="$2" log
     log="$(mktemp /tmp/git-clone-XXXXXX.log)"
     set +eo pipefail
     git -c advice.detachedHead=false clone \
         --branch "${branch}" \
-        --recurse-submodules \
         "${GIT_URL}" "${dest}" \
         >"${log}" 2>&1
     set -eo pipefail
@@ -135,13 +135,29 @@ git_clone() {
     return 1
 }
 
-# Attempt clone with bare version then v-prefixed version.
-# Only called when GIT_URL is set.
+# git_submodules: initialises submodules separately from the clone.
+# Kept as its own step so SIGPIPE from submodule pack operations
+# doesn't affect the parent clone, and failures are clearly attributable.
+git_submodules() {
+    local dest="$1" log
+    log="$(mktemp /tmp/git-submodule-XXXXXX.log)"
+    set +eo pipefail
+    git -C "${dest}" submodule update --init --recursive \
+        >"${log}" 2>&1
+    local rc=$?
+    set -eo pipefail
+    rm -f "${log}"
+    return $rc
+}
+
+# do_git_clone: tries bare version then v-prefixed, then inits submodules.
 do_git_clone() {
     local dest="$1"
-    git_clone "${VERSION}" "${dest}" && return 0
-    git_clone "v${VERSION}" "${dest}" && return 0
-    die "git clone failed: could not find branch '${VERSION}' or 'v${VERSION}' in ${GIT_URL}"
+    git_clone "${VERSION}" "${dest}" \
+        || git_clone "v${VERSION}" "${dest}" \
+        || die "git clone failed: could not find branch '${VERSION}' or 'v${VERSION}' in ${GIT_URL}"
+    git_submodules "${dest}" \
+        || die "git submodule update failed for ${GIT_URL}"
 }
 
 STAGED_TARBALL=""
