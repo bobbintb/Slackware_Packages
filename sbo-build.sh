@@ -113,11 +113,10 @@ info "Resolved TARNAM='${TARNAM}' VERSION='${VERSION}'"
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
-# git_clone: all git output is redirected to a temp file so it never touches
-# the GitHub Actions log pipe. Writing too much to that pipe causes git to
-# receive SIGPIPE and exit 141, even when the clone itself succeeded.
-# We verify success by checking that .git exists in the destination.
-# The log is shown only on genuine failure.
+# git_clone: all output is captured to a temp file — never touches stdout/stderr
+# so the Actions log pipe cannot cause SIGPIPE regardless of output volume.
+# Returns 0 if .git exists in dest (clone succeeded), 1 otherwise.
+# Silent on failure — caller decides whether to retry or die.
 git_clone() {
     local branch="$1" dest="$2" log
     log="$(mktemp /tmp/git-clone-XXXXXX.log)"
@@ -132,10 +131,17 @@ git_clone() {
         rm -f "${log}"
         return 0
     fi
-    echo "--- git clone output ---" >&2
-    cat "${log}" >&2
     rm -f "${log}"
     return 1
+}
+
+# Attempt clone with bare version then v-prefixed version.
+# Only called when GIT_URL is set.
+do_git_clone() {
+    local dest="$1"
+    git_clone "${VERSION}" "${dest}" && return 0
+    git_clone "v${VERSION}" "${dest}" && return 0
+    die "git clone failed: could not find branch '${VERSION}' or 'v${VERSION}' in ${GIT_URL}"
 }
 
 STAGED_TARBALL=""
@@ -147,9 +153,7 @@ if [[ "${LOCAL_MODE}" == "true" ]]; then
         STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
     elif [[ -n "${GIT_URL}" ]]; then
         info "Source not found in workspace. Cloning from Git..."
-        git_clone "${VERSION}" "${SRCDIR}/source" \
-            || git_clone "v${VERSION}" "${SRCDIR}/source" \
-            || die "git clone failed for both '${VERSION}' and 'v${VERSION}'"
+        do_git_clone "${SRCDIR}/source"
         mv "${SRCDIR}/source" "${SRCDIR}/${TARNAM}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${TARNAM}-${VERSION}"
         STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
@@ -158,9 +162,7 @@ if [[ "${LOCAL_MODE}" == "true" ]]; then
     fi
 else
     if [[ -n "${GIT_URL}" ]]; then
-        git_clone "${VERSION}" "${SRCDIR}/source" \
-            || git_clone "v${VERSION}" "${SRCDIR}/source" \
-            || die "git clone failed for both '${VERSION}' and 'v${VERSION}'"
+        do_git_clone "${SRCDIR}/source"
         mv "${SRCDIR}/source" "${SRCDIR}/${TARNAM}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${TARNAM}-${VERSION}"
         STAGED_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
