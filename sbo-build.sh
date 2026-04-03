@@ -50,7 +50,7 @@ if [[ -n "${WORKSPACE_SRC}" ]]; then
     info "Local workspace detected at ${WORKSPACE_SRC}. Syncing to ${DEST_DIR}..."
     mkdir -p "$(dirname "${DEST_DIR}")"
     cp -af "${WORKSPACE_SRC}/." "${DEST_DIR}/"
-    
+
     SBO_DIR="${DEST_DIR}"
     LOCAL_MODE=true
 
@@ -94,8 +94,17 @@ if [[ -z "${VERSION}" ]]; then
     fi
 fi
 
-TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
-TARNAM="${TARNAM:-${PACKAGE}}"
+# Derive the exact tarball filename the SlackBuild expects, straight from .info.
+# This is the ground truth — avoids guessing names for packages like bpftool
+# where the tarball has no version, or where PRGNAM differs from PACKAGE.
+RAW_DOWNLOAD_RAW="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
+FIRST_DL_URL="${RAW_DOWNLOAD_RAW%% *}"
+EXPECTED_TARBALL="$(basename "${FIRST_DL_URL//${OLD_VERSION}/${VERSION}}")"
+EXPECTED_DIRNAME="${EXPECTED_TARBALL}"
+for ext in .tar.gz .tar.bz2 .tar.xz .tar.zst .tgz .zip; do
+    EXPECTED_DIRNAME="${EXPECTED_DIRNAME%${ext}}"
+done
+info "Expected tarball: ${EXPECTED_TARBALL}  dirname: ${EXPECTED_DIRNAME}"
 
 # ── step 4: fetch source ───────────────────────────────────────────────────────
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
@@ -103,27 +112,25 @@ trap 'rm -rf "${SRCDIR}"' EXIT
 
 if [[ "${LOCAL_MODE}" == "true" ]]; then
     info "Local mode: Ensuring source tarball is present..."
-    # If the tarball isn't in the workspace, we may still need to fetch it 
-    # OR you need to ensure it's copied from your workspace.
-    if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
-        cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
+    if [[ -f "${SBO_DIR}/${EXPECTED_TARBALL}" ]]; then
+        cp "${SBO_DIR}/${EXPECTED_TARBALL}" "${SRCDIR}/"
     elif [[ -n "${GIT_URL}" ]]; then
         info "Source not found in workspace. Cloning from Git..."
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         die "git clone failed"
-        mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
-        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
+        mv "${SRCDIR}/source" "${SRCDIR}/${EXPECTED_DIRNAME}"
+        tar -czf "${SRCDIR}/${EXPECTED_TARBALL}" -C "${SRCDIR}" "${EXPECTED_DIRNAME}"
     else
-        die "Source tarball ${TARNAM}-${VERSION}.tar.gz not found in workspace and no GIT_URL provided."
+        die "Source tarball ${EXPECTED_TARBALL} not found in workspace and no GIT_URL provided."
     fi
 else
     if [[ -n "${GIT_URL}" ]]; then
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         die "git clone failed"
-        mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
-        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
+        mv "${SRCDIR}/source" "${SRCDIR}/${EXPECTED_DIRNAME}"
+        tar -czf "${SRCDIR}/${EXPECTED_TARBALL}" -C "${SRCDIR}" "${EXPECTED_DIRNAME}"
     else
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
         NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
