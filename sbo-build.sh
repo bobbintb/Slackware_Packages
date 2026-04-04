@@ -99,6 +99,10 @@ PRGNAM="$(grep -m1 -E '^PRGNAM=' "${SLACKBUILD_SCRIPT}" | cut -d= -f2 | tr -d '"
 PRGNAM="${PRGNAM:-${PACKAGE}}"
 
 # Find the first tar line that extracts (contains 'x' in the flags)
+echo "DEBUG script path: ${SLACKBUILD_SCRIPT}"
+echo "DEBUG file exists: $(test -f "${SLACKBUILD_SCRIPT}" && echo yes || echo no)"
+echo "DEBUG grep result: $(grep -m1 -E '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}")"
+echo "DEBUG exit code: $?"
 _TAR_LINE="$(grep -m1 -E '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}")"
 _TAR_LINENUM="$(grep -m1 -nE '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}" | cut -d: -f1)"
 
