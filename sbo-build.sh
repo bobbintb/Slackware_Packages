@@ -99,7 +99,6 @@ PRGNAM="${PACKAGE}"
 echo "DEBUG script path: ${SLACKBUILD_SCRIPT}"
 echo "DEBUG file exists: $(test -f "${SLACKBUILD_SCRIPT}" && echo yes || echo no)"
 
-# Reverted to your original grep logic + '|| true' to handle git/missing cases
 _TAR_LINE="$(grep -m1 -E '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}" || true)"
 _TAR_LINENUM="$(grep -m1 -nE '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}" | cut -d: -f1 || echo "")"
 
@@ -137,19 +136,21 @@ if [[ "${LOCAL_MODE}" == "true" ]]; then
     if [[ -n "${SCRIPT_TARBALL}" && -f "${SBO_DIR}/${SCRIPT_TARBALL}" ]]; then
         cp "${SBO_DIR}/${SCRIPT_TARBALL}" "${SRCDIR}/"
     elif [[ -n "${GIT_URL}" ]]; then
-        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        info "Cloning into ${SRCDIR}/${PRGNAM}..."
+        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PRGNAM}" || \
+        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PRGNAM}" || \
         die "git clone failed"
-        [[ -n "${SCRIPT_TARBALL}" ]] && tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" source
+        [[ -n "${SCRIPT_TARBALL}" ]] && tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" "${PRGNAM}"
     else
         [[ -n "${SCRIPT_TARBALL}" ]] && die "Source tarball ${SCRIPT_TARBALL} not found and no GIT_URL provided."
     fi
 else
     if [[ -n "${GIT_URL}" ]]; then
-        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        info "Cloning into ${SRCDIR}/${PRGNAM}..."
+        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PRGNAM}" || \
+        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PRGNAM}" || \
         die "git clone failed"
-        [[ -n "${SCRIPT_TARBALL}" ]] && tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" source
+        [[ -n "${SCRIPT_TARBALL}" ]] && tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" "${PRGNAM}"
     else
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
         NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
