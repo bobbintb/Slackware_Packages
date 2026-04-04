@@ -54,7 +54,6 @@ if [[ -n "${WORKSPACE_SRC}" ]]; then
     SBO_DIR="${DEST_DIR}"
     LOCAL_MODE=true
 
-    # Your intentional tar/gpg logic
     tar -czf ${PACKAGE}.tar.gz -C "$(dirname "${DEST_DIR}")" "${PACKAGE}"
     gpg --armor --detach-sign ${PACKAGE}.tar.gz
     mv ${PACKAGE}.tar.gz "${SBO_ROOT}/SBo/15.0/development/"
@@ -94,65 +93,63 @@ if [[ -z "${VERSION}" ]]; then
     fi
 fi
 
-# ── step 3b: Set PRGNAM to PACKAGE ─────────────────────────────────────────────
-# Modified logic here:
+# ── step 3b: resolve the expected tarball name ────────────────────────────────
 PRGNAM="${PACKAGE}"
 
-# Find the first tar line that extracts (contains 'x' in the flags)
 echo "DEBUG script path: ${SLACKBUILD_SCRIPT}"
 echo "DEBUG file exists: $(test -f "${SLACKBUILD_SCRIPT}" && echo yes || echo no)"
-echo "DEBUG grep result: $(grep -m1 -E '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}")"
+
+# Reverted to your original grep logic + '|| true' to handle git/missing cases
+_TAR_LINE="$(grep -m1 -E '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}" || true)"
+_TAR_LINENUM="$(grep -m1 -nE '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}" | cut -d: -f1 || echo "")"
+
+echo "DEBUG grep result: ${_TAR_LINE}"
 echo "DEBUG exit code: $?"
-_TAR_LINE="$(grep -m1 -E '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}")"
-_TAR_LINENUM="$(grep -m1 -nE '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}" | cut -d: -f1)"
 
-# Extract the filename token after $CWD/
-_RAW_TARNAME="$(echo "${_TAR_LINE}" | grep -oE '\$\{?CWD\}?/\S+' | sed 's|.*CWD}*/||')"
-
-# Extract variable names from the filename token and substitute each
-SCRIPT_TARBALL="${_RAW_TARNAME}"
-_VARS="$(echo "${_RAW_TARNAME}" | grep -oE '\$\{?[A-Za-z_][A-Za-z0-9_]*\}?' | sed 's/[${}]//g')"
-for _VAR in ${_VARS}; do
-    # Logic adjustment: if the var is PRGNAM, use our overridden value
-    if [[ "${_VAR}" == "PRGNAM" ]]; then
-        _VAL="${PRGNAM}"
-    else
-        _VAL="$(head -n "${_TAR_LINENUM}" "${SLACKBUILD_SCRIPT}" | \
-            grep -E "^\s*${_VAR}=" | tail -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
-    fi
+SCRIPT_TARBALL=""
+if [[ -n "${_TAR_LINE}" ]]; then
+    _RAW_TARNAME="$(echo "${_TAR_LINE}" | grep -oE '\$\{?CWD\}?/\S+' | sed 's|.*CWD}*/||' || true)"
     
-    if [[ "${_VAL}" =~ ^\$\{[A-Za-z_][A-Za-z0-9_]*:-([^}]+)\}$ ]]; then
-        _VAL="${BASH_REMATCH[1]}"
+    if [[ -n "${_RAW_TARNAME}" ]]; then
+        SCRIPT_TARBALL="${_RAW_TARNAME}"
+        _VARS="$(echo "${_RAW_TARNAME}" | grep -oE '\$\{?[A-Za-z_][A-Za-z0-9_]*\}?' | sed 's/[${}]//g')"
+        for _VAR in ${_VARS}; do
+            if [[ "${_VAR}" == "PRGNAM" ]]; then
+                _VAL="${PRGNAM}"
+            else
+                _VAL="$(head -n "${_TAR_LINENUM}" "${SLACKBUILD_SCRIPT}" | \
+                    grep -E "^\s*${_VAR}=" | tail -n1 | cut -d= -f2- | tr -d '"' | tr -d "'" || true)"
+            fi
+            
+            [[ "${_VAL}" =~ ^\$\{[A-Za-z_][A-Za-z0-9_]*:-([^}]+)\}$ ]] && _VAL="${BASH_REMATCH[1]}"
+            SCRIPT_TARBALL="${SCRIPT_TARBALL//\$\{${_VAR}\}/${_VAL}}"
+            SCRIPT_TARBALL="${SCRIPT_TARBALL//\$${_VAR}/${_VAL}}"
+        done
+        info "SlackBuild expects tarball: ${SCRIPT_TARBALL}"
     fi
-    SCRIPT_TARBALL="${SCRIPT_TARBALL//\$\{${_VAR}\}/${_VAL}}"
-    SCRIPT_TARBALL="${SCRIPT_TARBALL//\$${_VAR}/${_VAL}}"
-done
-
-info "SlackBuild expects tarball: ${SCRIPT_TARBALL}"
+fi
 
 # ── step 4: fetch source ───────────────────────────────────────────────────────
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
 trap 'rm -rf "${SRCDIR}"' EXIT
 
 if [[ "${LOCAL_MODE}" == "true" ]]; then
-    info "Local mode: Ensuring source tarball is present..."
-    if [[ -f "${SBO_DIR}/${SCRIPT_TARBALL}" ]]; then
+    if [[ -n "${SCRIPT_TARBALL}" && -f "${SBO_DIR}/${SCRIPT_TARBALL}" ]]; then
         cp "${SBO_DIR}/${SCRIPT_TARBALL}" "${SRCDIR}/"
     elif [[ -n "${GIT_URL}" ]]; then
-        info "Source not found in workspace. Cloning from Git..."
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         die "git clone failed"
-        tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" source
+        [[ -n "${SCRIPT_TARBALL}" ]] && tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" source
     else
-        die "Source tarball ${SCRIPT_TARBALL} not found in workspace and no GIT_URL provided."
+        [[ -n "${SCRIPT_TARBALL}" ]] && die "Source tarball ${SCRIPT_TARBALL} not found and no GIT_URL provided."
     fi
 else
     if [[ -n "${GIT_URL}" ]]; then
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         die "git clone failed"
-        tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" source
+        [[ -n "${SCRIPT_TARBALL}" ]] && tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" source
     else
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
         NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
@@ -160,12 +157,13 @@ else
     fi
 fi
 
-# ── step 4b: rename source tarball to match what the SlackBuild expects ───────
-_ACTUAL="$(find "${SRCDIR}" -maxdepth 1 \( -name "*.tar.*" -o -name "*.tgz" \) | head -n1)"
-[[ -n "${_ACTUAL}" ]] || die "No source tarball found in ${SRCDIR}"
-if [[ "$(basename "${_ACTUAL}")" != "${SCRIPT_TARBALL}" ]]; then
-    info "Renaming $(basename "${_ACTUAL}") → ${SCRIPT_TARBALL}"
-    mv "${_ACTUAL}" "${SRCDIR}/${SCRIPT_TARBALL}"
+# ── step 4b: rename source tarball ────────────────────────────────────────────
+if [[ -n "${SCRIPT_TARBALL}" ]]; then
+    _ACTUAL="$(find "${SRCDIR}" -maxdepth 1 \( -name "*.tar.*" -o -name "*.tgz" \) | head -n1 || true)"
+    if [[ -n "${_ACTUAL}" && "$(basename "${_ACTUAL}")" != "${SCRIPT_TARBALL}" ]]; then
+        info "Renaming $(basename "${_ACTUAL}") → ${SCRIPT_TARBALL}"
+        mv "${_ACTUAL}" "${SRCDIR}/${SCRIPT_TARBALL}"
+    fi
 fi
 
 # ── step 5: stage everything and build ────────────────────────────────────────
@@ -173,7 +171,7 @@ BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
 trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
 cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
-cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
+cp -af "${SRCDIR}"/* "${BUILD_DIR}/" || true
 
 chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
 
