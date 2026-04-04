@@ -94,9 +94,9 @@ if [[ -z "${VERSION}" ]]; then
     fi
 fi
 
-# ── step 3b: parse the SlackBuild for the expected tarball name ────────────────
-PRGNAM="$(grep -m1 -E '^PRGNAM=' "${SLACKBUILD_SCRIPT}" | cut -d= -f2 | tr -d '"' | tr -d "'" || true)"
-PRGNAM="${PRGNAM:-${PACKAGE}}"
+# ── step 3b: Set PRGNAM to PACKAGE ─────────────────────────────────────────────
+# Modified logic here:
+PRGNAM="${PACKAGE}"
 
 # Find the first tar line that extracts (contains 'x' in the flags)
 echo "DEBUG script path: ${SLACKBUILD_SCRIPT}"
@@ -113,8 +113,14 @@ _RAW_TARNAME="$(echo "${_TAR_LINE}" | grep -oE '\$\{?CWD\}?/\S+' | sed 's|.*CWD}
 SCRIPT_TARBALL="${_RAW_TARNAME}"
 _VARS="$(echo "${_RAW_TARNAME}" | grep -oE '\$\{?[A-Za-z_][A-Za-z0-9_]*\}?' | sed 's/[${}]//g')"
 for _VAR in ${_VARS}; do
-    _VAL="$(head -n "${_TAR_LINENUM}" "${SLACKBUILD_SCRIPT}" | \
-        grep -E "^\s*${_VAR}=" | tail -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
+    # Logic adjustment: if the var is PRGNAM, use our overridden value
+    if [[ "${_VAR}" == "PRGNAM" ]]; then
+        _VAL="${PRGNAM}"
+    else
+        _VAL="$(head -n "${_TAR_LINENUM}" "${SLACKBUILD_SCRIPT}" | \
+            grep -E "^\s*${_VAR}=" | tail -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
+    fi
+    
     if [[ "${_VAL}" =~ ^\$\{[A-Za-z_][A-Za-z0-9_]*:-([^}]+)\}$ ]]; then
         _VAL="${BASH_REMATCH[1]}"
     fi
