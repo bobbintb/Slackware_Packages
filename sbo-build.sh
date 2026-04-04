@@ -171,7 +171,9 @@ fi
 BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
 trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
+# We need the metadata files in the same directory as the script
 cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
+# We need the source folder (e.g. bcc/) inside the build directory
 cp -af "${SRCDIR}"/* "${BUILD_DIR}/" || true
 
 chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
@@ -179,5 +181,6 @@ chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
 info "Building '${PACKAGE}' version ${VERSION}..."
 (
     cd "${BUILD_DIR}"
-    VERSION="${VERSION}" bash "${PACKAGE}.SlackBuild"
+    # Force TMP to BUILD_DIR so cd $TMP works as expected in SlackBuilds
+    TMP="${BUILD_DIR}" VERSION="${VERSION}" bash "${PACKAGE}.SlackBuild"
 )
