@@ -105,12 +105,18 @@ _TAR_LINENUM="$(grep -m1 -nE '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIP
 # Extract the filename token after $CWD/
 _RAW_TARNAME="$(echo "${_TAR_LINE}" | grep -oE '\$\{?CWD\}?/\S+' | sed 's|.*CWD}*/||')"
 
-# Substitute $PRGNAM and $VERSION (with or without braces)
+# Extract variable names from the filename token and substitute each
 SCRIPT_TARBALL="${_RAW_TARNAME}"
-SCRIPT_TARBALL="${SCRIPT_TARBALL//\$\{PRGNAM\}/${PRGNAM}}"
-SCRIPT_TARBALL="${SCRIPT_TARBALL//\$PRGNAM/${PRGNAM}}"
-SCRIPT_TARBALL="${SCRIPT_TARBALL//\$\{VERSION\}/${VERSION}}"
-SCRIPT_TARBALL="${SCRIPT_TARBALL//\$VERSION/${VERSION}}"
+_VARS="$(echo "${_RAW_TARNAME}" | grep -oE '\$\{?[A-Za-z_][A-Za-z0-9_]*\}?' | sed 's/[${}]//g')"
+for _VAR in ${_VARS}; do
+    _VAL="$(head -n "${_TAR_LINENUM}" "${SLACKBUILD_SCRIPT}" | \
+        grep -E "^\s*${_VAR}=" | tail -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
+    if [[ "${_VAL}" =~ ^\$\{[A-Za-z_][A-Za-z0-9_]*:-([^}]+)\}$ ]]; then
+        _VAL="${BASH_REMATCH[1]}"
+    fi
+    SCRIPT_TARBALL="${SCRIPT_TARBALL//\$\{${_VAR}\}/${_VAL}}"
+    SCRIPT_TARBALL="${SCRIPT_TARBALL//\$${_VAR}/${_VAL}}"
+done
 
 info "SlackBuild expects tarball: ${SCRIPT_TARBALL}"
 
