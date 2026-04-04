@@ -140,15 +140,16 @@ else
     else
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
         NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
-        DOWNLOADED_FILE="${SRCDIR}/$(basename "${NEW_URL%% *}")"
-        curl -fL -o "${DOWNLOADED_FILE}" "${NEW_URL%% *}" || die "Download failed"
-
-        # Rename to the filename the SlackBuild expects if it differs
-        if [[ "$(basename "${DOWNLOADED_FILE}")" != "${SCRIPT_TARBALL}" ]]; then
-            info "Renaming $(basename "${DOWNLOADED_FILE}") to ${SCRIPT_TARBALL}"
-            mv "${DOWNLOADED_FILE}" "${SRCDIR}/${SCRIPT_TARBALL}"
-        fi
+        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
     fi
+fi
+
+# ── step 4b: rename source tarball to match what the SlackBuild expects ───────
+_ACTUAL="$(find "${SRCDIR}" -maxdepth 1 \( -name "*.tar.*" -o -name "*.tgz" \) | head -n1)"
+[[ -n "${_ACTUAL}" ]] || die "No source tarball found in ${SRCDIR}"
+if [[ "$(basename "${_ACTUAL}")" != "${SCRIPT_TARBALL}" ]]; then
+    info "Renaming $(basename "${_ACTUAL}") → ${SCRIPT_TARBALL}"
+    mv "${_ACTUAL}" "${SRCDIR}/${SCRIPT_TARBALL}"
 fi
 
 # ── step 5: stage everything and build ────────────────────────────────────────
