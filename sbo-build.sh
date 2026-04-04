@@ -94,53 +94,25 @@ if [[ -z "${VERSION}" ]]; then
     fi
 fi
 
-# ── step 3b: parse the SlackBuild for expected tarball name and extract dirname ─
-#
-# The SlackBuild script is the authoritative source for both the tarball
-# filename and the directory name it expects after extraction.  Guessing from
-# the URL basename fails for packages like bpftool (no version in tarball name)
-# or bcc (GitHub extracts as bcc-0.36.1/ but the URL basename is v0.36.1.tar.gz).
-#
-# Strategy:
-#   1. Read PRGNAM from the script.
-#   2. Find the "tar ... $CWD/..." line → tarball filename.
-#   3. Find the "cd ..." line that immediately follows → extract dirname.
-#   4. Substitute $PRGNAM / ${PRGNAM} / $VERSION / ${VERSION} in both.
-
-PRGNAM="$(grep -m1 -oP '^PRGNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
+# ── step 3b: parse the SlackBuild for the expected tarball name ────────────────
+PRGNAM="$(grep -m1 -E '^PRGNAM=' "${SLACKBUILD_SCRIPT}" | cut -d= -f2 | tr -d '"' | tr -d "'" || true)"
 PRGNAM="${PRGNAM:-${PACKAGE}}"
 
-# Helper: substitute PRGNAM/VERSION shell variables in a string.
-# Operates on literal text still containing un-expanded $PRGNAM / ${PRGNAM} etc.
-_subst() {
-    echo "$1" | sed \
-        "s|\${PRGNAM}|${PRGNAM}|g; s|\\\$PRGNAM|${PRGNAM}|g; \
-         s|\${VERSION}|${VERSION}|g; s|\\\$VERSION|${VERSION}|g"
-}
+# Find the first tar line that extracts (contains 'x' in the flags)
+_TAR_LINE="$(grep -m1 -E '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}")"
+_TAR_LINENUM="$(grep -m1 -nE '^\s*tar -?[a-zA-Z]*x[a-zA-Z]*' "${SLACKBUILD_SCRIPT}" | cut -d: -f1)"
 
-# Find the tar line that references $CWD and extract the filename token after CWD/
-_TAR_LINE="$(grep -m1 'tar .*\$.*CWD' "${SLACKBUILD_SCRIPT}" || true)"
+# Extract the filename token after $CWD/
+_RAW_TARNAME="$(echo "${_TAR_LINE}" | grep -oE '\$\{?CWD\}?/\S+' | sed 's|.*CWD}*/||')"
 
-if [[ -n "${_TAR_LINE}" ]]; then
-    _RAW_TARNAME="$(echo "${_TAR_LINE}" | grep -oP '\$\{?CWD\}?/\K\S+')"
-    SCRIPT_TARBALL="$(_subst "${_RAW_TARNAME}")"
-else
-    SCRIPT_TARBALL="${PRGNAM}-${VERSION}.tar.gz"
-fi
+# Substitute $PRGNAM and $VERSION (with or without braces)
+SCRIPT_TARBALL="${_RAW_TARNAME}"
+SCRIPT_TARBALL="${SCRIPT_TARBALL//\$\{PRGNAM\}/${PRGNAM}}"
+SCRIPT_TARBALL="${SCRIPT_TARBALL//\$PRGNAM/${PRGNAM}}"
+SCRIPT_TARBALL="${SCRIPT_TARBALL//\$\{VERSION\}/${VERSION}}"
+SCRIPT_TARBALL="${SCRIPT_TARBALL//\$VERSION/${VERSION}}"
 
-# Find the cd line immediately after the tar line — that is the extracted dirname.
-_CD_LINE="$(grep -A5 'tar .*\$.*CWD' "${SLACKBUILD_SCRIPT}" | grep -m1 '^cd ' || true)"
-if [[ -n "${_CD_LINE}" ]]; then
-    SCRIPT_DIRNAME="$(_subst "${_CD_LINE#cd }")"
-else
-    # Fallback: strip the archive extension from the tarball name.
-    SCRIPT_DIRNAME="${SCRIPT_TARBALL}"
-    for _ext in .tar.gz .tar.bz2 .tar.xz .tar.zst .tgz .zip; do
-        SCRIPT_DIRNAME="${SCRIPT_DIRNAME%${_ext}}"
-    done
-fi
-
-info "SlackBuild expects tarball: ${SCRIPT_TARBALL}  dirname: ${SCRIPT_DIRNAME}"
+info "SlackBuild expects tarball: ${SCRIPT_TARBALL}"
 
 # ── step 4: fetch source ───────────────────────────────────────────────────────
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
@@ -155,8 +127,7 @@ if [[ "${LOCAL_MODE}" == "true" ]]; then
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         die "git clone failed"
-        mv "${SRCDIR}/source" "${SRCDIR}/${SCRIPT_DIRNAME}"
-        tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" "${SCRIPT_DIRNAME}"
+        tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" source
     else
         die "Source tarball ${SCRIPT_TARBALL} not found in workspace and no GIT_URL provided."
     fi
@@ -165,12 +136,18 @@ else
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         die "git clone failed"
-        mv "${SRCDIR}/source" "${SRCDIR}/${SCRIPT_DIRNAME}"
-        tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" "${SCRIPT_DIRNAME}"
+        tar -czf "${SRCDIR}/${SCRIPT_TARBALL}" -C "${SRCDIR}" source
     else
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
         NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
-        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
+        DOWNLOADED_FILE="${SRCDIR}/$(basename "${NEW_URL%% *}")"
+        curl -fL -o "${DOWNLOADED_FILE}" "${NEW_URL%% *}" || die "Download failed"
+
+        # Rename to the filename the SlackBuild expects if it differs
+        if [[ "$(basename "${DOWNLOADED_FILE}")" != "${SCRIPT_TARBALL}" ]]; then
+            info "Renaming $(basename "${DOWNLOADED_FILE}") to ${SCRIPT_TARBALL}"
+            mv "${DOWNLOADED_FILE}" "${SRCDIR}/${SCRIPT_TARBALL}"
+        fi
     fi
 fi
 
