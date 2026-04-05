@@ -1,5 +1,5 @@
 #!/bin/bash
-# sbo-build — Build a SlackBuild from a local workspace or sbopkg.
+# sbo-debug.sh — Validation-only version of sbo-build.
 set -euo pipefail
 trap 'echo "TRAP: exit $? at line $LINENO" >&2' ERR
 
@@ -62,7 +62,10 @@ if [[ -n "${WORKSPACE_SRC}" ]]; then
 else
     info "Workspace source not found. Falling back to sbopkg..."
     command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
-    sbopkg -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
+    
+    # FIX: Use 'yes y' and -p to prevent interactive GPG prompts from eating the loop input
+    yes y | sbopkg -p -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
+    
     SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
 fi
 
@@ -131,8 +134,6 @@ fi
 
 # ── step 5: staging (Dry Run Mode) ───────────────────────────────────────────
 BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
-# In validation mode, we keep the trap to clean up, but you might want to 
-# comment it out if you want to inspect the temp directory manually.
 trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
 cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
@@ -140,7 +141,7 @@ cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
 
 chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
 
-# ── step 6: validation output ──────────────────────────────────────────────────
+# ── step 6: validation output (Build Command Removed) ────────────────────────
 echo "--- VALIDATION COMPLETE ---"
 echo "Package:          ${PACKAGE}"
 echo "Version:          ${VERSION}"
