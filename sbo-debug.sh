@@ -35,6 +35,8 @@ VERSION="${2:-}"
 GIT_URL="${GIT_URL:-}"
 LOCAL_MODE=false
 
+info "=========================BEGIN========================="
+
 # ── step 1: locate workspace OR download via sbopkg ───────────────────────────
 if [ -d "/__w/Slackware_Packages/Slackware_Packages/SlackBuilds/${PACKAGE}" ]; then
     WORKSPACE_SRC="/__w/Slackware_Packages/Slackware_Packages/SlackBuilds/${PACKAGE}"
@@ -146,3 +148,5 @@ info "Building '${PACKAGE}' version ${VERSION}..."
     cd "${BUILD_DIR}"
     VERSION="${VERSION}" bash "${PACKAGE}.SlackBuild"
 )
+
+info "=========================END========================="
