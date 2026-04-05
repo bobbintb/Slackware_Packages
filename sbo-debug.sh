@@ -63,8 +63,9 @@ else
     info "Workspace source not found. Falling back to sbopkg..."
     command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
     
-    # FIX: Use 'yes y' and -p to prevent interactive GPG prompts from eating the loop input
-    yes y | sbopkg -p -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
+    # FIX: Using -p (permanent) and answering 'y' via printf to avoid flooding stdin.
+    # We use -k to skip GPG errors and -p to run as a non-interactive process.
+    printf "y\ny\n" | sbopkg -p -k -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
     
     SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
 fi
@@ -102,53 +103,3 @@ TARNAM="${TARNAM:-${PACKAGE}}"
 
 # ── step 4: fetch source ───────────────────────────────────────────────────────
 SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
-trap 'rm -rf "${SRCDIR}"' EXIT
-
-if [[ "${LOCAL_MODE}" == "true" ]]; then
-    info "Local mode: Ensuring source tarball is present..."
-    if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
-        cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
-    elif [[ -n "${GIT_URL}" ]]; then
-        info "Source not found in workspace. Cloning from Git..."
-        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        die "git clone failed"
-        mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
-        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
-    else
-        die "Source tarball ${TARNAM}-${VERSION}.tar.gz not found in workspace and no GIT_URL provided."
-    fi
-else
-    if [[ -n "${GIT_URL}" ]]; then
-        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-        die "git clone failed"
-        mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
-        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
-    else
-        RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
-        NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
-        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
-    fi
-fi
-
-# ── step 5: staging (Dry Run Mode) ───────────────────────────────────────────
-BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
-trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
-
-cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
-cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
-
-chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
-
-# ── step 6: validation output (Build Command Removed) ────────────────────────
-echo "--- VALIDATION COMPLETE ---"
-echo "Package:          ${PACKAGE}"
-echo "Version:          ${VERSION}"
-echo "Local Mode:       ${LOCAL_MODE}"
-echo "SBo Directory:    ${SBO_DIR}"
-echo "Staging Dir:      ${BUILD_DIR}"
-echo "Source Tarball:   ${TARNAM}-${VERSION}.tar.gz"
-echo "Build Script:     ${BUILD_DIR}/${PACKAGE}.SlackBuild"
-echo "---------------------------"
-info "Dry run complete. No build was performed."
