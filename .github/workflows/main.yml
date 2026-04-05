@@ -1,0 +1,55 @@
+name: slackbuild test
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: bobbintb/unraid-cicd-builder
+      options: --privileged
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          clean: true
+
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v7
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
+
+      - name: Run Multiple SBo Debug Validations
+        run: |
+          chmod +x sbo-debug.sh
+
+          # Define your test cases here as a JSON array
+          TEST_CASES='[
+            { "pkg": "bpftrace", "ver": "", "url": "https://github.com/bpftrace/bpftrace.git" },
+            { "pkg": "libbpf", "ver": "", "url": "" },
+            { "pkg": "pahole", "ver": "", "url": "" },
+            { "pkg": "sbotools", "ver": "", "url": "" },
+            { "pkg": "valkey", "ver": "", "url": "" },
+            { "pkg": "bcc", "ver": "", "url": "https://github.com/iovisor/bcc.git" },
+            { "pkg": "bpftool", "ver": "", "url": "https://github.com/libbpf/bpftool.git" }
+          ]'
+
+          # Loop through each test case using jq (pre-installed in most builder images)
+          echo "$TEST_CASES" | jq -c '.[]' | while read -r test_case; do
+            # Extract values
+            PACKAGE=$(echo "$test_case" | jq -r '.pkg')
+            VERSION=$(echo "$test_case" | jq -r '.ver')
+            export GIT_URL=$(echo "$test_case" | jq -r '.url')
+
+            echo "========================================================="
+            echo " TESTING: $PACKAGE (Version: ${VERSION:-AUTO})"
+            echo "========================================================="
+            
+            # Execute script. Using '|| true' ensures one failure doesn't stop the whole loop
+            ./sbo-debug.sh "$PACKAGE" "$VERSION" || echo "!! Test failed for $PACKAGE"
+            
+            echo -e "Done with $PACKAGE\n"
+          done
