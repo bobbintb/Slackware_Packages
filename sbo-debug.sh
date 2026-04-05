@@ -62,7 +62,7 @@ else
     info "Workspace source not found. Falling back to sbopkg..."
     command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
     
-    # FIXED SBOPKG SYNTAX: use -e continue separately from -d
+    # FIX: Cleaned up flag syntax for sbopkg batch mode
     sbopkg -b -e continue -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
     
     SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
@@ -83,11 +83,13 @@ if [[ -z "${VERSION}" ]]; then
     RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
     FIRST_URL="${RAW_DOWNLOAD%% *}"
     
-    # Check if we actually need to hit the GitHub API to avoid 403 rate limits
     if [[ "$FIRST_URL" == *"github.com"* ]]; then
         slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
-        # Only curl if we don't have a version yet
-        tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+' || echo "")
+        # Use GITHUB_TOKEN if available to avoid rate limits
+        AUTH_HEADER=""
+        [[ -n "${GITHUB_TOKEN:-}" ]] && AUTH_HEADER="-H \"Authorization: token ${GITHUB_TOKEN}\""
+        
+        tag=$(eval curl -fsSL "${AUTH_HEADER}" "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+' || echo "")
         if [[ -n "$tag" ]]; then
              VERSION="${tag#v}"
         else
@@ -95,7 +97,6 @@ if [[ -z "${VERSION}" ]]; then
         fi
     else
         VERSION="${OLD_VERSION}"
-        info "Using version from .info: ${VERSION}"
     fi
 fi
 
@@ -112,21 +113,19 @@ if [[ "${LOCAL_MODE}" == "true" ]]; then
         cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
     elif [[ -n "${GIT_URL}" ]]; then
         info "Source not found in workspace. Cloning from Git..."
+        # Try version with and without 'v' prefix
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         die "git clone failed"
         mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
-    else
-        # If we get here, just check if it already exists in the destination to avoid error
-        ls "${SBO_DIR}/${TARNAM}"*.tar.gz 2>/dev/null || info "Note: No source tarball found in workspace yet."
     fi
 else
-    # Non-local mode download logic
+    # Only try downloading if we aren't using a local workspace
     RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
     NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
     if [[ -n "${NEW_URL}" ]]; then
-        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || info "Download failed, but continuing validation..."
+        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || info "Download failed - continuing validation"
     fi
 fi
 
