@@ -62,8 +62,8 @@ else
     info "Workspace source not found. Falling back to sbopkg..."
     command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
     
-    # FIX: Quoted "continue" to satisfy the sbopkg parser
-    sbopkg -b -e "continue" -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
+    # FIX: Separate -e and -d explicitly to avoid "unknown token" errors
+    sbopkg -b -e continue -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
     
     SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
 fi
@@ -86,11 +86,13 @@ if [[ -z "${VERSION}" ]]; then
     if [[ "$FIRST_URL" == *"github.com"* ]]; then
         slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
         
-        # Use GITHUB_TOKEN to bypass Rate Limits
-        CURL_OPTS="-fsSL"
-        [[ -n "${GITHUB_TOKEN:-}" ]] && CURL_OPTS="${CURL_OPTS} -H 'Authorization: token ${GITHUB_TOKEN}'"
+        # Use GITHUB_TOKEN header to avoid 403 Rate Limits
+        CURL_CMD="curl -fsSL"
+        if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+            CURL_CMD="curl -fsSL -H \"Authorization: token ${GITHUB_TOKEN}\""
+        fi
         
-        tag=$(eval curl ${CURL_OPTS} "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+' || echo "")
+        tag=$(eval "$CURL_CMD" "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+' || echo "")
         
         if [[ -n "$tag" ]]; then
              VERSION="${tag#v}"
@@ -122,10 +124,11 @@ if [[ "${LOCAL_MODE}" == "true" ]]; then
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
     fi
 else
+    # Only attempt download if we didn't use a local workspace sync
     RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
     NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
     if [[ -n "${NEW_URL}" ]]; then
-        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || info "Download check failed."
+        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || info "Download failed or skipped."
     fi
 fi
 
