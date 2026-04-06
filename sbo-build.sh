@@ -113,30 +113,33 @@ step_3_resolve_version() {
 
 step_4_fetch_source() {
     # ── step 4: fetch source ───────────────────────────────────────────────────────
-    SRCDIR="$(mktemp -d /tmp/SBo)"
+    SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
     trap 'rm -rf "${SRCDIR}"' EXIT
 
     if [[ "${LOCAL_MODE}" == "true" ]]; then
         info "Local mode: Ensuring source tarball is present..."
         if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
             cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
+        elif [[ -f "${SBO_DIR}/${TARNAM}.tar.gz" ]]; then
+            cp "${SBO_DIR}/${TARNAM}.tar.gz" "${SRCDIR}/"
         elif [[ -n "${GIT_URL}" ]]; then
             info "Source not found in workspace. Cloning from Git..."
-            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PACKAGE}" || \
+            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PACKAGE}" || \
             die "git clone failed"
-            mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
-            tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
+            
+            # Archive the cloned directory so it extracts as $PACKAGE (matching bcc example)
+            tar -czf "${SRCDIR}/${TARNAM}.tar.gz" -C "${SRCDIR}" "${PACKAGE}"
         else
-            die "Source tarball ${TARNAM}-${VERSION}.tar.gz not found in workspace and no GIT_URL provided."
+            die "Source tarball ${TARNAM} not found in workspace and no GIT_URL provided."
         fi
     else
         if [[ -n "${GIT_URL}" ]]; then
-            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PACKAGE}" || \
+            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PACKAGE}" || \
             die "git clone failed"
-            mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
-            tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
+            
+            tar -czf "${SRCDIR}/${TARNAM}.tar.gz" -C "${SRCDIR}" "${PACKAGE}"
         else
             RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
             NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
