@@ -113,7 +113,7 @@ step_3_resolve_version() {
 
 step_4_fetch_source() {
     # ── step 4: fetch source ───────────────────────────────────────────────────────
-    SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
+    SRCDIR="$(mktemp -d /tmp/SBo)"
     trap 'rm -rf "${SRCDIR}"' EXIT
 
     if [[ "${LOCAL_MODE}" == "true" ]]; then
