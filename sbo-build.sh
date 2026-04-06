@@ -22,7 +22,6 @@ PACKAGE=""
 VERSION=""
 GIT_URL="${GIT_URL:-}"
 SBO_DIR=""
-SRCDIR=""
 BUILD_DIR=""
 
 # ── functions ──────────────────────────────────────────────────────────────────
@@ -70,7 +69,6 @@ step_1_locate_workspace() {
     else
         info "Workspace source not found. Falling back to sbopkg..."
         command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
-        # sbopkg -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
         info "This is where sbopkg is ran"
         SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
     fi
@@ -113,54 +111,58 @@ step_3_resolve_version() {
 
 step_4_fetch_source() {
     # ── step 4: fetch source ───────────────────────────────────────────────────────
-    SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
-    trap 'rm -rf "${SRCDIR}"' EXIT
+    # We now stage everything in a temporary directory that acts as the "CWD" 
+    # for the SlackBuild script.
+    BUILD_DIR="$(mktemp -d /tmp/sbo-stage.XXXXXX)"
+    trap 'rm -rf "${BUILD_DIR}"' EXIT
+
+    # Copy the SlackBuild, info, slack-desc, etc. to the stage
+    cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
 
     if [[ "${LOCAL_MODE}" == "true" ]]; then
         info "Local mode: Ensuring source tarball is present..."
+        # Check if tarball already exists in the workspace
         if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
-            cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
+            cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${BUILD_DIR}/"
         elif [[ -f "${SBO_DIR}/${TARNAM}.tar.gz" ]]; then
-            cp "${SBO_DIR}/${TARNAM}.tar.gz" "${SRCDIR}/"
+            cp "${SBO_DIR}/${TARNAM}.tar.gz" "${BUILD_DIR}/"
         elif [[ -n "${GIT_URL}" ]]; then
-            info "Source not found in workspace. Cloning from Git..."
-            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PACKAGE}" || \
-            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PACKAGE}" || \
+            info "Source not found. Cloning and creating tarball..."
+            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
+            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
             die "git clone failed"
             
-            # Archive the cloned directory so it extracts as $PACKAGE (matching bcc example)
-            tar -czf "${SRCDIR}/${TARNAM}.tar.gz" -C "${SRCDIR}" "${PACKAGE}"
+            # Create the tarball in the BUILD_DIR so the SlackBuild sees it
+            tar -czf "${BUILD_DIR}/${TARNAM}.tar.gz" -C "${BUILD_DIR}" "${PACKAGE}"
+            rm -rf "${BUILD_DIR}/${PACKAGE}"
         else
-            die "Source tarball ${TARNAM} not found in workspace and no GIT_URL provided."
+            die "Source tarball ${TARNAM} not found and no GIT_URL provided."
         fi
     else
         if [[ -n "${GIT_URL}" ]]; then
-            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PACKAGE}" || \
-            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/${PACKAGE}" || \
+            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
+            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
             die "git clone failed"
-            
-            tar -czf "${SRCDIR}/${TARNAM}.tar.gz" -C "${SRCDIR}" "${PACKAGE}"
+            tar -czf "${BUILD_DIR}/${TARNAM}.tar.gz" -C "${BUILD_DIR}" "${PACKAGE}"
+            rm -rf "${BUILD_DIR}/${PACKAGE}"
         else
             RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
             NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
-            curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
+            curl -fL -o "${BUILD_DIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
         fi
     fi
 }
 
 step_5_stage_and_build() {
     # ── step 5: stage everything and build ────────────────────────────────────────
-    BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
-    trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
-
-    cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
-    cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
-
+    # Source is already staged in BUILD_DIR by step 4.
+    
     chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
 
     info "Building '${PACKAGE}' version ${VERSION}..."
     (
         cd "${BUILD_DIR}"
+        # SlackBuilds use CWD=$(pwd) to find the tarball; we are now in that directory.
         VERSION="${VERSION}" bash "${PACKAGE}.SlackBuild"
     )
 }
