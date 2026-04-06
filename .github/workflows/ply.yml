@@ -1,13 +1,21 @@
-name: -Build ply
+name: Build ply
 on:
   workflow_dispatch:
+    inputs:
+      do_deploy:
+        description: 'Deploy to GitHub Pages?'
+        required: false
+        type: boolean
+        default: true
 permissions:
   contents: write
+  pages: write
+  id-token: write
 jobs:
   make_slackware_package:
-    uses: bobbintb/Slackware_Packages/.github/workflows/workflow-alien-template.yml@main
+    uses: bobbintb/Slackware_Packages/.github/workflows/sbopkg_template.yml@main
     secrets: inherit
     with:
-      VERSION: "2.4.0"
+      DEPLOY: ${{ inputs.do_deploy }}
       NAME: "ply"
-      SOURCE: http://archive.ubuntu.com/ubuntu/pool/universe/p/ply-probe/ply_2.4.0-1_amd64.deb
+      GIT: "https://github.com/iovisor/ply.git"
