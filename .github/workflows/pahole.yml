@@ -1,4 +1,4 @@
-name: Build pahole
+name: -Build pahole
 on:
   workflow_dispatch:
     inputs:
