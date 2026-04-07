@@ -94,7 +94,7 @@ jobs:
           if [ -n "${{ inputs.GIT }}" ]; then
             export GIT_URL="${{ inputs.GIT }}"
           fi
-          ./sbo-build.sh ${{ inputs.NAME }} <<< p
+          ./sbo-build.sh "${{ inputs.NAME }}" <<< p
       
       # We upload the built package so the next job can pick it up
       - name: Upload built package as intermediate artifact
@@ -136,9 +136,9 @@ jobs:
 
       - name: Process Package and Repository Files
         run: |
-          rm -rf /tmp/site-root/builds/${{ inputs.NAME }}
-          mkdir -p /tmp/site-root/builds/${{ inputs.NAME }}
-          find /tmp -name "${{ inputs.NAME }}-*.t?z" -exec cp {} /tmp/site-root/builds/${{ inputs.NAME }}/ \;
+          rm -rf /tmp/site-root/builds/"${{ inputs.NAME }}"
+          mkdir -p /tmp/site-root/builds/"${{ inputs.NAME }}"
+          find /tmp -name "${{ inputs.NAME }}-*.t?z" -exec cp {} /tmp/site-root/builds/"${{ inputs.NAME }}"/ \;
           
           slackpkg update gpg || true
           slackpkg update || true
