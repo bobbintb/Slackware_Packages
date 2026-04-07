@@ -42,8 +42,8 @@ parse_args() {
     PACKAGE="$1"
     VERSION="${2:-}"
 }
-
 step_1_locate_workspace() {
+
     # ── step 1: locate workspace OR download via sbopkg ───────────────────────────
     local WORKSPACE_SRC=""
     if [ -d "/__w/Slackware_Packages/Slackware_Packages/SlackBuilds/${PACKAGE}" ]; then
@@ -111,37 +111,34 @@ step_3_resolve_version() {
 }
 
 step_4_fetch_source() {
-    # ── step 4: fetch source ───────────────────────────────────────────────────────
+    # Creates Temp Storage
     SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
     trap 'rm -rf "${SRCDIR}"' EXIT
 
-    if [[ "${LOCAL_MODE}" == "true" ]]; then
-        info "========================================Local mode: Ensuring source tarball is present...========================================"
-        if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
-            cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
-        elif [[ -n "${GIT_URL}" ]]; then
-            info "========================================Source not found in workspace. Cloning from Git...========================================"
-            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-            die "git clone failed"
-            mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
-            tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
-        else
-            die "Source tarball ${TARNAM}-${VERSION}.tar.gz not found in workspace and no GIT_URL provided."
-        fi
-    else
-        if [[ -n "${GIT_URL}" ]]; then
-            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
-            die "git clone failed"
-            mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
-            tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
-        else
-            RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
-            NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
-            curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
-        fi
+    # Prioritizes Local Tarballs: Only happens if LOCAL_MODE is true
+    if [[ "${LOCAL_MODE}" == "true" && -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
+        cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
     fi
+
+    # Clones via Git: Runs if no tarball was found and a Git URL is provided
+    if [[ ! -f "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" && -n "${GIT_URL}" ]]; then
+        git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+        die "git clone failed"
+
+        mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
+        tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
+    fi
+
+    # Dynamic URL Fallback: Only runs if still missing, NOT in local mode, and no Git URL worked
+    if [[ ! -f "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" && "${LOCAL_MODE}" != "true" ]]; then
+        RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
+        NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
+        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
+    fi
+
+    # Ensures Integrity: Final check to make sure we actually got the source
+    [[ -f "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" ]] || die "Source retrieval failed: No tarball found or generated."
 }
 
 step_5_stage_and_build() {
