@@ -83,6 +83,66 @@ step_2_verify_directory() {
     [[ -f "${SLACKBUILD_SCRIPT}" ]] || die "No .SlackBuild script found at '${SLACKBUILD_SCRIPT}'"
 }
 
+analyze_slackbuild_tar() {
+    # ── analyze .SlackBuild for the expected source tarball name ──────────────────
+    info "Analyzing ${SLACKBUILD_SCRIPT} for tar extraction command..."
+    local EXPECTED_TARBALL=""
+
+    while IFS= read -r line; do
+        # Ignore comments
+        if echo "$line" | grep -q '^\s*#'; then continue; fi
+
+        # Support: tar xvf $CWD/filename, tar -xvf filename, etc.
+        local tarball=$(echo "$line" | grep -oP 'tar\s+.*x\S*\s+\K[^[:space:]|;&]+' | head -n1)
+
+        if [[ -n "$tarball" ]]; then
+            # Strip quotes if present
+            tarball="${tarball%\"}"
+            tarball="${tarball#\"}"
+            tarball="${tarball%\'}"
+            tarball="${tarball#\'}"
+
+            # Clean up known path prefixes
+            tarball="${tarball#\$CWD/}"
+            tarball="${tarball#\$\{CWD\}/}"
+            tarball="${tarball#./}"
+
+            local resolved="$tarball"
+
+            # Resolve known variables
+            # Note: We must handle ${VAR} before $VAR to avoid partial matches
+            resolved="${resolved//\$\{PRGNAM\}/$PACKAGE}"
+            resolved="${resolved//\$PRGNAM/$PACKAGE}"
+            resolved="${resolved//\$\{PRGNM\}/$PACKAGE}"
+            resolved="${resolved//\$PRGNM/$PACKAGE}"
+            resolved="${resolved//\$\{NAME\}/$PACKAGE}"
+            resolved="${resolved//\$NAME/$PACKAGE}"
+            resolved="${resolved//\$\{PACKAGE\}/$PACKAGE}"
+            resolved="${resolved//\$PACKAGE/$PACKAGE}"
+            resolved="${resolved//\$\{VERSION\}/$VERSION}"
+            resolved="${resolved//\$VERSION/$VERSION}"
+
+            # If there are still $ symbols, it's an unknown variable; skip it
+            if [[ "$resolved" == *"$"* ]]; then
+                continue
+            fi
+
+            # Handle common escaping in SlackBuilds (like \_)
+            resolved="${resolved//\\/}"
+
+            EXPECTED_TARBALL="$resolved"
+            break
+        fi
+    done < "${SLACKBUILD_SCRIPT}"
+
+    if [[ -z "${EXPECTED_TARBALL}" ]]; then
+        info "No resolvable tar extraction command found in SlackBuild."
+    else
+        info "Analyzed expected source filename: ${EXPECTED_TARBALL}"
+    fi
+    echo "${EXPECTED_TARBALL}"
+}
+
 step_3_resolve_version() {
     # ── step 3: resolve version ────────────────────────────────────────────────────
     INFO_FILE="${SBO_DIR}/${PACKAGE}.info"
@@ -97,6 +157,8 @@ step_3_resolve_version() {
 
     TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
     TARNAM="${TARNAM:-${PACKAGE}}"
+
+    EXPECTED_TARBALL=$(analyze_slackbuild_tar)
 }
 
 step_4_fetch_source() {
@@ -112,10 +174,20 @@ step_4_fetch_source() {
     if [[ "${LOCAL_MODE}" == "true" ]]; then
         info "Local mode: Ensuring source tarball is present..."
         # Check if tarball already exists in the workspace
+        local FOUND_SOURCE=""
         if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
-            cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${BUILD_DIR}/"
+            FOUND_SOURCE="${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz"
         elif [[ -f "${SBO_DIR}/${TARNAM}.tar.gz" ]]; then
-            cp "${SBO_DIR}/${TARNAM}.tar.gz" "${BUILD_DIR}/"
+            FOUND_SOURCE="${SBO_DIR}/${TARNAM}.tar.gz"
+        elif [[ -n "${EXPECTED_TARBALL}" && -f "${SBO_DIR}/${EXPECTED_TARBALL}" ]]; then
+            FOUND_SOURCE="${SBO_DIR}/${EXPECTED_TARBALL}"
+        fi
+
+        if [[ -n "${FOUND_SOURCE}" ]]; then
+            local fname=$(basename "${FOUND_SOURCE}")
+            local target_name="${EXPECTED_TARBALL:-$fname}"
+            info "Staging ${fname} as ${target_name}..."
+            cp "${FOUND_SOURCE}" "${BUILD_DIR}/${target_name}"
         elif [[ -n "${GIT_URL}" ]]; then
             info "Source not found. Cloning and creating tarball..."
             git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
@@ -123,17 +195,21 @@ step_4_fetch_source() {
             die "git clone failed"
             
             # Create the tarball in the BUILD_DIR so the SlackBuild sees it
-            tar -czf "${BUILD_DIR}/${TARNAM}.tar.gz" -C "${BUILD_DIR}" "${PACKAGE}"
+            local target_name="${EXPECTED_TARBALL:-${TARNAM}.tar.gz}"
+            info "Creating tarball ${target_name}..."
+            tar -czf "${BUILD_DIR}/${target_name}" -C "${BUILD_DIR}" "${PACKAGE}"
             rm -rf "${BUILD_DIR}/${PACKAGE}"
         else
-            die "Source tarball ${TARNAM} not found and no GIT_URL provided."
+            die "Source tarball not found and no GIT_URL provided."
         fi
     else
         if [[ -n "${GIT_URL}" ]]; then
             git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
             git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
             die "git clone failed"
-            tar -czf "${BUILD_DIR}/${TARNAM}.tar.gz" -C "${BUILD_DIR}" "${PACKAGE}"
+            local target_name="${EXPECTED_TARBALL:-${TARNAM}.tar.gz}"
+            info "Creating tarball ${target_name}..."
+            tar -czf "${BUILD_DIR}/${target_name}" -C "${BUILD_DIR}" "${PACKAGE}"
             rm -rf "${BUILD_DIR}/${PACKAGE}"
         else
             RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
@@ -148,7 +224,13 @@ step_4_fetch_source() {
             fi
 
             info "Downloading from: $NEW_URL"
-            curl -fL -o "${BUILD_DIR}/$(basename "${NEW_URL}")" "$NEW_URL" || die "Download failed"
+            local dl_file="$(basename "${NEW_URL}")"
+            curl -fL -o "${BUILD_DIR}/${dl_file}" "$NEW_URL" || die "Download failed"
+
+            if [[ -n "${EXPECTED_TARBALL}" && "${dl_file}" != "${EXPECTED_TARBALL}" ]]; then
+                info "Renaming ${dl_file} to ${EXPECTED_TARBALL}..."
+                mv "${BUILD_DIR}/${dl_file}" "${BUILD_DIR}/${EXPECTED_TARBALL}"
+            fi
         fi
     fi
 }
