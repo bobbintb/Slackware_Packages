@@ -158,7 +158,8 @@ step_3_resolve_version() {
     TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
     TARNAM="${TARNAM:-${PACKAGE}}"
 
-    EXPECTED_TARBALL=$(analyze_slackbuild_tar)
+    # Analyze the tar command, ensuring we only capture the final result
+    EXPECTED_TARBALL=$(analyze_slackbuild_tar | grep -v '^>>>' | tail -n1 || true)
 }
 
 step_4_fetch_source() {
