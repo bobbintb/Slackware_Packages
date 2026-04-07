@@ -5,11 +5,11 @@ trap 'echo "TRAP: exit $? at line $LINENO" >&2' ERR
 
 # ── helpers ────────────────────────────────────────────────────────────────────
 die()  { echo "ERROR: $*" >&2; exit 1; }
-info() { echo ">>> $*"; }
+info() { echo ">>> $*" >&2; }
 
 usage() {
     cat <<EOF
-Usage: $(basename "$0") [OPTIONS] <package> [version]
+Usage: $(basename "$0") [OPTIONS] <package> [version] [url] [git]
 EOF
     exit 0
 }
@@ -20,7 +20,8 @@ export CMAKE_POLICY_VERSION_MINIMUM=3.5
 LOCAL_MODE=false
 PACKAGE=""
 VERSION=""
-GIT_URL="${GIT_URL:-}"
+URL=""
+GIT=""
 SBO_DIR=""
 BUILD_DIR=""
 
@@ -40,6 +41,8 @@ parse_args() {
 
     PACKAGE="$1"
     VERSION="${2:-}"
+    URL="${3:-}"
+    GIT="${4:-}"
 }
 
 step_1_locate_workspace() {
@@ -65,13 +68,13 @@ step_1_locate_workspace() {
 
         # Your intentional tar/gpg logic
         tar -czf "${PACKAGE}.tar.gz" -C "$(dirname "${DEST_DIR}")" "${PACKAGE}"
-        gpg --armor --detach-sign "${PACKAGE}.tar.gz"
+        gpg --armor --detach-sign "${PACKAGE}.tar.gz" || true
         mv "${PACKAGE}.tar.gz" "${SBO_ROOT}/SBo/15.0/development/"
-        mv "${PACKAGE}.tar.gz.asc" "${SBO_ROOT}/SBo/15.0/development/"
+        [ -f "${PACKAGE}.tar.gz.asc" ] && mv "${PACKAGE}.tar.gz.asc" "${SBO_ROOT}/SBo/15.0/development/" || true
     else
         info "Workspace source not found. Falling back to sbopkg..."
         command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
-        info "This is where sbopkg is ran"
+        sbopkg -d "${PACKAGE}"
         SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
     fi
 }
@@ -151,8 +154,32 @@ step_3_resolve_version() {
     OLD_VERSION="$(grep -E '^VERSION=' "${INFO_FILE}" | cut -d= -f2 | tr -d '"' | tr -d "'")"
 
     if [[ -z "${VERSION}" ]]; then
-        VERSION="${OLD_VERSION}"
-        info "Using version from .info: ${VERSION}"
+        RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
+        FIRST_URL="${RAW_DOWNLOAD%% *}"
+        if [[ "$FIRST_URL" == *"github.com"* ]]; then
+            slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
+            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
+            VERSION="${tag#v}"
+        elif [[ "${GIT}" == *"github.com"* ]]; then
+            slug=$(echo "${GIT}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
+            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
+            VERSION="${tag#v}"
+        else
+            VERSION="${OLD_VERSION}"
+            info "Using version from .info: ${VERSION}"
+        fi
+    fi
+
+    # Update .info if VERSION has changed
+    if [[ "${VERSION}" != "${OLD_VERSION}" ]]; then
+        info "Updating .info version: ${OLD_VERSION} -> ${VERSION}"
+        sed -i "s/^VERSION=.*/VERSION=\"${VERSION}\"/" "${INFO_FILE}"
+    fi
+
+    # Update .info if URL was supplied
+    if [[ -n "${URL}" ]]; then
+        info "Updating .info DOWNLOAD URL: ${URL}"
+        sed -i "s|^DOWNLOAD=.*|DOWNLOAD=\"${URL}\"|" "${INFO_FILE}"
     fi
 
     TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
@@ -188,10 +215,10 @@ step_4_fetch_source() {
             local target_name="${EXPECTED_TARBALL:-$fname}"
             info "Staging ${fname} as ${target_name}..."
             cp "${FOUND_SOURCE}" "${BUILD_DIR}/${target_name}"
-        elif [[ -n "${GIT_URL}" ]]; then
-            info "Source not found. Cloning and creating tarball..."
-            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
-            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
+        elif [[ -n "${GIT}" ]]; then
+            info "Source not found. Cloning and creating tarball from ${GIT}..."
+            git clone --branch "${VERSION}" --recurse-submodules "${GIT}" "${BUILD_DIR}/${PACKAGE}" || \
+            git clone --branch "v${VERSION}" --recurse-submodules "${GIT}" "${BUILD_DIR}/${PACKAGE}" || \
             die "git clone failed"
             
             # Create the tarball in the BUILD_DIR so the SlackBuild sees it
@@ -200,12 +227,13 @@ step_4_fetch_source() {
             tar -czf "${BUILD_DIR}/${target_name}" -C "${BUILD_DIR}" "${PACKAGE}"
             rm -rf "${BUILD_DIR}/${PACKAGE}"
         else
-            die "Source tarball not found and no GIT_URL provided."
+            die "Source tarball not found and no GIT repository provided."
         fi
     else
-        if [[ -n "${GIT_URL}" ]]; then
-            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
-            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${BUILD_DIR}/${PACKAGE}" || \
+        if [[ -n "${GIT}" ]]; then
+            info "Cloning and creating tarball from ${GIT}..."
+            git clone --branch "${VERSION}" --recurse-submodules "${GIT}" "${BUILD_DIR}/${PACKAGE}" || \
+            git clone --branch "v${VERSION}" --recurse-submodules "${GIT}" "${BUILD_DIR}/${PACKAGE}" || \
             die "git clone failed"
             local target_name="${EXPECTED_TARBALL:-${TARNAM}.tar.gz}"
             info "Creating tarball ${target_name}..."
