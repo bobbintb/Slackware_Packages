@@ -5,11 +5,11 @@ trap 'echo "TRAP: exit $? at line $LINENO" >&2' ERR
 
 # ── helpers ────────────────────────────────────────────────────────────────────
 die()  { echo "ERROR: $*" >&2; exit 1; }
-info() { echo ">>> $*" >&2; }
+info() { echo ">>> $*"; }
 
 usage() {
     cat <<EOF
-Usage: $(basename "$0") [OPTIONS] <package> [version] [url] [git]
+Usage: $(basename "$0") [OPTIONS] <package> [version]
 EOF
     exit 0
 }
@@ -18,11 +18,11 @@ EOF
 SBO_ROOT="/var/lib/sbopkg"
 export CMAKE_POLICY_VERSION_MINIMUM=3.5
 LOCAL_MODE=false
-PACKAGE="${PACKAGE:-}"
-VERSION="${VERSION:-}"
-URL="${URL:-}"
-GIT="${GIT:-}"
+PACKAGE=""
+VERSION=""
+GIT_URL="${GIT_URL:-}"
 SBO_DIR=""
+SRCDIR=""
 BUILD_DIR=""
 
 # ── functions ──────────────────────────────────────────────────────────────────
@@ -37,21 +37,10 @@ parse_args() {
         shift
     done
 
-    # Positional arguments override environment variables
-    if [[ $# -ge 1 ]]; then
-        PACKAGE="$1"
-    fi
-    if [[ $# -ge 2 ]]; then
-        VERSION="$2"
-    fi
-    if [[ $# -ge 3 ]]; then
-        URL="$3"
-    fi
-    if [[ $# -ge 4 ]]; then
-        GIT="$4"
-    fi
+    [[ $# -ge 1 ]] || usage
 
-    [[ -n "${PACKAGE}" ]] || usage
+    PACKAGE="$1"
+    VERSION="${2:-}"
 }
 
 step_1_locate_workspace() {
@@ -61,14 +50,12 @@ step_1_locate_workspace() {
         WORKSPACE_SRC="/__w/Slackware_Packages/Slackware_Packages/SlackBuilds/${PACKAGE}"
     elif [ -d "/root/Slackware_Packages/SlackBuilds/${PACKAGE}" ]; then
         WORKSPACE_SRC="/root/Slackware_Packages/SlackBuilds/${PACKAGE}"
-    elif [ -d "./SlackBuilds/${PACKAGE}" ]; then
-        WORKSPACE_SRC="./SlackBuilds/${PACKAGE}"
     fi
 
     DEST_DIR="${SBO_ROOT}/SBo/15.0/development/${PACKAGE}"
 
     if [[ -n "${WORKSPACE_SRC}" ]]; then
-        info "Local workspace detected at ${WORKSPACE_SRC}. Syncing to ${DEST_DIR}..."
+        info "========================================Local workspace detected at ${WORKSPACE_SRC}. Syncing to ${DEST_DIR}...========================================"
         mkdir -p "$(dirname "${DEST_DIR}")"
         cp -af "${WORKSPACE_SRC}/." "${DEST_DIR}/"
         
@@ -76,14 +63,14 @@ step_1_locate_workspace() {
         LOCAL_MODE=true
 
         # Your intentional tar/gpg logic
-        tar -czf "${PACKAGE}.tar.gz" -C "$(dirname "${DEST_DIR}")" "${PACKAGE}"
-        gpg --armor --detach-sign "${PACKAGE}.tar.gz" || true
-        mv "${PACKAGE}.tar.gz" "${SBO_ROOT}/SBo/15.0/development/"
-        [ -f "${PACKAGE}.tar.gz.asc" ] && mv "${PACKAGE}.tar.gz.asc" "${SBO_ROOT}/SBo/15.0/development/" || true
+        tar -czf ${PACKAGE}.tar.gz -C "$(dirname "${DEST_DIR}")" "${PACKAGE}"
+        gpg --armor --detach-sign ${PACKAGE}.tar.gz
+        mv ${PACKAGE}.tar.gz "${SBO_ROOT}/SBo/15.0/development/"
+        mv ${PACKAGE}.tar.gz.asc "${SBO_ROOT}/SBo/15.0/development/"
     else
-        info "Workspace source not found. Falling back to sbopkg..."
+        info "========================================Workspace source not found. Falling back to sbopkg...========================================"
         command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
-        sbopkg -d "${PACKAGE}"
+        sbopkg -d "${PACKAGE}" || die "sbopkg -d failed for '${PACKAGE}'"
         SBO_DIR="$(find "${SBO_ROOT}" -type d -name "${PACKAGE}" | head -n1)"
     fi
 }
@@ -93,66 +80,6 @@ step_2_verify_directory() {
     [[ -n "${SBO_DIR}" ]] || die "Cannot find SlackBuild directory for '${PACKAGE}'"
     SLACKBUILD_SCRIPT="${SBO_DIR}/${PACKAGE}.SlackBuild"
     [[ -f "${SLACKBUILD_SCRIPT}" ]] || die "No .SlackBuild script found at '${SLACKBUILD_SCRIPT}'"
-}
-
-analyze_slackbuild_tar() {
-    # ── analyze .SlackBuild for the expected source tarball name ──────────────────
-    info "Analyzing ${SLACKBUILD_SCRIPT} for tar extraction command..."
-    local EXPECTED_TARBALL=""
-
-    while IFS= read -r line; do
-        # Ignore comments
-        if echo "$line" | grep -q '^\s*#'; then continue; fi
-
-        # Support: tar xvf $CWD/filename, tar -xvf filename, etc.
-        local tarball=$(echo "$line" | grep -oP 'tar\s+.*x\S*\s+\K[^[:space:]|;&]+' | head -n1)
-
-        if [[ -n "$tarball" ]]; then
-            # Strip quotes if present
-            tarball="${tarball%\"}"
-            tarball="${tarball#\"}"
-            tarball="${tarball%\'}"
-            tarball="${tarball#\'}"
-
-            # Clean up known path prefixes
-            tarball="${tarball#\$CWD/}"
-            tarball="${tarball#\$\{CWD\}/}"
-            tarball="${tarball#./}"
-
-            local resolved="$tarball"
-
-            # Resolve known variables
-            # Note: We must handle ${VAR} before $VAR to avoid partial matches
-            resolved="${resolved//\$\{PRGNAM\}/$PACKAGE}"
-            resolved="${resolved//\$PRGNAM/$PACKAGE}"
-            resolved="${resolved//\$\{PRGNM\}/$PACKAGE}"
-            resolved="${resolved//\$PRGNM/$PACKAGE}"
-            resolved="${resolved//\$\{NAME\}/$PACKAGE}"
-            resolved="${resolved//\$NAME/$PACKAGE}"
-            resolved="${resolved//\$\{PACKAGE\}/$PACKAGE}"
-            resolved="${resolved//\$PACKAGE/$PACKAGE}"
-            resolved="${resolved//\$\{VERSION\}/$VERSION}"
-            resolved="${resolved//\$VERSION/$VERSION}"
-
-            # If there are still $ symbols, it's an unknown variable; skip it
-            if [[ "$resolved" == *"$"* ]]; then
-                continue
-            fi
-
-            # Handle common escaping in SlackBuilds (like \_)
-            resolved="${resolved//\\/}"
-
-            EXPECTED_TARBALL="$resolved"
-            break
-        fi
-    done < "${SLACKBUILD_SCRIPT}"
-
-    if [[ -z "${EXPECTED_TARBALL}" ]]; then
-        info "No resolvable tar extraction command found in SlackBuild."
-    else
-        info "Analyzed expected source filename: ${EXPECTED_TARBALL}"
-    fi
-    echo "${EXPECTED_TARBALL}"
 }
 
 step_3_resolve_version() {
@@ -167,112 +94,69 @@ step_3_resolve_version() {
         FIRST_URL="${RAW_DOWNLOAD%% *}"
         if [[ "$FIRST_URL" == *"github.com"* ]]; then
             slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
-            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+' || true)
-            [[ -n "${tag}" ]] && VERSION="${tag#v}"
-        elif [[ "${GIT}" == *"github.com"* ]]; then
-            slug=$(echo "${GIT}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
-            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+' || true)
-            [[ -n "${tag}" ]] && VERSION="${tag#v}"
-        fi
-
-        if [[ -z "${VERSION}" ]]; then
+            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
+            VERSION="${tag#v}"
+        elif [[ "${GIT_URL}" == *"github.com"* ]]; then
+            slug=$(echo "${GIT_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
+            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
+            VERSION="${tag#v}"
+        else
             VERSION="${OLD_VERSION}"
-            info "Using version from .info: ${VERSION}"
+            info ========================================"Using version from .info: ${VERSION}========================================"
         fi
-    fi
-
-    # Update .info if VERSION has changed
-    if [[ "${VERSION}" != "${OLD_VERSION}" ]]; then
-        info "Updating .info version: ${OLD_VERSION} -> ${VERSION}"
-        sed -i "s/^VERSION=.*/VERSION=\"${VERSION}\"/" "${INFO_FILE}"
-    fi
-
-    # Update .info if URL was supplied
-    if [[ -n "${URL}" ]]; then
-        info "Updating .info DOWNLOAD URL: ${URL}"
-        sed -i "s|^DOWNLOAD=.*|DOWNLOAD=\"${URL}\"|" "${INFO_FILE}"
     fi
 
     TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
     TARNAM="${TARNAM:-${PACKAGE}}"
-
-    EXPECTED_TARBALL=$(analyze_slackbuild_tar)
 }
 
 step_4_fetch_source() {
     # ── step 4: fetch source ───────────────────────────────────────────────────────
-    # We now stage everything in a temporary directory that acts as the "CWD" 
-    # for the SlackBuild script.
-    BUILD_DIR="$(mktemp -d /tmp/sbo-stage.XXXXXX)"
-    trap 'rm -rf "${BUILD_DIR}"' EXIT
+    SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
+    trap 'rm -rf "${SRCDIR}"' EXIT
 
-    # Copy the SlackBuild, info, slack-desc, etc. to the stage
-    cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
-
-    if [[ -n "${GIT}" ]]; then
-        info "Cloning and creating tarball from ${GIT}..."
-        git clone --branch "${VERSION}" --recurse-submodules "${GIT}" "${BUILD_DIR}/${PACKAGE}" || \
-        git clone --branch "v${VERSION}" --recurse-submodules "${GIT}" "${BUILD_DIR}/${PACKAGE}" || \
-        die "git clone failed"
-        
-        # Create the tarball in the BUILD_DIR so the SlackBuild sees it
-        local target_name="${EXPECTED_TARBALL:-${TARNAM}.tar.gz}"
-        info "Creating tarball ${target_name}..."
-        tar -czf "${BUILD_DIR}/${target_name}" -C "${BUILD_DIR}" "${PACKAGE}"
-        rm -rf "${BUILD_DIR}/${PACKAGE}"
-    elif [[ "${LOCAL_MODE}" == "true" ]]; then
-        info "Local mode: Ensuring source tarball is present..."
-        # Check if tarball already exists in the workspace
-        local FOUND_SOURCE=""
+    if [[ "${LOCAL_MODE}" == "true" ]]; then
+        info "========================================Local mode: Ensuring source tarball is present...========================================"
         if [[ -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
-            FOUND_SOURCE="${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz"
-        elif [[ -f "${SBO_DIR}/${TARNAM}.tar.gz" ]]; then
-            FOUND_SOURCE="${SBO_DIR}/${TARNAM}.tar.gz"
-        elif [[ -n "${EXPECTED_TARBALL}" && -f "${SBO_DIR}/${EXPECTED_TARBALL}" ]]; then
-            FOUND_SOURCE="${SBO_DIR}/${EXPECTED_TARBALL}"
-        fi
-
-        if [[ -n "${FOUND_SOURCE}" ]]; then
-            local fname=$(basename "${FOUND_SOURCE}")
-            local target_name="${EXPECTED_TARBALL:-$fname}"
-            info "Staging ${fname} as ${target_name}..."
-            cp "${FOUND_SOURCE}" "${BUILD_DIR}/${target_name}"
+            cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
+        elif [[ -n "${GIT_URL}" ]]; then
+            info "========================================Source not found in workspace. Cloning from Git...========================================"
+            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+            die "git clone failed"
+            mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
+            tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
         else
-            die "Source tarball not found and no GIT repository provided."
+            die "Source tarball ${TARNAM}-${VERSION}.tar.gz not found in workspace and no GIT_URL provided."
         fi
     else
-        RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
-            # Split multiple URLs if present
-            FIRST_URL="${RAW_DOWNLOAD%% *}"
-            
-            # If the original URL contains the old version, replace it
-            if [[ "$FIRST_URL" == *"$OLD_VERSION"* ]]; then
-                NEW_URL="${FIRST_URL//$OLD_VERSION/$VERSION}"
-            else
-                NEW_URL="$FIRST_URL"
-            fi
-
-            info "Downloading from: $NEW_URL"
-            local dl_file="$(basename "${NEW_URL}")"
-            curl -fL -o "${BUILD_DIR}/${dl_file}" "$NEW_URL" || die "Download failed"
-
-            if [[ -n "${EXPECTED_TARBALL}" && "${dl_file}" != "${EXPECTED_TARBALL}" ]]; then
-                info "Renaming ${dl_file} to ${EXPECTED_TARBALL}..."
-                mv "${BUILD_DIR}/${dl_file}" "${BUILD_DIR}/${EXPECTED_TARBALL}"
-            fi
+        if [[ -n "${GIT_URL}" ]]; then
+            git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+            git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
+            die "git clone failed"
+            mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
+            tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
+        else
+            RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
+            NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
+            curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
+        fi
     fi
 }
 
 step_5_stage_and_build() {
     # ── step 5: stage everything and build ────────────────────────────────────────
-    # Source is already staged in BUILD_DIR by step 4.
-    
+    BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
+    trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
+
+    cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
+    cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
+
     chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
 
-    info "Building '${PACKAGE}' version ${VERSION}..."
+    info "========================================Building '${PACKAGE}' version ${VERSION}...========================================"
     (
         cd "${BUILD_DIR}"
-        # SlackBuilds use CWD=$(pwd) to find the tarball; we are now in that directory.
         VERSION="${VERSION}" bash "${PACKAGE}.SlackBuild"
     )
 }
@@ -281,7 +165,7 @@ step_5_stage_and_build() {
 
 parse_args "$@"
 
-info "=========================BEGIN========================="
+info ========================================BEGIN========================================
 
 step_1_locate_workspace
 step_2_verify_directory
@@ -289,4 +173,4 @@ step_3_resolve_version
 step_4_fetch_source
 step_5_stage_and_build
 
-info "=========================END========================="
+info ========================================END========================================
