@@ -72,6 +72,8 @@ mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 # rm -rf $PRGNAM
 # tar xvf $CWD/$TARNAM.tar.gz
+pwd
+ls -ls
 cd ${PRGNAM}
 chown -R root:root .
 find -L . \
