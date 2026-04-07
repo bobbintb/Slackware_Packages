@@ -111,10 +111,13 @@ step_3_resolve_version() {
 }
 
 step_4_fetch_source() {
-    # Creates Temp Storage: Initializes a secure temporary directory (SRCDIR)
-    SRCDIR="$(mktemp -d /tmp/sbo-src.XXXXXX)"
-    trap 'rm -rf "${SRCDIR}"' EXIT
-
+    # ── step 4: fetch source ───────────────────────────────────────────────────────
+    
+    # Creates Temp Storage: Use a fixed directory instead of a random one
+    SRCDIR="/tmp/SBo"
+    mkdir -p "${SRCDIR}"
+    # Note: Removed 'trap' so the folder persists for the build step
+    
     # Prioritizes Local Tarballs: Only happens if LOCAL_MODE is true
     if [[ "${LOCAL_MODE}" == "true" && -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
         cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
@@ -128,6 +131,8 @@ step_4_fetch_source() {
 
         mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
+        # Cleanup cloned source folder to keep /tmp/SBo clean
+        rm -rf "${SRCDIR}/${PACKAGE}-${VERSION}"
     fi
 
     # Dynamic URL Fallback: Only runs if still missing, NOT in local mode, and no Git URL worked
@@ -137,12 +142,12 @@ step_4_fetch_source() {
         curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
     fi
 
-    # Ensures Integrity: Final check to make sure we actually got the source
+    # Ensures Integrity: Final check to make sure the tarball exists in /tmp/SBo
     local FINAL_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
     if [[ -f "${FINAL_TARBALL}" ]]; then
         info "Source prepared: $(basename "${FINAL_TARBALL}") located at ${FINAL_TARBALL}"
     else
-        die "Source retrieval failed: No tarball found or generated."
+        die "Source retrieval failed: No tarball found or generated in ${SRCDIR}"
     fi
 }
 
