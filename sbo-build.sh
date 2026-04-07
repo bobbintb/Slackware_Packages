@@ -49,6 +49,8 @@ step_1_locate_workspace() {
         WORKSPACE_SRC="/__w/Slackware_Packages/Slackware_Packages/SlackBuilds/${PACKAGE}"
     elif [ -d "/root/Slackware_Packages/SlackBuilds/${PACKAGE}" ]; then
         WORKSPACE_SRC="/root/Slackware_Packages/SlackBuilds/${PACKAGE}"
+    elif [ -d "./SlackBuilds/${PACKAGE}" ]; then
+        WORKSPACE_SRC="./SlackBuilds/${PACKAGE}"
     fi
 
     DEST_DIR="${SBO_ROOT}/SBo/15.0/development/${PACKAGE}"
@@ -62,10 +64,10 @@ step_1_locate_workspace() {
         LOCAL_MODE=true
 
         # Your intentional tar/gpg logic
-        tar -czf ${PACKAGE}.tar.gz -C "$(dirname "${DEST_DIR}")" "${PACKAGE}"
-        gpg --armor --detach-sign ${PACKAGE}.tar.gz
-        mv ${PACKAGE}.tar.gz "${SBO_ROOT}/SBo/15.0/development/"
-        mv ${PACKAGE}.tar.gz.asc "${SBO_ROOT}/SBo/15.0/development/"
+        tar -czf "${PACKAGE}.tar.gz" -C "$(dirname "${DEST_DIR}")" "${PACKAGE}"
+        gpg --armor --detach-sign "${PACKAGE}.tar.gz"
+        mv "${PACKAGE}.tar.gz" "${SBO_ROOT}/SBo/15.0/development/"
+        mv "${PACKAGE}.tar.gz.asc" "${SBO_ROOT}/SBo/15.0/development/"
     else
         info "Workspace source not found. Falling back to sbopkg..."
         command -v sbopkg &>/dev/null || die "sbopkg not found and no local workspace exists."
@@ -89,19 +91,25 @@ step_3_resolve_version() {
     OLD_VERSION="$(grep -E '^VERSION=' "${INFO_FILE}" | cut -d= -f2 | tr -d '"' | tr -d "'")"
 
     if [[ -z "${VERSION}" ]]; then
+        VERSION="${OLD_VERSION}"
+        info "Using version from .info: ${VERSION}"
+
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
         FIRST_URL="${RAW_DOWNLOAD%% *}"
         if [[ "$FIRST_URL" == *"github.com"* ]]; then
             slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
             tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
-            VERSION="${tag#v}"
+            if [[ -n "${tag:-}" ]]; then
+                VERSION="${tag#v}"
+                info "Detected GitHub release, updating version to: ${VERSION}"
+            fi
         elif [[ "${GIT_URL}" == *"github.com"* ]]; then
             slug=$(echo "${GIT_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
             tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
-            VERSION="${tag#v}"
-        else
-            VERSION="${OLD_VERSION}"
-            info "Using version from .info: ${VERSION}"
+            if [[ -n "${tag:-}" ]]; then
+                VERSION="${tag#v}"
+                info "Detected GitHub URL, updating version to: ${VERSION}"
+            fi
         fi
     fi
 

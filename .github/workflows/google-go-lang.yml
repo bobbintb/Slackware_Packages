@@ -17,4 +17,5 @@ jobs:
     secrets: inherit
     with:
       DEPLOY: ${{ inputs.do_deploy }}
-      NAME: "Build google-go-lang"
+      NAME: "google-go-lang"
+      REPOS: "alien-15.0"
