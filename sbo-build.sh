@@ -91,20 +91,8 @@ step_3_resolve_version() {
     OLD_VERSION="$(grep -E '^VERSION=' "${INFO_FILE}" | cut -d= -f2 | tr -d '"' | tr -d "'")"
 
     if [[ -z "${VERSION}" ]]; then
-        RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
-        FIRST_URL="${RAW_DOWNLOAD%% *}"
-        if [[ "$FIRST_URL" == *"github.com"* ]]; then
-            slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
-            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
-            VERSION="${tag#v}"
-        elif [[ "${GIT_URL}" == *"github.com"* ]]; then
-            slug=$(echo "${GIT_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
-            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
-            VERSION="${tag#v}"
-        else
-            VERSION="${OLD_VERSION}"
-            info "Using version from .info: ${VERSION}"
-        fi
+        VERSION="${OLD_VERSION}"
+        info "Using version from .info: ${VERSION}"
     fi
 
     TARNAM="$(grep -oP '^TARNAM=\K\S+' "${SLACKBUILD_SCRIPT}" | tr -d '"' | tr -d "'" || true)"
@@ -149,8 +137,18 @@ step_4_fetch_source() {
             rm -rf "${BUILD_DIR}/${PACKAGE}"
         else
             RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
-            NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
-            curl -fL -o "${BUILD_DIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
+            # Split multiple URLs if present
+            FIRST_URL="${RAW_DOWNLOAD%% *}"
+            
+            # If the original URL contains the old version, replace it
+            if [[ "$FIRST_URL" == *"$OLD_VERSION"* ]]; then
+                NEW_URL="${FIRST_URL//$OLD_VERSION/$VERSION}"
+            else
+                NEW_URL="$FIRST_URL"
+            fi
+
+            info "Downloading from: $NEW_URL"
+            curl -fL -o "${BUILD_DIR}/$(basename "${NEW_URL}")" "$NEW_URL" || die "Download failed"
         fi
     fi
 }
