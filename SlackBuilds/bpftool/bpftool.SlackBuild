@@ -97,6 +97,8 @@ mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
 tar xvf $CWD/$PRGNAM.tar.gz
+pwd
+ls -ls
 cd $PRGNAM
 chown -R root:root .
 find -L . \
