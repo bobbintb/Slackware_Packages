@@ -154,20 +154,34 @@ step_4_fetch_source() {
 step_5_stage_and_build() {
     # ── step 5: stage everything and build ────────────────────────────────────────
     BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
-    info "======================================== BUILD_DIR =  '${BUILD_DIR}' ========================================"
-    info "======================================== SBO_DIR = '${SBO_DIR}' ========================================"
-    info "======================================== SRCDIR =  '${SRCDIR}' ========================================"
 
-    # trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
-
+    # 1. Copy the SlackBuild script and metadata files (from Step 1)
     cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
+
+    # 2. Copy the actual source tarball (from Step 4)
+    # We use -f to overwrite any "wrapper" tarballs from Step 1 with the real source
     cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
+
+    # 3. FIX: Handle Naming Mismatch (The bpftool fix)
+    # If the script expects 'package.tar.gz' but we have 'package-version.tar.gz',
+    # we create a symlink so the SlackBuild finds the right file.
+    local VERSIONED_TARBALL="${TARNAM}-${VERSION}.tar.gz"
+    local GENERIC_TARBALL="${PACKAGE}.tar.gz"
+
+    if [[ -f "${BUILD_DIR}/${VERSIONED_TARBALL}" && ! -f "${BUILD_DIR}/${GENERIC_TARBALL}" ]]; then
+        ln -sf "${VERSIONED_TARBALL}" "${BUILD_DIR}/${GENERIC_TARBALL}"
+    elif [[ -f "${BUILD_DIR}/${VERSIONED_TARBALL}" && "${VERSIONED_TARBALL}" != "${GENERIC_TARBALL}" ]]; then
+        # Force the generic name to point to our freshly fetched source
+        ln -sf "${VERSIONED_TARBALL}" "${BUILD_DIR}/${GENERIC_TARBALL}"
+    fi
 
     chmod +x "${BUILD_DIR}/${PACKAGE}.SlackBuild"
 
     info "========================================Building '${PACKAGE}' version ${VERSION}...========================================"
+    
     (
         cd "${BUILD_DIR}"
+        # Run the build. We pass VERSION explicitly in case the script relies on it.
         VERSION="${VERSION}" bash "${PACKAGE}.SlackBuild"
     )
 }
