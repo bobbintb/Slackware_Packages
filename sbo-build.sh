@@ -154,6 +154,10 @@ step_4_fetch_source() {
 step_5_stage_and_build() {
     # ── step 5: stage everything and build ────────────────────────────────────────
     BUILD_DIR="$(mktemp -d /tmp/sbo-build-stage.XXXXXX)"
+    info "======================================== BUILD_DIR =  '${BUILD_DIR}' ========================================"
+    info "======================================== SBO_DIR = '${SBO_DIR}' ========================================"
+    info "======================================== SRCDIR =  '${SRCDIR}' ========================================"
+
     trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
     cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
