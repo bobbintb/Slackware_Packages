@@ -158,7 +158,7 @@ step_5_stage_and_build() {
     info "======================================== SBO_DIR = '${SBO_DIR}' ========================================"
     info "======================================== SRCDIR =  '${SRCDIR}' ========================================"
 
-    trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
+    # trap 'rm -rf "${SRCDIR}" "${BUILD_DIR}"' EXIT
 
     cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
     cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
