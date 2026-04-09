@@ -96,9 +96,9 @@ rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
-mv ${PRGNAM} "$TMP/${PRGNAM,,}"
 pwd
 ls -ls
+mv ${PRGNAM} "$TMP/${PRGNAM,,}"
 #tar xvf $CWD/$PRGNAM-$VERSION.tar.gz || tar xvf $CWD/v$VERSION.tar.gz
 cd $PRGNAM
 ./.install/install_boost.sh 1.87.0
