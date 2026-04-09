@@ -92,6 +92,7 @@ jobs:
           # Copy slack-desc so gen_repos_files.sh can populate the .txt metadata
           pwd
           ls -ls
+          find / -name slack-desc
           cp ./Slackware_Packages/Slackware_Packages/SlackBuilds/kernel-headers/slack-desc "$PKG_DIR/"
           
           slackpkg update gpg || true
