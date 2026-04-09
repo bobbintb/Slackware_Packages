@@ -101,7 +101,7 @@ pwd
 ls -ls
 # tar xvf $CWD/$PRGNAM-$VERSION.tar.gz || tar xvf $CWD/v$VERSION.tar.gz
 #mv ${PRGNAMCAP}-${VERSION} "$TMP/${PRGNAM,,}"
-cd $PRGNAMCAP
+cd ${PRGNAMCAP}-${VERSION}
 # ./.install/install_boost.sh 1.87.0
 export BOOST_DIR=/tmp/SBo/${PRGNAM}/boost
 chown -R root:root .
