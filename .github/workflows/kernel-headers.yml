@@ -39,6 +39,7 @@ jobs:
           ./Slackware_Packages/SlackBuilds/kernel-headers/kernel-headers.SlackBuild
           
           # Move result to workspace for upload
+          rm -f $PKG_DIR/*
           cp /tmp/kernel-headers-${KERNEL_VERSION}-*.t?z $GITHUB_WORKSPACE/ 2>/dev/null || true
 
       - name: Upload built package artifact
