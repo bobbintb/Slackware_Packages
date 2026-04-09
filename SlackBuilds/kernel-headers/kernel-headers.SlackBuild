@@ -81,7 +81,7 @@ mkdir -p $PKG/usr
 )
   
 mkdir -p $PKG/install
-cat $CWD/slack-desc/slack-desc.kernel-headers > $PKG/install/slack-desc
+cat $CWD/slack-desc > $PKG/install/slack-desc
 
 # Make the package:
 cd $PKG
