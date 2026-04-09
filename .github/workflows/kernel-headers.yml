@@ -89,6 +89,9 @@ jobs:
           # Copy only the new version into the folder containing old versions
           cp /tmp/new-build/kernel-headers-${VERSION}-*.t?z "$PKG_DIR/"
           
+          # Copy slack-desc so gen_repos_files.sh can populate the .txt metadata
+          cp ./Slackware_Packages/SlackBuilds/kernel-headers/slack-desc "$PKG_DIR/"
+          
           slackpkg update gpg || true
           slackpkg update || true
           slackpkg install slackware64:pinentry slackware64:libsecret slackware64:gtk+2 slackware64:tcl slackware64:expect -y
