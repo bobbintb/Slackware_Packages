@@ -31,14 +31,15 @@ cd $(dirname $0) ; CWD=$(pwd)
 PKGNAM=${PKGNAM:-kernel-headers}
 BUILD=${BUILD:-1}
 KERNEL_SOURCE=${KERNEL_SOURCE:-/usr/src/linux}
-if [ -z "${HEADERS_ARCH}" ]; then
-    case "$(uname -m)" in
-    i?86) HEADERS_ARCH=x86 ;;
-    x86_64) HEADERS_ARCH=x86 ;;
-    # Use uname -m for all other archs:
-    *) HEADERS_ARCH=$(uname -m) ;;
+
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) ARCH=i586 ;;
+    arm*) ARCH=arm ;;
+       *) ARCH=$( uname -m ) ;;
   esac
 fi
+
 if [ ! -d "${KERNEL_SOURCE}" ]; then
   echo "Error: kernel source directory ${KERNEL_SOURCE} does not exist."
   exit 1
@@ -56,7 +57,7 @@ PKG=$TMP/package-$PKGNAM
 # the name of the created package would be, and then exit. This information
 # could be useful to other scripts.
 if [ ! -z "${PRINT_PACKAGE_NAME}" ]; then
-  echo "kernel-headers-$(echo ${VERSION} | tr - _)-${HEADERS_ARCH}-$BUILD.txz"
+  echo "kernel-headers-$(echo ${VERSION} | tr - _)-${ARCH}-$BUILD.txz"
   exit 0
 fi
 
@@ -67,14 +68,14 @@ mkdir -p $PKG/usr
 # Generate the kernel headers and clean them up:
 ( cd ${KERNEL_SOURCE}
   echo "Generating headers from the Linux kernel source tree in ${KERNEL_SOURCE}:"
-  make headers_install ARCH=${HEADERS_ARCH} INSTALL_HDR_PATH=$PKG/usr
+  make headers_install ARCH=${ARCH} INSTALL_HDR_PATH=$PKG/usr
   cd $PKG/usr/include
   # You won't want these files. The ones in libdrm work better.
   rm -rf drm
   # This next part seems pretty much cosmetic, but since we've been doing this
   # for a long time (and others also do), we'll stick with it:
-  mv asm asm-${HEADERS_ARCH}
-  ln -sf asm-${HEADERS_ARCH} asm
+  mv asm asm-${ARCH}
+  ln -sf asm-${ARCH} asm
   # Remove unneeded dotfiles:
   find . -name ".??*" -exec rm -f {} \+
 )
@@ -84,4 +85,4 @@ cat $CWD/slack-desc/slack-desc.kernel-headers > $PKG/install/slack-desc
 
 # Make the package:
 cd $PKG
-/sbin/makepkg -l y -c n $TMP/kernel-headers-$(echo ${VERSION} | tr - _)-${HEADERS_ARCH}-$BUILD.txz
+/sbin/makepkg -l y -c n $TMP/kernel-headers-$(echo ${VERSION} | tr - _)-${ARCH}-$BUILD.txz
