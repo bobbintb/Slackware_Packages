@@ -1,6 +1,12 @@
 name: -Build dragonfly
 on:
   workflow_dispatch:
+    inputs:
+      do_deploy:
+        description: 'Deploy to GitHub Pages?'
+        required: false
+        type: boolean
+        default: true
 permissions:
   contents: write
   pages: write
