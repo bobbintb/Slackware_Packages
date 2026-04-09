@@ -93,7 +93,7 @@ jobs:
           pwd
           ls -ls
           find / -name slack-desc
-          cp ./Slackware_Packages/Slackware_Packages/SlackBuilds/kernel-headers/slack-desc "$PKG_DIR/"
+          cp /__w/Slackware_Packages/Slackware_Packages/SlackBuilds/kernel-headers/slack-desc "$PKG_DIR/"
           
           slackpkg update gpg || true
           slackpkg update || true
