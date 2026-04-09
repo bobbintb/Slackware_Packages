@@ -88,7 +88,6 @@ jobs:
           
           # Remove any existing files for this specific version only
           rm -f "$PKG_DIR/kernel-headers-${VERSION}-"*
-          rm -f "$PKG_DIR"/*
           
           # Copy only the new version into the folder containing old versions
           cp /tmp/new-build/kernel-headers-${VERSION}-*.t?z "$PKG_DIR/"
