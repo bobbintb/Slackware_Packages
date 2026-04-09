@@ -54,7 +54,8 @@
 # |-----------------------------------------------------------------| #
 
 PRGNAM=redisearch       # replace with name of program
-VERSION=${VERSION:-2.10.11}
+PRGNAMCAP=RediSearch
+VERSION=${VERSION:-2.10.12}
 BUILD=${BUILD:-1}
 TAG=${TAG:-_SBo}        # "_SBo" is required for submission to slackbuilds.org
 
@@ -95,13 +96,11 @@ set -e # Exit on most errors
 rm -rf $PKG
 mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
-rm -rf $PRGNAM-$VERSION
-pwd
-ls -ls
-tar xvf $CWD/$PRGNAM-$VERSION.tar.gz || tar xvf $CWD/v$VERSION.tar.gz
-mv RediSearch-${VERSION} "$TMP/${PRGNAM,,}"
-cd $PRGNAM
-./.install/install_boost.sh 1.87.0
+rm -rf $PRGNAMCAP-$VERSION
+# tar xvf $CWD/$PRGNAM-$VERSION.tar.gz || tar xvf $CWD/v$VERSION.tar.gz
+#mv ${PRGNAMCAP}-${VERSION} "$TMP/${PRGNAM,,}"
+cd $PRGNAMCAP
+# ./.install/install_boost.sh 1.87.0
 export BOOST_DIR=/tmp/SBo/${PRGNAM}/boost
 chown -R root:root .
 find -L . \
