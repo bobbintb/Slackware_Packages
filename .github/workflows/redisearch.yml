@@ -18,4 +18,5 @@ jobs:
     with:
       DEPLOY: ${{ inputs.do_deploy }}
       NAME: "redisearch"
+      PACKAGES: "boost"
       GIT: "https://github.com/RediSearch/RediSearch.git"
