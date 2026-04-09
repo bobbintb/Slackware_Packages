@@ -40,7 +40,7 @@ jobs:
           
           # Move result to workspace for upload
           find / -name slack-desc
-          rm -f $PKG_DIR/*
+          rm -f ./Slackware_Packages/SlackBuilds/kernel-headers/*
           cp /tmp/kernel-headers-${KERNEL_VERSION}-*.t?z $GITHUB_WORKSPACE/ 2>/dev/null || true
 
       - name: Upload built package artifact
