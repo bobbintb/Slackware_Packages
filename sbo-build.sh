@@ -144,6 +144,8 @@ step_4_fetch_source() {
 
     # Ensures Integrity: Final check to make sure the tarball exists in /tmp/SBo
     local FINAL_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
+    pwd
+    ls -ls
     if [[ -f "${FINAL_TARBALL}" ]]; then
         info "Source prepared: $(basename "${FINAL_TARBALL}") located at ${FINAL_TARBALL}"
     else
