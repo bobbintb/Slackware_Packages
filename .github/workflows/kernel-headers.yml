@@ -39,7 +39,6 @@ jobs:
           ./Slackware_Packages/SlackBuilds/kernel-headers/kernel-headers.SlackBuild
           
           # Move result to workspace for upload
-          rm -f ./Slackware_Packages/SlackBuilds/kernel-headers/*
           cp /tmp/kernel-headers-${KERNEL_VERSION}-*.t?z $GITHUB_WORKSPACE/ 2>/dev/null || true
 
       - name: Upload built package artifact
@@ -89,13 +88,13 @@ jobs:
           
           # Remove any existing files for this specific version only
           rm -f "$PKG_DIR/kernel-headers-${VERSION}-"*
-          rm -f ${PKG_DIR}/*
+          rm -f "$PKG_DIR"/*
           
           # Copy only the new version into the folder containing old versions
           cp /tmp/new-build/kernel-headers-${VERSION}-*.t?z "$PKG_DIR/"
           
           # Copy slack-desc so gen_repos_files.sh can populate the .txt metadata
-          cp ./SlackBuilds/kernel-headers/slack-desc "$PKG_DIR/kernel-headers-${KERNEL_VERSION}-x86-1.txt"
+          # cp ./SlackBuilds/kernel-headers/slack-desc "$PKG_DIR/"
           
           slackpkg update gpg || true
           slackpkg update || true
