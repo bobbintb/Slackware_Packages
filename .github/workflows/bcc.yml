@@ -16,6 +16,7 @@ jobs:
     uses: bobbintb/Slackware_Packages/.github/workflows/sbopkg_template.yml@main
     secrets: inherit
     with:
+      DEPLOY: ${{ inputs.do_deploy }}
       NAME: "bcc"
       PACKAGES: "ccache gettext lua luajit fmt python-setuptools"
       REINSTALL: libedit
