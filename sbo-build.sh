@@ -113,43 +113,45 @@ step_3_resolve_version() {
 step_4_fetch_source() {
     # ── step 4: fetch source ───────────────────────────────────────────────────────
     
-    # Creates Temp Storage: Use a fixed directory instead of a random one
     SRCDIR="/tmp/SBo"
     mkdir -p "${SRCDIR}"
-    # Note: Removed 'trap' so the folder persists for the build step
-    
-    # Prioritizes Local Tarballs: Only happens if LOCAL_MODE is true
-    if [[ "${LOCAL_MODE}" == "true" && -f "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
-        cp "${SBO_DIR}/${TARNAM}-${VERSION}.tar.gz" "${SRCDIR}/"
-    fi
 
-    # Clones via Git: If no tarball was found and a Git URL is provided, clone and compress
-    if [[ ! -f "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" && -n "${GIT_URL}" ]]; then
+    # 1. Try Git first (if GIT_URL is provided)
+    if [[ -n "${GIT_URL}" ]]; then
+        info "Fetching source via Git clone..."
         git clone --branch "${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         git clone --branch "v${VERSION}" --recurse-submodules "${GIT_URL}" "${SRCDIR}/source" || \
         die "git clone failed"
 
+        # Package the clone into the expected tarball format
         mv "${SRCDIR}/source" "${SRCDIR}/${PACKAGE}-${VERSION}"
         tar -czf "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" -C "${SRCDIR}" "${PACKAGE}-${VERSION}"
-        # Cleanup cloned source folder to keep /tmp/SBo clean
         rm -rf "${SRCDIR}/${PACKAGE}-${VERSION}"
     fi
 
-    # Dynamic URL Fallback: Only runs if still missing, NOT in local mode, and no Git URL worked
-    if [[ ! -f "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" && "${LOCAL_MODE}" != "true" ]]; then
+    # 2. Try URL Fallback (if Git didn't run or failed to produce the file)
+    if [[ ! -f "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
+        info "Fetching source via URL..."
+        
+        # Extract URL from .info file
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
-        NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
-        curl -fL -o "${SRCDIR}/$(basename "${NEW_URL%% *}")" "${NEW_URL%% *}" || die "Download failed"
+        
+        if [[ -n "${RAW_DOWNLOAD}" ]]; then
+            # Handle potential version mismatches in the URL string
+            NEW_URL="${RAW_DOWNLOAD//${OLD_VERSION}/${VERSION}}"
+            
+            # Download and force the output name to match our expected TARNAM
+            curl -fL -o "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" "${NEW_URL%% *}" || die "Download failed"
+        else
+            die "Error: No Git URL provided and no Download URL found in ${INFO_FILE}"
+        fi
     fi
 
-    # Ensures Integrity: Final check to make sure the tarball exists in /tmp/SBo
-    local FINAL_TARBALL="${SRCDIR}/${TARNAM}-${VERSION}.tar.gz"
-    pwd
-    ls -ls
-    if [[ -f "${FINAL_TARBALL}" ]]; then
-        info "Source prepared: $(basename "${FINAL_TARBALL}") located at ${FINAL_TARBALL}"
+    # 3. Final Integrity Check
+    if [[ -f "${SRCDIR}/${TARNAM}-${VERSION}.tar.gz" ]]; then
+        info "Source successfully prepared in ${SRCDIR}"
     else
-        die "Source retrieval failed: No tarball found or generated in ${SRCDIR}"
+        die "Source retrieval failed: File not found in ${SRCDIR}"
     fi
 }
 
