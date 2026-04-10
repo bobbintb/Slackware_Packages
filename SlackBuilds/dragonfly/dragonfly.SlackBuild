@@ -99,7 +99,7 @@ rm -rf $PRGNAM-$VERSION
 mkdir -p $PRGNAM
 pwd
 ls -ls
-tar xvf $CWD/$PRGNAM-x86_64.tar.gz -C $PRGNAM
+tar xvf $CWD/$PRGNAM-$VERSION.tar.gz -C $PRGNAM
 cd $PRGNAM
 chown -R root:root .
 find -L . \
