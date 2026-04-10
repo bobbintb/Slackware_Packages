@@ -97,6 +97,8 @@ mkdir -p $TMP $PKG $OUTPUT
 cd $TMP
 rm -rf $PRGNAM-$VERSION
 mkdir -p $PRGNAM
+pwd
+ls -ls
 tar xvf $CWD/$PRGNAM-x86_64.tar.gz -C $PRGNAM
 cd $PRGNAM
 chown -R root:root .
