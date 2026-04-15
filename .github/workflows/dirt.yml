@@ -17,7 +17,6 @@ jobs:
     secrets: inherit
     with:
       DEPLOY: ${{ inputs.do_deploy }}
-      VERSION: 0.0.1
       NAME: "dirt"
       PACKAGES: "libbpf"
       REPOS: "bobbintb"
