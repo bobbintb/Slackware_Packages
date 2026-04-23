@@ -92,17 +92,20 @@ step_3_resolve_version() {
     if [[ -z "${VERSION}" ]]; then
         RAW_DOWNLOAD="$(grep -E '^DOWNLOAD(_x86_64)?=' "${INFO_FILE}" | grep -v 'UNSUPPORTED' | head -n1 | cut -d= -f2- | tr -d '"' | tr -d "'")"
         FIRST_URL="${RAW_DOWNLOAD%% *}"
+        local tag=""
         if [[ "$FIRST_URL" == *"github.com"* ]]; then
-            slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+')
-            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
-            VERSION="${tag#v}"
-        elif [[ "${GIT_URL}" == *"github.com"* ]]; then
+            slug=$(echo "${FIRST_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
+            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+') || true
+        fi
+        if [[ -z "${tag}" && "${GIT_URL}" == *"github.com"* ]]; then
             slug=$(echo "${GIT_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
-            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+')
+            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+') || true
+        fi
+        if [[ -n "${tag}" ]]; then
             VERSION="${tag#v}"
         else
             VERSION="${OLD_VERSION}"
-            info ========================================"Using version from .info: ${VERSION}========================================"
+            info "========================================Using version from .info: ${VERSION}========================================"
         fi
     fi
 
