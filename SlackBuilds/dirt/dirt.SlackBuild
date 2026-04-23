@@ -77,14 +77,6 @@ find -L . \
   -o -perm 440 -o -perm 400 \) -exec chmod 644 {} \;
 
 			# Compile the application and install it into the $PKG directory
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-. "$HOME/.cargo/env"
-rustup install stable
-rustup toolchain install nightly --component rust-src
-cargo install bpf-linker
-cargo install cargo-generate
-cargo install bindgen-cli
-cargo install --git https://github.com/aya-rs/aya -- aya-tool
 cargo build --release
 mkdir -p $PKG/usr/local/bin
 cp target/release/$PRGNAM $PKG/usr/local/bin
