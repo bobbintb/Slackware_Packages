@@ -18,7 +18,6 @@ jobs:
     with:
       DEPLOY: ${{ inputs.do_deploy }}
       NAME: "dirt"
-      PACKAGES: 'gcc binutils pkgconf kernel-headers bcc bpftrace libbpf llvm && cat /etc/slackpkg/mirrors && curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && . "$HOME/.cargo/env" && rustup install stable && rustup toolchain install nightly --component rust-src && cargo install bpf-linker && cargo install cargo-generate && cargo install bindgen-cli && cargo install --git https://github.com/aya-rs/aya -- aya-tool'
+      PACKAGES: 'gcc binutils pkgconf kernel-headers bcc bpftrace libbpf llvm && slackpkg remove openssl && slackpkg install openssl && curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && . "$HOME/.cargo/env" && rustup install stable && rustup toolchain install nightly --component rust-src && cargo install bpf-linker && cargo install cargo-generate && cargo install bindgen-cli && cargo install --git https://github.com/aya-rs/aya -- aya-tool'
       REPOS: "bobbintb"
-      REINSTALL: "openssl"
       GIT: https://github.com/bobbintb/dirt.git
