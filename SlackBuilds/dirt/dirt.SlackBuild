@@ -79,7 +79,7 @@ find -L . \
 			# Compile the application and install it into the $PKG directory
 cargo +nightly build --release
 mkdir -p $PKG/usr/local/bin
-cp target/release/$PRGNAM $PKG/usr/local/bin
+cp target/release/$PRGNAM $PKG/usr/local/bin/$(PRGNAM)-backend
 
 			# Strip binaries and libraries
 find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
