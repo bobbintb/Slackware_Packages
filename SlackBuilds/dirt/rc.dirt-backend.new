@@ -1,10 +1,9 @@
 #!/bin/sh
 #
-# /etc/rc.d/rc.dirt
+# /etc/rc.d/rc.dirt-backend
 #      This shell script takes care of starting and stopping
 #      the dirt-backend service
 #
-
 # Put the command line options here that you want to pass to dirt-backend:
 DIRT_OPTIONS=""
 
@@ -16,7 +15,7 @@ start() {
 
 stop() {
       echo -n "Shutting down dirt-backend..."
-      if kill -TERM $(pgrep -f "dirt-backend"); then
+      if kill -TERM $(pgrep -f "/usr/local/bin/dirt-backend"); then
           echo "Process terminated successfully."
       else
           echo "Failed to terminate the process."
@@ -25,7 +24,7 @@ stop() {
 }
 
 status() {
-  PIDS=$(pgrep -f "dirt-backend")
+  PIDS=$(pgrep -f "/usr/local/bin/dirt-backend")
   if [ "$PIDS" == "" ]; then
     echo "dirt-backend is not running!"
   else
