@@ -91,6 +91,10 @@ find $PKG -name "perllocal.pod" \
   -o -name "*.bs" \
   | xargs rm -f
 
+# Install init script.
+mkdir -p $PKG/etc/rc.d
+cat $CWD/rc.${PRGNAM}-backend.new > $PKG/etc/rc.d/rc.${PRGNAM}-backend.new
+
 			# Copy the slack-desc (and a custom doinst.sh if necessary) into ./install
 mkdir -p $PKG/install
 cat $CWD/slack-desc > $PKG/install/slack-desc
