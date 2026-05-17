@@ -30,6 +30,10 @@ on:
         description: 'Git repository URL to clone and build from instead of sbopkg'
         required: false
         type: string
+      BINARY_URL:
+        description: 'URL to download a pre-built binary instead of building from source'
+        required: false
+        type: string
       DEPLOY:
         description: 'Whether to process and deploy the build'
         required: false
@@ -94,7 +98,11 @@ jobs:
           if [ -n "${{ inputs.GIT }}" ]; then
             export GIT_URL="${{ inputs.GIT }}"
           fi
-          ./sbo-build.sh "${{ inputs.NAME }}" <<< p
+          BINARY_URL_ARG=""
+          if [ -n "${{ inputs.BINARY_URL }}" ]; then
+            BINARY_URL_ARG="--binary-url ${{ inputs.BINARY_URL }}"
+          fi
+          ./sbo-build.sh $BINARY_URL_ARG "${{ inputs.NAME }}" <<< p
       
       # We upload the built package so the next job can pick it up
       - name: Upload built package as intermediate artifact
