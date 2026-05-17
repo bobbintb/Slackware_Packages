@@ -21,9 +21,11 @@ LOCAL_MODE=false
 PACKAGE=""
 VERSION=""
 GIT_URL="${GIT_URL:-}"
+BINARY_URL=""
 SBO_DIR=""
 SRCDIR=""
 BUILD_DIR=""
+SCRIPT_DIR="$(dirname "$(realpath "$0")")"
 
 # ── functions ──────────────────────────────────────────────────────────────────
 
@@ -32,6 +34,7 @@ parse_args() {
         case "$1" in
             -h|--help) usage ;;
             -d|--dir)  SBO_ROOT="${2:?--dir requires a path}"; shift ;;
+            -b|--binary-url) BINARY_URL="${2:?--binary-url requires a URL}"; shift ;;
             *) die "Unknown option: $1" ;;
         esac
         shift
@@ -115,9 +118,32 @@ step_3_resolve_version() {
 
 step_4_fetch_source() {
     # ── step 4: fetch source ───────────────────────────────────────────────────────
-    
+
     SRCDIR="/tmp/SBo"
     mkdir -p "${SRCDIR}"
+
+    # Binary mode: download pre-built binary directly, skip all source/git logic
+    if [[ -n "${BINARY_URL}" ]]; then
+        info "Binary URL provided. Downloading binary from ${BINARY_URL}..."
+        curl -fL -J -O --output-dir "${SRCDIR}" "${BINARY_URL}" || die "Binary download failed"
+
+        # Detect and extract archives by extension; delete archive after
+        local DOWNLOADED
+        DOWNLOADED="$(ls -t "${SRCDIR}" | head -n1)"
+        local FILEPATH="${SRCDIR}/${DOWNLOADED}"
+        case "${DOWNLOADED}" in
+            *.tar.gz|*.tgz)       tar -xzf  "${FILEPATH}" -C "${SRCDIR}" && rm -f "${FILEPATH}" ;;
+            *.tar.bz2|*.tbz2)     tar -xjf  "${FILEPATH}" -C "${SRCDIR}" && rm -f "${FILEPATH}" ;;
+            *.tar.xz|*.txz)       tar -xJf  "${FILEPATH}" -C "${SRCDIR}" && rm -f "${FILEPATH}" ;;
+            *.tar.zst)            tar --zstd -xf "${FILEPATH}" -C "${SRCDIR}" && rm -f "${FILEPATH}" ;;
+            *.zip)                unzip -q   "${FILEPATH}" -d "${SRCDIR}"  && rm -f "${FILEPATH}" ;;
+            *.7z)                 7z x       "${FILEPATH}" -o"${SRCDIR}"   && rm -f "${FILEPATH}" ;;
+            *)  info "File does not appear to be an archive; treating as raw binary." ;;
+        esac
+
+        info "Binary successfully prepared in ${SRCDIR}"
+        return
+    fi
 
     # 1. Try Git first (if GIT_URL is provided)
     if [[ -n "${GIT_URL}" ]]; then
@@ -165,9 +191,25 @@ step_5_stage_and_build() {
     # 1. Copy the SlackBuild script and metadata files (from Step 1)
     cp -af "${SBO_DIR}/." "${BUILD_DIR}/"
 
-    # 2. Copy the actual source tarball (from Step 4)
+    # 2. Copy the actual source/binary (from Step 4)
     # We use -f to overwrite any "wrapper" tarballs from Step 1 with the real source
     cp -af "${SRCDIR}"/* "${BUILD_DIR}/"
+
+    # Binary mode: use binary.SlackBuild from the script's own directory
+    if [[ -n "${BINARY_URL}" ]]; then
+        local BINARY_SLACKBUILD="${SCRIPT_DIR}/binary.SlackBuild"
+        [[ -f "${BINARY_SLACKBUILD}" ]] || die "binary.SlackBuild not found at '${BINARY_SLACKBUILD}'"
+        cp -f "${BINARY_SLACKBUILD}" "${BUILD_DIR}/binary.SlackBuild"
+        chmod +x "${BUILD_DIR}/binary.SlackBuild"
+
+        info "========================================Building '${PACKAGE}' version ${VERSION} from binary...========================================"
+
+        (
+            cd "${BUILD_DIR}"
+            VERSION="${VERSION}" bash binary.SlackBuild
+        )
+        return
+    fi
 
     # 3. FIX: Handle Naming Mismatch (The bpftool fix)
     # If the script expects 'package.tar.gz' but we have 'package-version.tar.gz',
