@@ -18,6 +18,7 @@ jobs:
     with:
       DEPLOY: ${{ inputs.do_deploy }}
       NAME: "bpftool"
-      PACKAGES: "openssl"
-      UPGRADE: "elfutils zlib openssl"
-      GIT: "https://github.com/libbpf/bpftool.git"
+      # PACKAGES: "openssl"
+      # UPGRADE: "elfutils zlib openssl"
+      # GIT: "https://github.com/libbpf/bpftool.git"
+      BINARY_URL: "https://github.com/libbpf/bpftool/releases/download/v7.7.0/bpftool-v7.7.0-amd64.tar.gz"
