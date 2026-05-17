@@ -18,8 +18,9 @@ jobs:
     with:
       DEPLOY: ${{ inputs.do_deploy }}
       NAME: "bpftrace"
-      PACKAGES: "bcc cereal gettext vim bpftool pahole gtest m4 ccache fmt ruby-4 rubygem-asciidoctor"
-      UPGRADE: "zlib elfutils libxml2 libpcap"
-      REINSTALL: "libedit"
-      REPOS: "bobbintb SlackDCE_Project-15.0"
-      GIT: "https://github.com/bpftrace/bpftrace.git"
+      # PACKAGES: "bcc cereal gettext vim bpftool pahole gtest m4 ccache fmt ruby-4 rubygem-asciidoctor"
+      # UPGRADE: "zlib elfutils libxml2 libpcap"
+      # REINSTALL: "libedit"
+      # REPOS: "bobbintb SlackDCE_Project-15.0"
+      # GIT: "https://github.com/bpftrace/bpftrace.git"
+      BINARY_URL: "https://github.com/bpftrace/bpftrace/releases/download/v0.25.1/bpftrace"
