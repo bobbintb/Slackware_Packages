@@ -22,6 +22,7 @@ PACKAGE=""
 VERSION=""
 GIT_URL="${GIT_URL:-}"
 BINARY_URL=""
+BINARY_DEST="${BINARY_DEST:-/usr/bin}"
 SBO_DIR=""
 SRCDIR=""
 BUILD_DIR=""
@@ -34,7 +35,8 @@ parse_args() {
         case "$1" in
             -h|--help) usage ;;
             -d|--dir)  SBO_ROOT="${2:?--dir requires a path}"; shift ;;
-            -b|--binary-url) BINARY_URL="${2:?--binary-url requires a URL}"; shift ;;
+            -b|--binary-url)  BINARY_URL="${2:?--binary-url requires a URL}"; shift ;;
+            --binary-dest)    BINARY_DEST="${2:?--binary-dest requires a path}"; shift ;;
             *) die "Unknown option: $1" ;;
         esac
         shift
@@ -206,7 +208,7 @@ step_5_stage_and_build() {
 
         (
             cd "${BUILD_DIR}"
-            VERSION="${VERSION}" bash binary.SlackBuild
+            PRGNAM="${PACKAGE}" VERSION="${VERSION}" BINARY_DEST="${BINARY_DEST}" bash binary.SlackBuild
         )
         return
     fi
