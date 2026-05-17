@@ -1,0 +1,55 @@
+#!/bin/sh
+# binary.SlackBuild — Generic SlackBuild for pre-built binaries.
+# Called by sbo-build.sh when --binary-url is supplied.
+# The binary is expected to be named $PRGNAM and present in $CWD.
+
+PRGNAM=${PRGNAM:-}
+VERSION=${VERSION:-}
+BUILD=${BUILD:-1}
+TAG=${TAG:-_SBo}
+BINARY_DEST=${BINARY_DEST:-/usr/bin}
+
+[ -z "$PRGNAM" ]   && { echo "ERROR: PRGNAM is not set" >&2; exit 1; }
+[ -z "$VERSION" ]  && { echo "ERROR: VERSION is not set" >&2; exit 1; }
+
+if [ -z "$ARCH" ]; then
+  case "$( uname -m )" in
+    i?86) export ARCH=i586 ;;
+    arm*) export ARCH=arm ;;
+       *) export ARCH=$( uname -m ) ;;
+  esac
+fi
+
+CWD=$(pwd)
+TMP=${TMP:-/tmp/SBo}
+PKG=$TMP/package-$PRGNAM
+OUTPUT=${OUTPUT:-/tmp}
+
+set -e
+
+[ -f "$CWD/$PRGNAM" ] || { echo "ERROR: Binary '$PRGNAM' not found in $CWD" >&2; exit 1; }
+
+rm -rf $PKG
+mkdir -p $PKG/$BINARY_DEST $OUTPUT
+
+# Install the pre-built binary
+install -m 0755 $CWD/$PRGNAM $PKG/$BINARY_DEST/$PRGNAM
+
+# Strip binary
+find $PKG -print0 | xargs -0 file | grep -e "executable" -e "shared object" \
+  | grep ELF | cut -f 1 -d : | xargs strip --strip-unneeded 2> /dev/null || true
+
+# Copy documentation if present
+mkdir -p $PKG/usr/doc/$PRGNAM-$VERSION
+[ -d $CWD/docs ] && cp -a $CWD/docs $PKG/usr/doc/$PRGNAM-$VERSION/
+cat $CWD/$PRGNAM.SlackBuild > $PKG/usr/doc/$PRGNAM-$VERSION/$PRGNAM.SlackBuild
+
+# Copy slack-desc and optional doinst.sh
+mkdir -p $PKG/install
+cat $CWD/slack-desc > $PKG/install/slack-desc
+[ -f $CWD/doinst.sh ] && cat $CWD/doinst.sh > $PKG/install/doinst.sh
+
+cd $PKG
+/sbin/makepkg -l y -c n $OUTPUT/$PRGNAM-$VERSION-$ARCH-$BUILD$TAG.${PKGTYPE:-tgz}
+
+exit 0
