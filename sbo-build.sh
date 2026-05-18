@@ -106,6 +106,10 @@ step_3_resolve_version() {
             slug=$(echo "${GIT_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
             tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+') || true
         fi
+        if [[ -z "${tag}" && "${BINARY_URL}" == *"github.com"* ]]; then
+            slug=$(echo "${BINARY_URL}" | grep -oP '(?<=github\.com/)[^/]+/[^/]+' | sed 's/\.git$//')
+            tag=$(curl -fsSL "https://api.github.com/repos/${slug}/releases/latest" | grep -oP '"tag_name"\s*:\s*"\K[^"]+') || true
+        fi
         if [[ -n "${tag}" ]]; then
             VERSION="${tag#v}"
         else
