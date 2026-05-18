@@ -130,7 +130,7 @@ step_4_fetch_source() {
 
     # Binary mode: download pre-built binary directly, skip all source/git logic
     if [[ -n "${BINARY_URL}" ]]; then
-        BINARY_URL="$(eval echo "${BINARY_URL}")"
+        BINARY_URL="${BINARY_URL//\{VERSION\}/${VERSION}}"
         info "Binary URL provided. Downloading binary from ${BINARY_URL}..."
         curl -fL -J -O --output-dir "${SRCDIR}" "${BINARY_URL}" || die "Binary download failed"
 
