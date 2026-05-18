@@ -21,4 +21,4 @@ jobs:
       # PACKAGES: "openssl"
       # UPGRADE: "elfutils zlib openssl"
       # GIT: "https://github.com/libbpf/bpftool.git"
-      BINARY_URL: "https://github.com/libbpf/bpftool/releases/download/v${VERSION}/bpftool-v7.7.0-amd64.tar.gz"
+      BINARY_URL: "https://github.com/libbpf/bpftool/releases/download/v{VERSION}/bpftool-v{VERSION}-amd64.tar.gz"
