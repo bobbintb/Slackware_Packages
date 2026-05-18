@@ -23,4 +23,4 @@ jobs:
       # REINSTALL: "libedit"
       # REPOS: "bobbintb SlackDCE_Project-15.0"
       # GIT: "https://github.com/bpftrace/bpftrace.git"
-      BINARY_URL: "https://github.com/bpftrace/bpftrace/releases/download/v${VERSION}/bpftrace"
+      BINARY_URL: "https://github.com/bpftrace/bpftrace/releases/download/v{VERSION}/bpftrace"
